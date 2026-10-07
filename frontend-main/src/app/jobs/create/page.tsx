@@ -194,21 +194,21 @@ export default function CreateJobPage() {
       <div>
         <Link
           href="/jobs"
-          className="text-sm text-slate-600 hover:text-indigo-600"
+          className="text-sm font-medium text-slate-600 transition hover:text-emerald-700 dark:text-zinc-400 dark:hover:text-emerald-400"
         >
           ← Orqaga
         </Link>
-        <h1 className="mt-2 text-2xl font-bold text-slate-900 sm:text-3xl">
+        <h1 className="mt-2 text-2xl font-black tracking-tight text-slate-900 sm:text-3xl dark:text-white">
           Yangi vakansiya
         </h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <p className="mt-1 text-sm text-slate-500 dark:text-zinc-400">
           Formani to&apos;ldiring va e&apos;lon joylang
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <section className="rounded-2xl border border-slate-200 bg-white p-6">
-          <h2 className="mb-4 text-lg font-semibold text-slate-900">
+        <section className="rim rounded-3xl glass p-6 animate-fade-in-up">
+          <h2 className="mb-4 text-lg font-black tracking-tight text-slate-900 dark:text-white">
             Asosiy ma&apos;lumot
           </h2>
           <div className="space-y-4">
@@ -220,7 +220,7 @@ export default function CreateJobPage() {
               required
             />
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-slate-700">
+              <label className="mb-1.5 block text-sm font-bold text-slate-700 dark:text-zinc-300">
                 Ish tavsifi *
               </label>
               <textarea
@@ -229,9 +229,9 @@ export default function CreateJobPage() {
                 placeholder="Vazifa, loyihalar, jamoa haqida batafsil yozing..."
                 rows={6}
                 required
-                className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                className="w-full rounded-2xl border border-slate-200/60 bg-white/60 px-4 py-3 text-sm font-medium text-slate-900 placeholder:text-slate-400 backdrop-blur-xl focus:border-emerald-500/60 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-zinc-500"
               />
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-xs text-slate-500 dark:text-zinc-500">
                 Kamida 20 belgi ({form.description.length})
               </p>
             </div>
@@ -252,13 +252,13 @@ export default function CreateJobPage() {
           </div>
         </section>
 
-        <section className="rounded-2xl border border-slate-200 bg-white p-6">
-          <h2 className="mb-4 text-lg font-semibold text-slate-900">
+        <section className="rim rounded-3xl glass p-6 animate-fade-in-up">
+          <h2 className="mb-4 text-lg font-black tracking-tight text-slate-900 dark:text-white">
             Talablar va vazifalar
           </h2>
           <div className="space-y-4">
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-slate-700">
+              <label className="mb-1.5 block text-sm font-bold text-slate-700 dark:text-zinc-300">
                 Talablar (har bir qatorda bittasi)
               </label>
               <textarea
@@ -266,11 +266,11 @@ export default function CreateJobPage() {
                 onChange={(e) => update("requirements", e.target.value)}
                 placeholder={"Node.js 3+ yil tajriba\nMongoDB bilan ishlash\nJamoaviy ish ko'nikmasi"}
                 rows={4}
-                className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                className="w-full rounded-2xl border border-slate-200/60 bg-white/60 px-4 py-3 text-sm font-medium text-slate-900 placeholder:text-slate-400 backdrop-blur-xl focus:border-emerald-500/60 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-zinc-500"
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-slate-700">
+              <label className="mb-1.5 block text-sm font-bold text-slate-700 dark:text-zinc-300">
                 Vazifalar (har bir qatorda bittasi)
               </label>
               <textarea
@@ -278,14 +278,14 @@ export default function CreateJobPage() {
                 onChange={(e) => update("responsibilities", e.target.value)}
                 placeholder={"Yangi API'lar yaratish\nKod review qilish\nArxitektura qarorlar qabul qilish"}
                 rows={4}
-                className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                className="w-full rounded-2xl border border-slate-200/60 bg-white/60 px-4 py-3 text-sm font-medium text-slate-900 placeholder:text-slate-400 backdrop-blur-xl focus:border-emerald-500/60 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-zinc-500"
               />
             </div>
           </div>
         </section>
 
-        <section className="rounded-2xl border border-slate-200 bg-white p-6">
-          <h2 className="mb-4 text-lg font-semibold text-slate-900">
+        <section className="rim rounded-3xl glass p-6 animate-fade-in-up">
+          <h2 className="mb-4 text-lg font-black tracking-tight text-slate-900 dark:text-white">
             Ish sharoiti
           </h2>
           <div className="space-y-4">
@@ -337,8 +337,8 @@ export default function CreateJobPage() {
           </div>
         </section>
 
-        <section className="rounded-2xl border border-slate-200 bg-white p-6">
-          <h2 className="mb-4 text-lg font-semibold text-slate-900">Maosh</h2>
+        <section className="rim rounded-3xl glass p-6 animate-fade-in-up">
+          <h2 className="mb-4 text-lg font-black tracking-tight text-slate-900 dark:text-white">Maosh</h2>
           <div className="grid gap-4 sm:grid-cols-3">
             <Input
               label="Minimal"
@@ -368,12 +368,12 @@ export default function CreateJobPage() {
               onChange={(e) => update("isNegotiable", e.target.checked)}
               className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
             />
-            <span className="text-sm text-slate-700">Kelishilgan</span>
+            <span className="text-sm font-medium text-slate-700 dark:text-zinc-300">Kelishilgan</span>
           </label>
         </section>
 
-        <section className="rounded-2xl border border-slate-200 bg-white p-6">
-          <h2 className="mb-4 text-lg font-semibold text-slate-900">
+        <section className="rim rounded-3xl glass p-6 animate-fade-in-up">
+          <h2 className="mb-4 text-lg font-black tracking-tight text-slate-900 dark:text-white">
             Joylashuv
           </h2>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -397,14 +397,14 @@ export default function CreateJobPage() {
               onChange={(e) => update("isRemote", e.target.checked)}
               className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
             />
-            <span className="text-sm text-slate-700">
+            <span className="text-sm font-medium text-slate-700 dark:text-zinc-300">
               Masofadan ishlash mumkin
             </span>
           </label>
         </section>
 
-        <section className="rounded-2xl border border-slate-200 bg-white p-6">
-          <h2 className="mb-4 text-lg font-semibold text-slate-900">
+        <section className="rim rounded-3xl glass p-6 animate-fade-in-up">
+          <h2 className="mb-4 text-lg font-black tracking-tight text-slate-900 dark:text-white">
             Kompaniya
           </h2>
           <div className="space-y-4">
@@ -430,7 +430,7 @@ export default function CreateJobPage() {
         </section>
 
         {error && (
-          <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+          <div className="rounded-2xl border border-rose-200/60 bg-rose-50/60 px-4 py-3 text-sm font-medium whitespace-pre-line text-rose-700 backdrop-blur-xl dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-400">
             {error}
           </div>
         )}
