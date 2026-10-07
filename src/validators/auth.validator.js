@@ -1,62 +1,45 @@
-/**
- * Auth endpointlari uchun validatsiya sxemalari (Joi).
- */
-
 const Joi = require('joi');
 
-// ============ REGISTER ============
 const registerSchema = Joi.object({
-  firstName: Joi.string().trim().min(2).max(50).required().messages({
-    'string.empty': 'Ism kiritilishi shart',
-    'string.min': 'Ism kamida 2 belgi',
-    'any.required': 'Ism kiritilishi shart',
-  }),
-  lastName: Joi.string().trim().min(2).max(50).required().messages({
-    'string.empty': 'Familiya kiritilishi shart',
-    'any.required': 'Familiya kiritilishi shart',
-  }),
-  email: Joi.string().email().lowercase().trim().required().messages({
-    'string.email': 'Email formati notogri',
-    'any.required': 'Email kiritilishi shart',
-  }),
-  password: Joi.string().min(8).max(128).required().messages({
-    'string.min': 'Parol kamida 8 belgi',
-    'any.required': 'Parol kiritilishi shart',
-  }),
-  phone: Joi.string()
-    .pattern(/^\+?\d{9,15}$/)
-    .allow(null, '')
-    .messages({
-      'string.pattern.base': 'Telefon raqam formati notogri',
-    }),
-  role: Joi.string().valid('seeker', 'employer').default('seeker').messages({
-    'any.only': 'Rol faqat: seeker yoki employer',
-  }),
+  firstName: Joi.string().trim().min(2).max(50).required(),
+  lastName: Joi.string().trim().min(2).max(50).required(),
+  phone: Joi.string().pattern(/^\+?\d{9,15}$/).required(),
+  email: Joi.string().email().lowercase().trim().allow(null, '').optional(),
+  password: Joi.string().min(8).max(128).required(),
+  role: Joi.string().valid('seeker', 'employer').default('seeker'),
   company: Joi.object({
     name: Joi.string().trim().max(100),
     website: Joi.string().uri().allow(null, ''),
-  }).when('role', {
-    is: 'employer',
-    then: Joi.object({ name: Joi.string().trim().max(100).required() }),
   }),
 });
 
-// ============ LOGIN ============
 const loginSchema = Joi.object({
-  email: Joi.string().email().lowercase().trim().required().messages({
-    'string.email': 'Email formati notogri',
-    'any.required': 'Email kiritilishi shart',
-  }),
-  password: Joi.string().required().messages({
-    'any.required': 'Parol kiritilishi shart',
-  }),
+  identifier: Joi.string().trim().required(),
+  password: Joi.string().required(),
 });
 
-// ============ REFRESH ============
 const refreshSchema = Joi.object({
-  refreshToken: Joi.string().required().messages({
-    'any.required': 'Refresh token kiritilishi shart',
+  refreshToken: Joi.string().required(),
+});
+
+const switchRoleSchema = Joi.object({
+  role: Joi.string().valid('seeker', 'employer').required(),
+});
+
+/**
+ * Hisobni o'chirish — parol tasdiqlanadi
+ */
+const deleteAccountSchema = Joi.object({
+  password: Joi.string().required().messages({
+    'any.required': 'Parolni kiritish shart',
+    'string.empty': 'Parolni kiritish shart',
   }),
 });
 
-module.exports = { registerSchema, loginSchema, refreshSchema };
+module.exports = {
+  registerSchema,
+  loginSchema,
+  refreshSchema,
+  switchRoleSchema,
+  deleteAccountSchema,
+};

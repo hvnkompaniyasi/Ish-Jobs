@@ -1,7 +1,3 @@
-/**
- * Barcha route'larni birlashtiruvchi.
- */
-
 const express = require('express');
 const authRoutes = require('./auth.routes');
 const jobRoutes = require('./job.routes');

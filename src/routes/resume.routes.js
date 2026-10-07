@@ -1,58 +1,26 @@
-/**
- * Resume endpointlari.
- * Prefix: /api/resumes
- */
-
 const express = require('express');
 const resumeController = require('../controllers/resume.controller');
 const validate = require('../middleware/validate.middleware');
-const { protect } = require('../middleware/auth.middleware');
-const { authorize } = require('../middleware/role.middleware');
-const {
-  createResumeSchema,
-  updateResumeSchema,
-  listResumesQuerySchema,
-} = require('../validators/resume.validator');
+const { protect, authorize } = require('../middleware/auth.middleware');
+const { createResumeSchema, updateResumeSchema } = require('../validators/resume.validator');
 
 const router = express.Router();
 
-// Public ro'yxat (hamma ko'radi — faqat isPublic=true)
-router.get('/', validate(listResumesQuerySchema, 'query'), resumeController.listResumes);
+router.use(protect);
 
-// Faqat seeker — o'z rezyumelari
-router.get(
-  '/my',
-  protect,
-  authorize('seeker', 'admin'),
-  resumeController.getMyResumes
-);
+router.get('/my', resumeController.getMyResumes);
 
-// Public — bitta rezyume
-router.get('/:id', resumeController.getResume);
-
-// Faqat seeker — yaratish
 router.post(
   '/',
-  protect,
   authorize('seeker', 'admin'),
   validate(createResumeSchema),
   resumeController.createResume
 );
 
-// Faqat egasi — tahrirlash va o'chirish
-router.patch(
-  '/:id',
-  protect,
-  authorize('seeker', 'admin'),
-  validate(updateResumeSchema),
-  resumeController.updateResume
-);
+router.get('/:id', resumeController.getResume);
 
-router.delete(
-  '/:id',
-  protect,
-  authorize('seeker', 'admin'),
-  resumeController.deleteResume
-);
+router.patch('/:id', validate(updateResumeSchema), resumeController.updateResume);
+
+router.delete('/:id', resumeController.deleteResume);
 
 module.exports = router;

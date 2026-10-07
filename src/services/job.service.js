@@ -7,27 +7,31 @@ const { Job } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
- * Yangi vakansiya yaratish (faqat employer).
+ * Yangi vakansiya yaratish.
  */
-async function createJob(employerId, data) {
-  // Employer ma'lumotlarini olish uchun company maydonini to'ldirish
-  const jobData = {
+async function createJob(data, user) {
+  const payload = {
     ...data,
-    employer: employerId,
+    employer: user._id,
   };
 
-  const job = await Job.create(jobData);
+  // Employer company'si mavjud bo'lsa, kompaniya nomini to'ldirish
+  if (data.company) {
+    payload.company = {
+      ...data.company,
+      name: data.company.name || (user.company && user.company.name) || undefined,
+    };
+  }
 
+  const job = await Job.create(payload);
   return job;
 }
 
 /**
- * Vakansiyalar ro'yxati (filter, pagination, sort).
+ * Vakansiyalar ro'yxati (qidiruv, filter, pagination).
  */
-async function listJobs(query) {
+async function getJobs(filters = {}, pagination = {}) {
   const {
-    page = 1,
-    limit = 20,
     search,
     category,
     employmentType,
@@ -35,37 +39,38 @@ async function listJobs(query) {
     city,
     isRemote,
     minSalary,
+    maxSalary,
     status = 'active',
-    sortBy = 'createdAt',
-    sortOrder = 'desc',
-  } = query;
+  } = filters;
 
-  const filter = {};
+  const page = Number(pagination.page) || 1;
+  const limit = Number(pagination.limit) || 10;
 
-  if (status) filter.status = status;
-  if (category) filter.category = category;
-  if (employmentType) filter.employmentType = employmentType;
-  if (experienceLevel) filter.experienceLevel = experienceLevel;
-  if (typeof isRemote === 'boolean') filter['location.isRemote'] = isRemote;
-  if (city) filter['location.city'] = new RegExp(city, 'i');
-  if (minSalary) filter['salary.min'] = { $gte: minSalary };
+  const query = { status };
 
-  // Text search
   if (search) {
-    filter.$text = { $search: search };
+    query.$text = { $search: search };
+  }
+  if (category) query.category = category;
+  if (employmentType) query.employmentType = employmentType;
+  if (experienceLevel) query.experienceLevel = experienceLevel;
+  if (city) query['location.city'] = new RegExp(city, 'i');
+  if (isRemote === true) query['location.isRemote'] = true;
+
+  if (minSalary || maxSalary) {
+    if (minSalary) query['salary.min'] = { $gte: Number(minSalary) };
+    if (maxSalary) query['salary.max'] = { $lte: Number(maxSalary) };
   }
 
   const skip = (page - 1) * limit;
-  const sort = { [sortBy]: sortOrder === 'asc' ? 1 : -1 };
 
   const [jobs, total] = await Promise.all([
-    Job.find(filter)
-      .populate('employer', 'firstName lastName company.name')
-      .sort(sort)
+    Job.find(query)
+      .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
-      .lean(),
-    Job.countDocuments(filter),
+      .populate('employer', 'firstName lastName email company avatar'),
+    Job.countDocuments(query),
   ]);
 
   return {
@@ -74,101 +79,124 @@ async function listJobs(query) {
       page,
       limit,
       total,
-      pages: Math.ceil(total / limit),
+      pages: Math.ceil(total / limit) || 1,
     },
   };
 }
 
 /**
- * Bitta vakansiyani olish (ko'rishlar sonini oshiradi).
+ * Bitta vakansiyani olish (ixtiyoriy viewsCount +1).
  */
-async function getJobById(jobId) {
-  if (!mongoose.Types.ObjectId.isValid(jobId)) {
-    throw new ApiError(400, 'Notogri ID formati');
+async function getJobById(id, incrementViews = false) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new ApiError(400, 'Vakansiya ID notogri');
   }
 
-  const job = await Job.findByIdAndUpdate(
-    jobId,
-    { $inc: { viewsCount: 1 } },
-    { new: true }
-  ).populate('employer', 'firstName lastName company.name');
+  const job = await Job.findById(id).populate(
+    'employer',
+    'firstName lastName email company avatar phone'
+  );
 
   if (!job) {
     throw new ApiError(404, 'Vakansiya topilmadi');
+  }
+
+  if (incrementViews) {
+    await Job.findByIdAndUpdate(id, { $inc: { viewsCount: 1 } });
   }
 
   return job;
 }
 
 /**
- * Vakansiyani tahrirlash (faqat egasi).
+ * Vakansiyani yangilash (faqat egasi yoki admin).
  */
-async function updateJob(jobId, employerId, updates) {
-  if (!mongoose.Types.ObjectId.isValid(jobId)) {
-    throw new ApiError(400, 'Notogri ID formati');
+async function updateJob(id, data, user) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new ApiError(400, 'Vakansiya ID notogri');
   }
 
-  const job = await Job.findById(jobId);
-  if (!job) {
-    throw new ApiError(404, 'Vakansiya topilmadi');
+  const job = await Job.findById(id);
+  if (!job) throw new ApiError(404, 'Vakansiya topilmadi');
+
+  const isOwner = job.employer.toString() === user._id.toString();
+  if (!isOwner && user.role !== 'admin') {
+    throw new ApiError(403, 'Bu vakansiyani ozgartirish huquqi yoq');
   }
 
-  if (job.employer.toString() !== employerId.toString()) {
-    throw new ApiError(403, 'Bu vakansiya sizga tegishli emas');
-  }
+  const allowed = [
+    'title',
+    'description',
+    'requirements',
+    'responsibilities',
+    'category',
+    'skills',
+    'employmentType',
+    'experienceLevel',
+    'salary',
+    'location',
+    'company',
+    'deadline',
+    'status',
+  ];
 
-  Object.assign(job, updates);
+  allowed.forEach((key) => {
+    if (data[key] !== undefined) job[key] = data[key];
+  });
+
   await job.save();
-
   return job;
 }
 
 /**
- * Vakansiyani o'chirish (faqat egasi).
+ * Vakansiyani o'chirish (faqat egasi yoki admin).
  */
-async function deleteJob(jobId, employerId) {
-  if (!mongoose.Types.ObjectId.isValid(jobId)) {
-    throw new ApiError(400, 'Notogri ID formati');
+async function deleteJob(id, user) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new ApiError(400, 'Vakansiya ID notogri');
   }
 
-  const job = await Job.findById(jobId);
-  if (!job) {
-    throw new ApiError(404, 'Vakansiya topilmadi');
-  }
+  const job = await Job.findById(id);
+  if (!job) throw new ApiError(404, 'Vakansiya topilmadi');
 
-  if (job.employer.toString() !== employerId.toString()) {
-    throw new ApiError(403, 'Bu vakansiya sizga tegishli emas');
+  const isOwner = job.employer.toString() === user._id.toString();
+  if (!isOwner && user.role !== 'admin') {
+    throw new ApiError(403, 'Bu vakansiyani ochirish huquqi yoq');
   }
 
   await job.deleteOne();
-
-  return { deleted: true };
+  return { id };
 }
 
 /**
- * Employerning o'z vakansiyalari.
+ * Employer o'z vakansiyalarini olish.
  */
-async function getMyJobs(employerId, query) {
-  const { page = 1, limit = 20, status } = query;
-  const filter = { employer: employerId };
-  if (status) filter.status = status;
-
+async function getMyJobs(user, pagination = {}) {
+  const page = Number(pagination.page) || 1;
+  const limit = Number(pagination.limit) || 10;
   const skip = (page - 1) * limit;
 
+  const query = { employer: user._id };
+
   const [jobs, total] = await Promise.all([
-    Job.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
-    Job.countDocuments(filter),
+    Job.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit),
+    Job.countDocuments(query),
   ]);
 
   return {
     jobs,
-    pagination: { page, limit, total, pages: Math.ceil(total / limit) },
+    pagination: {
+      page,
+      limit,
+      total,
+      pages: Math.ceil(total / limit) || 1,
+    },
   };
 }
 
 module.exports = {
   createJob,
-  listJobs,
+  getJobs,
   getJobById,
   updateJob,
   deleteJob,

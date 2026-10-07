@@ -1,32 +1,26 @@
 /**
- * Job endpointlari uchun Joi validatsiya sxemalari.
+ * Job endpointlari uchun validatsiya sxemalari (Joi).
  */
 
 const Joi = require('joi');
 
-const salarySchema = Joi.object({
-  min: Joi.number().min(0).allow(null),
-  max: Joi.number().min(0).allow(null),
-  currency: Joi.string().valid('UZS', 'USD', 'EUR', 'RUB').default('UZS'),
-  isNegotiable: Joi.boolean().default(false),
-});
+const EMPLOYMENT_TYPES = [
+  'full-time',
+  'part-time',
+  'contract',
+  'internship',
+  'remote',
+];
 
-const locationSchema = Joi.object({
-  city: Joi.string().trim().max(100).allow(null, ''),
-  country: Joi.string().trim().max(50).default('UZ'),
-  isRemote: Joi.boolean().default(false),
-});
+const EXPERIENCE_LEVELS = ['intern', 'junior', 'middle', 'senior', 'lead'];
 
-const companySchema = Joi.object({
-  name: Joi.string().trim().max(150),
-  logo: Joi.string().uri().allow(null, ''),
-  website: Joi.string().uri().allow(null, ''),
-});
+const STATUSES = ['draft', 'active', 'closed', 'archived'];
 
 // ============ CREATE ============
 const createJobSchema = Joi.object({
   title: Joi.string().trim().min(3).max(150).required().messages({
     'string.empty': 'Sarlavha kiritilishi shart',
+    'string.min': 'Sarlavha kamida 3 belgi',
     'any.required': 'Sarlavha kiritilishi shart',
   }),
   description: Joi.string().trim().min(20).max(10000).required().messages({
@@ -34,20 +28,43 @@ const createJobSchema = Joi.object({
     'any.required': 'Tavsif kiritilishi shart',
   }),
   requirements: Joi.array().items(Joi.string().trim().max(500)).default([]),
-  responsibilities: Joi.array().items(Joi.string().trim().max(500)).default([]),
-  category: Joi.string().trim().max(100).default('other'),
-  skills: Joi.array().items(Joi.string().trim().max(50)).default([]),
+  responsibilities: Joi.array()
+    .items(Joi.string().trim().max(500))
+    .default([]),
+  category: Joi.string().trim().default('other'),
+  skills: Joi.array().items(Joi.string().trim()).default([]),
   employmentType: Joi.string()
-    .valid('full-time', 'part-time', 'contract', 'internship', 'remote')
-    .default('full-time'),
+    .valid(...EMPLOYMENT_TYPES)
+    .default('full-time')
+    .messages({
+      'any.only': `Ish turi faqat: ${EMPLOYMENT_TYPES.join(', ')}`,
+    }),
   experienceLevel: Joi.string()
-    .valid('intern', 'junior', 'middle', 'senior', 'lead')
-    .default('middle'),
-  salary: salarySchema.default({}),
-  location: locationSchema.default({}),
-  company: companySchema,
-  deadline: Joi.date().iso().allow(null),
-  status: Joi.string().valid('draft', 'active', 'closed', 'archived').default('active'),
+    .valid(...EXPERIENCE_LEVELS)
+    .default('middle')
+    .messages({
+      'any.only': `Tajriba darajasi faqat: ${EXPERIENCE_LEVELS.join(', ')}`,
+    }),
+  salary: Joi.object({
+    min: Joi.number().min(0).allow(null).default(null),
+    max: Joi.number().min(0).allow(null).default(null),
+    currency: Joi.string().default('UZS'),
+    isNegotiable: Joi.boolean().default(false),
+  }).default({}),
+  location: Joi.object({
+    city: Joi.string().trim().allow(null, '').default(null),
+    country: Joi.string().trim().default('UZ'),
+    isRemote: Joi.boolean().default(false),
+  }).default({}),
+  company: Joi.object({
+    name: Joi.string().trim().max(100),
+    logo: Joi.string().uri().allow(null, ''),
+    website: Joi.string().uri().allow(null, ''),
+  }).default({}),
+  deadline: Joi.date().iso().allow(null).default(null),
+  status: Joi.string()
+    .valid(...STATUSES)
+    .default('active'),
 });
 
 // ============ UPDATE ============
@@ -56,49 +73,47 @@ const updateJobSchema = Joi.object({
   description: Joi.string().trim().min(20).max(10000),
   requirements: Joi.array().items(Joi.string().trim().max(500)),
   responsibilities: Joi.array().items(Joi.string().trim().max(500)),
-  category: Joi.string().trim().max(100),
-  skills: Joi.array().items(Joi.string().trim().max(50)),
-  employmentType: Joi.string().valid(
-    'full-time',
-    'part-time',
-    'contract',
-    'internship',
-    'remote'
-  ),
-  experienceLevel: Joi.string().valid('intern', 'junior', 'middle', 'senior', 'lead'),
-  salary: salarySchema,
-  location: locationSchema,
-  company: companySchema,
+  category: Joi.string().trim(),
+  skills: Joi.array().items(Joi.string().trim()),
+  employmentType: Joi.string().valid(...EMPLOYMENT_TYPES),
+  experienceLevel: Joi.string().valid(...EXPERIENCE_LEVELS),
+  salary: Joi.object({
+    min: Joi.number().min(0).allow(null),
+    max: Joi.number().min(0).allow(null),
+    currency: Joi.string(),
+    isNegotiable: Joi.boolean(),
+  }),
+  location: Joi.object({
+    city: Joi.string().trim().allow(null, ''),
+    country: Joi.string().trim(),
+    isRemote: Joi.boolean(),
+  }),
+  company: Joi.object({
+    name: Joi.string().trim().max(100),
+    logo: Joi.string().uri().allow(null, ''),
+    website: Joi.string().uri().allow(null, ''),
+  }),
   deadline: Joi.date().iso().allow(null),
-  status: Joi.string().valid('draft', 'active', 'closed', 'archived'),
-}).min(1).messages({
-  'object.min': 'Kamida bitta maydon ozgartirilishi kerak',
-});
+  status: Joi.string().valid(...STATUSES),
+}).min(1);
 
-// ============ LIST QUERY ============
-const listJobsQuerySchema = Joi.object({
-  page: Joi.number().integer().min(1).default(1),
-  limit: Joi.number().integer().min(1).max(100).default(20),
-  search: Joi.string().trim().max(200).allow(''),
-  category: Joi.string().trim().max(100),
-  employmentType: Joi.string().valid(
-    'full-time',
-    'part-time',
-    'contract',
-    'internship',
-    'remote'
-  ),
-  experienceLevel: Joi.string().valid('intern', 'junior', 'middle', 'senior', 'lead'),
-  city: Joi.string().trim().max(100),
+// ============ QUERY ============
+const jobQuerySchema = Joi.object({
+  search: Joi.string().trim().allow(''),
+  category: Joi.string().trim().allow(''),
+  employmentType: Joi.string().valid(...EMPLOYMENT_TYPES, ''),
+  experienceLevel: Joi.string().valid(...EXPERIENCE_LEVELS, ''),
+  city: Joi.string().trim().allow(''),
   isRemote: Joi.boolean(),
   minSalary: Joi.number().min(0),
-  status: Joi.string().valid('draft', 'active', 'closed', 'archived').default('active'),
-  sortBy: Joi.string().valid('createdAt', 'salary.min', 'viewsCount').default('createdAt'),
-  sortOrder: Joi.string().valid('asc', 'desc').default('desc'),
+  maxSalary: Joi.number().min(0),
+  status: Joi.string().valid(...STATUSES),
+  page: Joi.number().integer().min(1).default(1),
+  limit: Joi.number().integer().min(1).max(100).default(10),
 });
 
 module.exports = {
   createJobSchema,
   updateJobSchema,
-  listJobsQuerySchema,
+  jobQuerySchema,
 };

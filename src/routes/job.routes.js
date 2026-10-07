@@ -6,26 +6,26 @@
 const express = require('express');
 const jobController = require('../controllers/job.controller');
 const validate = require('../middleware/validate.middleware');
-const { protect } = require('../middleware/auth.middleware');
-const { authorize } = require('../middleware/role.middleware');
+const { protect, authorize } = require('../middleware/auth.middleware');
 const {
   createJobSchema,
   updateJobSchema,
-  listJobsQuerySchema,
 } = require('../validators/job.validator');
 
 const router = express.Router();
 
-// Public (hamma ko'rishi mumkin)
-router.get('/', validate(listJobsQuerySchema, 'query'), jobController.listJobs);
+// ============ PUBLIC ============
+router.get('/', jobController.getJobs);
 
-// Faqat employer — o'z vakansiyalarini ko'rish
-router.get('/my', protect, authorize('employer', 'admin'), jobController.getMyJobs);
+// ============ PROTECTED ============
+// Diqqat: "/my" "/:id" dan OLDIN turishi shart!
+router.get(
+  '/my',
+  protect,
+  authorize('employer', 'admin'),
+  jobController.getMyJobs
+);
 
-// Public — bitta vakansiya
-router.get('/:id', jobController.getJob);
-
-// Faqat employer — yaratish
 router.post(
   '/',
   protect,
@@ -34,7 +34,10 @@ router.post(
   jobController.createJob
 );
 
-// Faqat egasi — tahrirlash va o'chirish
+// ============ PUBLIC (bitta) ============
+router.get('/:id', jobController.getJob);
+
+// ============ PROTECTED (egasi) ============
 router.patch(
   '/:id',
   protect,
@@ -43,6 +46,11 @@ router.patch(
   jobController.updateJob
 );
 
-router.delete('/:id', protect, authorize('employer', 'admin'), jobController.deleteJob);
+router.delete(
+  '/:id',
+  protect,
+  authorize('employer', 'admin'),
+  jobController.deleteJob
+);
 
 module.exports = router;
