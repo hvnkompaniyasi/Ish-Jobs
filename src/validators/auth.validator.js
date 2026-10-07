@@ -43,3 +43,21 @@ module.exports = {
   switchRoleSchema,
   deleteAccountSchema,
 };
+
+const updateProfileSchema = Joi.object({
+  firstName: Joi.string().trim().min(2).max(50),
+  lastName: Joi.string().trim().min(2).max(50),
+}).min(1);
+
+const changePasswordSchema = Joi.object({
+  oldPassword: Joi.string().required().messages({
+    'any.required': 'Eski parol kiritilishi shart',
+  }),
+  newPassword: Joi.string().min(8).max(128).required().messages({
+    'string.min': 'Yangi parol kamida 8 belgi',
+    'any.required': 'Yangi parol kiritilishi shart',
+  }),
+});
+
+module.exports.updateProfileSchema = updateProfileSchema;
+module.exports.changePasswordSchema = changePasswordSchema;

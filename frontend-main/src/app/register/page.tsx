@@ -47,7 +47,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="relative mx-auto max-w-md py-6 sm:py-12">
+    <div className="relative mx-auto max-w-md overflow-hidden py-6 sm:py-12">
       <div className="pointer-events-none absolute -left-32 top-10 h-72 w-72 rounded-full bg-emerald-500/20 blur-3xl" />
       <div className="pointer-events-none absolute -right-32 bottom-10 h-72 w-72 rounded-full bg-teal-500/15 blur-3xl" />
 

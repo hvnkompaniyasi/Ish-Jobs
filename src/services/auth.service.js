@@ -165,3 +165,41 @@ async function deleteAccount(userId, password) {
 }
 
 module.exports = { register, login, refresh, logout, switchRole, deleteAccount };
+
+/**
+ * Profilni yangilash (ism, familiya).
+ */
+async function updateProfile(userId, data) {
+  const user = await User.findById(userId);
+  if (!user) throw new ApiError(404, 'Foydalanuvchi topilmadi');
+
+  if (data.firstName) user.firstName = data.firstName.trim();
+  if (data.lastName) user.lastName = data.lastName.trim();
+
+  await user.save();
+  user.password = undefined;
+  return user;
+}
+
+/**
+ * Parolni o'zgartirish.
+ */
+async function changePassword(userId, oldPassword, newPassword) {
+  const user = await User.findById(userId);
+  if (!user) throw new ApiError(404, 'Foydalanuvchi topilmadi');
+
+  const isMatch = await comparePassword(oldPassword, user.password);
+  if (!isMatch) throw new ApiError(401, 'Eski parol notogri');
+
+  if (oldPassword === newPassword) {
+    throw new ApiError(400, 'Yangi parol eskisidan farq qilishi kerak');
+  }
+
+  user.password = await hashPassword(newPassword);
+  await user.save();
+
+  return { updated: true };
+}
+
+module.exports.updateProfile = updateProfile;
+module.exports.changePassword = changePassword;

@@ -82,12 +82,12 @@ export function Navbar() {
 
   return (
     <>
-      <div className="fixed inset-x-3 top-3 z-50 mx-auto max-w-5xl sm:inset-x-4 sm:top-4">
-        <header className="rim rounded-full border border-white/60 bg-white/70 px-3 py-2.5 shadow-xl shadow-emerald-950/5 backdrop-blur-2xl dark:border-white/10 dark:bg-zinc-900/60 dark:shadow-black/50 sm:px-5 sm:py-3">
-          <div className="flex items-center justify-between gap-2">
+      <div className="fixed left-1/2 top-3 z-50 w-[calc(100%-1.5rem)] max-w-5xl -translate-x-1/2 sm:top-4">
+        <header className="rim rounded-full border border-white/60 bg-white/70 px-2 py-2 sm:px-5 sm:py-3 shadow-xl shadow-emerald-950/5 backdrop-blur-2xl dark:border-white/10 dark:bg-zinc-900/60 dark:shadow-black/50 sm:px-5 sm:py-3">
+          <div className="flex items-center justify-between gap-1 sm:gap-2">
             {/* Logo */}
             <Link href="/" className="group flex shrink-0 items-center gap-2 rounded-full pl-1 pr-2 transition">
-              <span className="relative flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-sm font-black text-white shadow-lg shadow-emerald-500/40 transition group-hover:scale-105 sm:h-10 sm:w-10">
+              <span className="relative flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-xs font-black sm:h-10 sm:w-10 sm:text-sm text-white shadow-lg shadow-emerald-500/40 transition group-hover:scale-105 sm:h-10 sm:w-10">
                 ij
                 <span className="absolute inset-0 rounded-full ring-1 ring-inset ring-white/40" />
               </span>
@@ -134,7 +134,7 @@ export function Navbar() {
             </nav>
 
             {/* Right side */}
-            <div className="flex items-center gap-1.5 sm:gap-2">
+            <div className="flex items-center gap-1 sm:gap-2">
               <ThemeToggle />
 
               {isAuthenticated ? (
@@ -309,10 +309,10 @@ export function Navbar() {
                     </Button>
                   </Link>
                   <Link href="/register">
-                    <Button size="sm" className="rounded-full">
-                      Ro&apos;yxatdan
-                    </Button>
-                  </Link>
+                  <Button size="sm" className="rounded-full whitespace-nowrap !px-2.5 !text-xs sm:!px-5 sm:!text-sm">
+                    Ro&apos;yxatdan o&apos;tish
+                  </Button>
+                </Link>
                 </>
               )}
 

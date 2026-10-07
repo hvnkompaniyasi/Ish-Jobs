@@ -21,6 +21,8 @@ interface AuthContextValue {
   register: (payload: RegisterPayload) => Promise<User>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
+  updateProfile: (data: { firstName?: string; lastName?: string }) => Promise<User>;
+  changePassword: (oldPassword: string, newPassword: string) => Promise<void>;
   switchRole: (role: UserRole) => Promise<User>;
   deleteAccount: (password: string) => Promise<void>;
   clearError: () => void;
@@ -102,6 +104,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [logout]);
 
+  const updateProfile = useCallback(async (data: { firstName?: string; lastName?: string }) => {
+    setError(null);
+    try {
+      const updated = await authService.updateProfile(data);
+      setUser(updated);
+      return updated;
+    } catch (err) {
+      const msg = getErrorMessage(err);
+      setError(msg);
+      throw new Error(msg);
+    }
+  }, []);
+
+  const changePassword = useCallback(async (oldPassword: string, newPassword: string) => {
+    setError(null);
+    try {
+      await authService.changePassword(oldPassword, newPassword);
+    } catch (err) {
+      const msg = getErrorMessage(err);
+      setError(msg);
+      throw new Error(msg);
+    }
+  }, []);
+
   const switchRole = useCallback(async (role: UserRole) => {
     setError(null);
     try {
@@ -131,32 +157,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<AuthContextValue>(
     () => ({
-      user,
-      loading,
-      hydrated,
-      error,
+      user, loading, hydrated, error,
       isAuthenticated: !!user,
-      login,
-      register,
-      logout,
-      refreshUser,
-      switchRole,
-      deleteAccount,
-      clearError,
+      login, register, logout, refreshUser,
+      updateProfile, changePassword, switchRole, deleteAccount, clearError,
     }),
-    [
-      user,
-      loading,
-      hydrated,
-      error,
-      login,
-      register,
-      logout,
-      refreshUser,
-      switchRole,
-      deleteAccount,
-      clearError,
-    ]
+    [user, loading, hydrated, error, login, register, logout, refreshUser,
+     updateProfile, changePassword, switchRole, deleteAccount, clearError]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

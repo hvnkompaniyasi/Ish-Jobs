@@ -46,3 +46,23 @@ const deleteAccount = asyncHandler(async (req, res) => {
 });
 
 module.exports = { register, login, refresh, logout, me, switchRole, deleteAccount };
+
+/**
+ * PATCH /api/auth/me — Profilni yangilash
+ */
+const updateProfile = asyncHandler(async (req, res) => {
+  const user = await authService.updateProfile(req.user._id, req.body);
+  res.status(200).json(new ApiResponse(200, user, 'Profil yangilandi'));
+});
+
+/**
+ * PATCH /api/auth/change-password
+ */
+const changePassword = asyncHandler(async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+  const result = await authService.changePassword(req.user._id, oldPassword, newPassword);
+  res.status(200).json(new ApiResponse(200, result, 'Parol ozgartirildi'));
+});
+
+module.exports.updateProfile = updateProfile;
+module.exports.changePassword = changePassword;

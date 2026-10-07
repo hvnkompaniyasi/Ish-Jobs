@@ -22,7 +22,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="uz" suppressHydrationWarning className={inter.variable}>
-      <body className="min-h-screen antialiased">
+      <body className="min-h-screen overflow-x-hidden antialiased">
         <ThemeProvider>
           <AuthProvider>
             <AmbientBackground />

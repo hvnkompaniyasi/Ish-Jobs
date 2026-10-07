@@ -31,15 +31,22 @@ export const authService = {
     return data;
   },
 
+  async updateProfile(payload: { firstName?: string; lastName?: string }): Promise<User> {
+    const { data } = await api.patch<User>("/auth/me", payload);
+    this.setCachedUser(data);
+    return data;
+  },
+
+  async changePassword(oldPassword: string, newPassword: string): Promise<void> {
+    await api.patch("/auth/change-password", { oldPassword, newPassword });
+  },
+
   async switchRole(role: UserRole): Promise<User> {
     const { data } = await api.patch<User>("/auth/switch-role", { role });
     this.setCachedUser(data);
     return data;
   },
 
-  /**
-   * Hisobni butunlay o'chirish (parol bilan tasdiqlanadi).
-   */
   async deleteAccount(password: string): Promise<void> {
     await api.delete("/auth/me", { data: { password } });
     tokenStore.clear();
