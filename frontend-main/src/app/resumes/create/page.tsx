@@ -96,7 +96,7 @@ export default function CreateResumePage() {
       <div className="mx-auto max-w-md py-12 text-center">
         <div className="rounded-2xl border border-slate-200 bg-white p-8">
           <div className="text-4xl">🔒</div>
-          <h2 className="mt-3 text-lg font-semibold text-slate-900">Kirish kerak</h2>
+          <h2 className="mt-3 text-lg font-black tracking-tight text-slate-900 dark:text-white">Kirish kerak</h2>
           <Link href="/login?next=/resumes/create">
             <Button className="mt-4">Kirish</Button>
           </Link>
@@ -108,21 +108,21 @@ export default function CreateResumePage() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div>
-        <Link href="/resumes/my" className="text-sm text-slate-600 hover:text-indigo-600">
+        <Link href="/resumes/my" className="text-sm font-medium text-slate-600 transition hover:text-emerald-700 dark:text-zinc-400 dark:hover:text-emerald-400">
           ← Orqaga
         </Link>
-        <h1 className="mt-2 text-2xl font-bold text-slate-900 sm:text-3xl">Yangi rezyume</h1>
-        <p className="mt-1 text-sm text-slate-500">O&apos;zingiz haqingizda batafsil ma&apos;lumot kiriting</p>
+        <h1 className="mt-2 text-2xl font-black tracking-tight text-slate-900 sm:text-3xl dark:text-white">Yangi rezyume</h1>
+        <p className="mt-1 text-sm text-slate-500 dark:text-zinc-400">O&apos;zingiz haqingizda batafsil ma&apos;lumot kiriting</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <section className="rounded-2xl border border-slate-200 bg-white p-6">
-          <h2 className="mb-4 text-lg font-semibold text-slate-900">Asosiy ma&apos;lumot</h2>
+        <section className="rim rounded-3xl glass p-6 animate-fade-in-up">
+          <h2 className="mb-4 text-lg font-black tracking-tight text-slate-900 dark:text-white">Asosiy ma&apos;lumot</h2>
           <div className="space-y-4">
             <Input label="Sarlavha *" placeholder="Frontend dasturchi" value={form.title} onChange={(e) => update("title", e.target.value)} required />
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-slate-700">O&apos;zim haqida</label>
-              <textarea value={form.about} onChange={(e) => update("about", e.target.value)} placeholder="Tajribangiz, maqsadlaringiz..." rows={5} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20" />
+              <label className="mb-1.5 block text-sm font-bold text-slate-700 dark:text-zinc-300">O&apos;zim haqida</label>
+              <textarea value={form.about} onChange={(e) => update("about", e.target.value)} placeholder="Tajribangiz, maqsadlaringiz..." rows={5} className="w-full rounded-2xl border border-slate-200/60 bg-white/60 px-4 py-3 text-sm font-medium text-slate-900 dark:text-white placeholder:text-slate-400 backdrop-blur-xl focus:border-emerald-500/60 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-zinc-500" />
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <Input label="Ko'nikmalar (vergul bilan)" placeholder="React, Next.js" value={form.skills} onChange={(e) => update("skills", e.target.value)} />
@@ -132,16 +132,16 @@ export default function CreateResumePage() {
           </div>
         </section>
 
-        <section className="rounded-2xl border border-slate-200 bg-white p-6">
+        <section className="rim rounded-3xl glass p-6 animate-fade-in-up">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-slate-900">Ish tajribasi</h2>
+            <h2 className="text-lg font-black tracking-tight text-slate-900 dark:text-white">Ish tajribasi</h2>
             <Button type="button" variant="outline" size="sm" onClick={() => setExperience((e) => [...e, emptyExperience()])}>+ Qo&apos;shish</Button>
           </div>
           <div className="space-y-4">
             {experience.map((exp, idx) => (
-              <div key={idx} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <div key={idx} className="rounded-2xl border border-slate-200/60 bg-white/40 p-4 backdrop-blur-xl dark:border-white/10 dark:bg-white/[0.03]">
                 <div className="mb-3 flex items-center justify-between">
-                  <span className="text-xs font-medium text-slate-500">#{idx + 1}</span>
+                  <span className="text-xs font-medium text-slate-500 dark:text-zinc-400">#{idx + 1}</span>
                   {experience.length > 1 && (
                     <button type="button" onClick={() => setExperience((e) => e.filter((_, i) => i !== idx))} className="text-xs text-rose-600 hover:text-rose-700">O&apos;chirish</button>
                   )}
@@ -154,23 +154,23 @@ export default function CreateResumePage() {
                 </div>
                 <label className="mt-3 flex cursor-pointer items-center gap-2">
                   <input type="checkbox" checked={!!exp.current} onChange={(e) => setExperience((list) => list.map((it, i) => i === idx ? { ...it, current: e.target.checked } : it))} className="h-4 w-4 rounded border-slate-300 text-indigo-600" />
-                  <span className="text-sm text-slate-700">Hali ishlayapman</span>
+                  <span className="text-sm font-medium text-slate-700 dark:text-zinc-300">Hali ishlayapman</span>
                 </label>
               </div>
             ))}
           </div>
         </section>
 
-        <section className="rounded-2xl border border-slate-200 bg-white p-6">
+        <section className="rim rounded-3xl glass p-6 animate-fade-in-up">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-slate-900">Ta&apos;lim</h2>
+            <h2 className="text-lg font-black tracking-tight text-slate-900 dark:text-white">Ta&apos;lim</h2>
             <Button type="button" variant="outline" size="sm" onClick={() => setEducation((e) => [...e, emptyEducation()])}>+ Qo&apos;shish</Button>
           </div>
           <div className="space-y-4">
             {education.map((ed, idx) => (
-              <div key={idx} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <div key={idx} className="rounded-2xl border border-slate-200/60 bg-white/40 p-4 backdrop-blur-xl dark:border-white/10 dark:bg-white/[0.03]">
                 <div className="mb-3 flex items-center justify-between">
-                  <span className="text-xs font-medium text-slate-500">#{idx + 1}</span>
+                  <span className="text-xs font-medium text-slate-500 dark:text-zinc-400">#{idx + 1}</span>
                   {education.length > 1 && (
                     <button type="button" onClick={() => setEducation((e) => e.filter((_, i) => i !== idx))} className="text-xs text-rose-600 hover:text-rose-700">O&apos;chirish</button>
                   )}
@@ -186,8 +186,8 @@ export default function CreateResumePage() {
           </div>
         </section>
 
-        <section className="rounded-2xl border border-slate-200 bg-white p-6">
-          <h2 className="mb-4 text-lg font-semibold text-slate-900">Kutilayotgan maosh</h2>
+        <section className="rim rounded-3xl glass p-6 animate-fade-in-up">
+          <h2 className="mb-4 text-lg font-black tracking-tight text-slate-900 dark:text-white">Kutilayotgan maosh</h2>
           <div className="grid gap-4 sm:grid-cols-3">
             <Input label="Minimal" type="number" placeholder="8000000" value={form.salaryMin} onChange={(e) => update("salaryMin", e.target.value)} />
             <Input label="Maksimal" type="number" placeholder="15000000" value={form.salaryMax} onChange={(e) => update("salaryMax", e.target.value)} />
@@ -195,16 +195,16 @@ export default function CreateResumePage() {
           </div>
         </section>
 
-        <section className="rounded-2xl border border-slate-200 bg-white p-6">
-          <h2 className="mb-4 text-lg font-semibold text-slate-900">Sozlamalar</h2>
+        <section className="rim rounded-3xl glass p-6 animate-fade-in-up">
+          <h2 className="mb-4 text-lg font-black tracking-tight text-slate-900 dark:text-white">Sozlamalar</h2>
           <div className="space-y-3">
             <label className="flex cursor-pointer items-center gap-2">
               <input type="checkbox" checked={form.isPublic} onChange={(e) => update("isPublic", e.target.checked)} className="h-4 w-4 rounded border-slate-300 text-indigo-600" />
-              <span className="text-sm text-slate-700">Ommaviy (ish beruvchilar ko&apos;ra oladi)</span>
+              <span className="text-sm font-medium text-slate-700 dark:text-zinc-300">Ommaviy (ish beruvchilar ko&apos;ra oladi)</span>
             </label>
             <label className="flex cursor-pointer items-center gap-2">
               <input type="checkbox" checked={form.isPrimary} onChange={(e) => update("isPrimary", e.target.checked)} className="h-4 w-4 rounded border-slate-300 text-indigo-600" />
-              <span className="text-sm text-slate-700">Asosiy rezyume sifatida belgilash</span>
+              <span className="text-sm font-medium text-slate-700 dark:text-zinc-300">Asosiy rezyume sifatida belgilash</span>
             </label>
           </div>
         </section>

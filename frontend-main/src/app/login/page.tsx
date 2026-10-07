@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/hooks";
@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 
 type Mode = "phone" | "email";
 
-export default function LoginPage() {
+function LoginForm() {
   const { login, loading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -27,8 +27,7 @@ export default function LoginPage() {
     e.preventDefault();
     setError(null);
 
-    const identifier =
-      mode === "phone" ? phone.trim() : email.trim().toLowerCase();
+    const identifier = mode === "phone" ? phone.trim() : email.trim().toLowerCase();
 
     if (!identifier) {
       setError(mode === "phone" ? "Telefon raqamni kiriting" : "Emailni kiriting");
@@ -44,22 +43,32 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="mx-auto max-w-md py-8">
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+    <div className="relative mx-auto max-w-md py-6 sm:py-12">
+      <div className="pointer-events-none absolute -left-32 top-0 h-72 w-72 rounded-full bg-emerald-500/20 blur-3xl" />
+      <div className="pointer-events-none absolute -right-32 bottom-0 h-72 w-72 rounded-full bg-teal-500/15 blur-3xl" />
+
+      <div className="rim relative overflow-hidden rounded-3xl glass-strong p-6 sm:p-8 animate-fade-in-up">
         <div className="mb-6 text-center">
-          <h1 className="text-2xl font-bold text-slate-900">Xush kelibsiz</h1>
-          <p className="mt-1 text-sm text-slate-500">Hisobingizga kiring</p>
+          <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-lg font-black text-white shadow-lg shadow-emerald-500/40 ring-2 ring-white/40 dark:ring-white/10">
+            ij
+          </span>
+          <h1 className="mt-4 text-2xl font-black tracking-tight text-slate-900 dark:text-white">
+            Xush kelibsiz
+          </h1>
+          <p className="mt-1 text-sm text-slate-500 dark:text-zinc-400">
+            Hisobingizga kiring
+          </p>
         </div>
 
-        <div className="mb-5 grid grid-cols-2 gap-2">
+        <div className="mb-5 grid grid-cols-2 gap-1.5 rounded-2xl border border-white/60 bg-white/40 p-1.5 backdrop-blur-xl dark:border-white/10 dark:bg-white/5">
           <button
             type="button"
             onClick={() => { setMode("phone"); setError(null); }}
             className={cn(
-              "rounded-xl border px-4 py-2.5 text-sm font-medium transition",
+              "rounded-xl px-4 py-2.5 text-sm font-bold transition-all duration-200",
               mode === "phone"
-                ? "border-indigo-500 bg-indigo-50 text-indigo-700"
-                : "border-slate-300 bg-white text-slate-600 hover:bg-slate-50"
+                ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/30 dark:bg-emerald-500"
+                : "text-slate-600 hover:bg-white/60 dark:text-zinc-400 dark:hover:bg-white/5"
             )}
           >
             📱 Telefon
@@ -68,10 +77,10 @@ export default function LoginPage() {
             type="button"
             onClick={() => { setMode("email"); setError(null); }}
             className={cn(
-              "rounded-xl border px-4 py-2.5 text-sm font-medium transition",
+              "rounded-xl px-4 py-2.5 text-sm font-bold transition-all duration-200",
               mode === "email"
-                ? "border-indigo-500 bg-indigo-50 text-indigo-700"
-                : "border-slate-300 bg-white text-slate-600 hover:bg-slate-50"
+                ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/30 dark:bg-emerald-500"
+                : "text-slate-600 hover:bg-white/60 dark:text-zinc-400 dark:hover:bg-white/5"
             )}
           >
             ✉️ Email
@@ -80,12 +89,7 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {mode === "phone" ? (
-            <PhoneInput
-              label="Telefon raqam"
-              value={phone}
-              onChange={setPhone}
-              required
-            />
+            <PhoneInput label="Telefon raqam" value={phone} onChange={setPhone} required />
           ) : (
             <Input
               label="Email"
@@ -111,26 +115,36 @@ export default function LoginPage() {
           />
 
           {error && (
-            <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm whitespace-pre-line text-rose-700">
+            <div className="rounded-2xl border border-rose-200/60 bg-rose-50/60 px-4 py-3 text-sm font-medium whitespace-pre-line text-rose-700 backdrop-blur-xl animate-fade-in dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-400">
               {error}
             </div>
           )}
 
-          <Button type="submit" loading={loading} className="w-full">
+          <Button type="submit" loading={loading} size="lg" className="w-full">
             Kirish
           </Button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-slate-600">
+        <div className="my-6 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent dark:via-white/10" />
+
+        <p className="text-center text-sm text-slate-600 dark:text-zinc-400">
           Hisobingiz yo&apos;qmi?{" "}
           <Link
             href="/register"
-            className="font-medium text-indigo-600 hover:text-indigo-700"
+            className="font-bold text-emerald-600 transition hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
           >
             Ro&apos;yxatdan o&apos;tish
           </Link>
         </p>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
   );
 }
