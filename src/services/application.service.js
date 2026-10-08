@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const { Application, Job, Resume } = require('../models');
 const ApiError = require('../utils/ApiError');
+const notificationService = require('./notification.service');
 
 async function createApplication(data, user) {
   const { jobId, resumeId, coverLetter } = data;
@@ -37,6 +38,21 @@ async function createApplication(data, user) {
   });
 
   await Job.findByIdAndUpdate(jobId, { $inc: { applicationsCount: 1 } });
+
+  // Employer'ga notification
+  try {
+    await notificationService.createNotification({
+      recipient: job.employer,
+      type: 'application_received',
+      title: 'Yangi ariza keldi!',
+      message: `${user.firstName} ${user.lastName} "${job.title}" vakansiyasiga ariza topshirdi`,
+      sender: user._id,
+      link: `/jobs/${job._id}/applications`,
+      meta: { jobId: job._id, applicationId: application._id },
+    });
+  } catch (err) {
+    console.error('Notification error:', err.message);
+  }
 
   return application.populate([
     { path: 'job', select: 'title company location employmentType experienceLevel salary status' },

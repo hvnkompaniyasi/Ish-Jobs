@@ -51,9 +51,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           const fresh = await authService.getMe();
           setUser(fresh);
           authService.setCachedUser(fresh);
-        } catch {
-          tokenStore.clear();
-          setUser(null);
+        } catch (err: any) {
+          // Faqat 401 bo'lganda tokenni o'chirish
+          const status = err?.response?.status;
+          if (status === 401 || status === 403) {
+            tokenStore.clear();
+            setUser(null);
+          } else {
+            // Network error - tokenni saqlab, cached user'ni qoldirish
+            console.warn('Bootstrap network error, keeping session:', err?.message);
+          }
         }
       } finally {
         setLoading(false);

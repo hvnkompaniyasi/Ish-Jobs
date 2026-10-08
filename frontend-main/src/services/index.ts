@@ -3,3 +3,5 @@ export { authService } from "./auth.service";
 export { jobsService } from "./jobs.service";
 export { resumesService } from "./resumes.service";
 export { applicationsService } from "./applications.service";
+
+export { notificationsService } from "./notifications.service";

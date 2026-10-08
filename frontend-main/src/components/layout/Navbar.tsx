@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/hooks";
 import { Button } from "@/components/ui/Button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { NotificationBell } from "./NotificationBell";
 import { DeleteAccountModal } from "@/components/auth/DeleteAccountModal";
 import { cn, initials, fullName } from "@/lib/utils";
 import type { UserRole } from "@/types";
@@ -136,6 +137,7 @@ export function Navbar() {
             {/* Right side */}
             <div className="flex items-center gap-1 sm:gap-2">
               <ThemeToggle />
+              {isAuthenticated && <NotificationBell />}
 
               {isAuthenticated ? (
                 <>
