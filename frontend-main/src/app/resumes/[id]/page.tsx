@@ -75,7 +75,7 @@ export default function ResumeDetailPage() {
 
       {resume.about && (
         <section className="rounded-2xl border border-slate-200 bg-white p-6">
-          <h2 className="text-lg font-semibold text-slate-900">Men haqimda</h2>
+          <h2 className="text-lg font-semibold text-slate-900">Tavsif</h2>
           <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-slate-700">{resume.about}</p>
         </section>
       )}

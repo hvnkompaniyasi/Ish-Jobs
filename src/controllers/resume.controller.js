@@ -28,3 +28,14 @@ const deleteResume = asyncHandler(async (req, res) => {
 });
 
 module.exports = { createResume, getMyResumes, getResume, updateResume, deleteResume };
+
+const listResumes = asyncHandler(async (req, res) => {
+  const { search, location, skill, page, limit } = req.query;
+  const result = await resumeService.listResumes(
+    { search, location, skill },
+    { page, limit }
+  );
+  res.status(200).json(new ApiResponse(200, result, 'Rezyumelar royxati olindi'));
+});
+
+module.exports.listResumes = listResumes;

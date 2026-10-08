@@ -45,7 +45,7 @@ export function initials(first?: string, last?: string): string {
   return (f + l).toUpperCase() || "U";
 }
 
-export function fullName(user?: { firstName?: string; lastName?: string }): string {
+export function fullName(user?: { firstName?: string; lastName?: string } | null): string {
   if (!user) return "";
   return [user.firstName, user.lastName].filter(Boolean).join(" ");
 }

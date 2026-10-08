@@ -153,9 +153,17 @@ export function Navbar() {
                   <div className="relative" ref={userMenuRef}>
                     <button
                       onClick={() => setUserMenuOpen((v) => !v)}
-                      className="relative flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-sm font-bold text-white shadow-lg shadow-emerald-500/40 transition hover:scale-105"
+                      className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-sm font-bold text-white shadow-lg shadow-emerald-500/40 transition hover:scale-105"
                     >
-                      {initials(user?.firstName, user?.lastName)}
+                      {user?.avatarUrl ? (
+                        <img
+                          src={user.avatarUrl}
+                          alt={user.firstName || 'Avatar'}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        initials(user?.firstName, user?.lastName)
+                      )}
                       <span className="absolute inset-0 rounded-full ring-1 ring-inset ring-white/40" />
                     </button>
 
@@ -219,6 +227,18 @@ export function Navbar() {
                               ? "Ish qidiruvchi rejimiga"
                               : "Ish beruvchi rejimiga"}
                           </button>
+
+                          <Link
+                            href="/profile"
+                            onClick={() => setUserMenuOpen(false)}
+                            className="flex items-center gap-2.5 rounded-2xl px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100/80 dark:text-zinc-300 dark:hover:bg-white/5"
+                          >
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                              <circle cx="12" cy="7" r="4" />
+                            </svg>
+                            Profil
+                          </Link>
 
                           <div className="my-1 h-px bg-slate-100 dark:bg-white/5" />
 

@@ -7,6 +7,14 @@ export const resumesService = {
     return data;
   },
 
+  async getPublicResumes(filters: { search?: string; location?: string; page?: number; limit?: number } = {}): Promise<{ resumes: Resume[]; pagination: { page: number; limit: number; total: number; pages: number } }> {
+    const params = Object.fromEntries(
+      Object.entries(filters).filter(([, v]) => v !== undefined && v !== null && v !== '')
+    );
+    const { data } = await api.get('/resumes', { params });
+    return data;
+  },
+
   async getMyResumes(): Promise<Resume[]> {
     const { data } = await api.get<Resume[]>("/resumes/my");
     return data;

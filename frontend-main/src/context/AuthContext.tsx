@@ -23,6 +23,7 @@ interface AuthContextValue {
   refreshUser: () => Promise<void>;
   updateProfile: (data: { firstName?: string; lastName?: string }) => Promise<User>;
   changePassword: (oldPassword: string, newPassword: string) => Promise<void>;
+  uploadAvatar: (file: File) => Promise<User>;
   switchRole: (role: UserRole) => Promise<User>;
   deleteAccount: (password: string) => Promise<void>;
   clearError: () => void;
@@ -128,6 +129,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const uploadAvatar = useCallback(async (file: File) => {
+    setError(null);
+    try {
+      const updated = await authService.uploadAvatar(file);
+      setUser(updated);
+      return updated;
+    } catch (err) {
+      const msg = getErrorMessage(err);
+      setError(msg);
+      throw new Error(msg);
+    }
+  }, []);
+
   const switchRole = useCallback(async (role: UserRole) => {
     setError(null);
     try {
@@ -160,7 +174,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       user, loading, hydrated, error,
       isAuthenticated: !!user,
       login, register, logout, refreshUser,
-      updateProfile, changePassword, switchRole, deleteAccount, clearError,
+      updateProfile, changePassword, uploadAvatar, switchRole, deleteAccount, clearError,
     }),
     [user, loading, hydrated, error, login, register, logout, refreshUser,
      updateProfile, changePassword, switchRole, deleteAccount, clearError]

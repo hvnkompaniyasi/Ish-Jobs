@@ -52,16 +52,10 @@ export default function RegisterPage() {
       <div className="pointer-events-none absolute -right-32 bottom-10 h-72 w-72 rounded-full bg-teal-500/15 blur-3xl" />
 
       <div className="rim relative overflow-hidden rounded-3xl glass-strong p-6 sm:p-8 animate-fade-in-up">
-        <div className="mb-6 text-center">
-          <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-lg font-black text-white shadow-lg shadow-emerald-500/40 ring-2 ring-white/40 dark:ring-white/10">
-            ij
-          </span>
-          <h1 className="mt-4 text-2xl font-black tracking-tight text-slate-900 dark:text-white">
+        <div className="mb-6">
+          <h1 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
             Hisob yarating
           </h1>
-          <p className="mt-1 text-sm text-slate-500 dark:text-zinc-400">
-            ishjobs&apos;ga qo&apos;shiling
-          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">

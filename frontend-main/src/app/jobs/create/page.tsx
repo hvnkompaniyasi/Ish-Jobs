@@ -9,6 +9,7 @@ import { Spinner } from "@/components/ui/Spinner";
 import { useAuth } from "@/hooks";
 import { jobsService, getErrorMessage } from "@/services";
 import { cn } from "@/lib/utils";
+import { LogoUploader } from "@/components/jobs/LogoUploader";
 import type {
   CreateJobPayload,
   EmploymentType,
@@ -37,6 +38,9 @@ export default function CreateJobPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -413,6 +417,14 @@ export default function CreateJobPage() {
               placeholder="Tech Corp"
               value={form.companyName}
               onChange={(e) => update("companyName", e.target.value)}
+            />
+            <LogoUploader
+              value={logoPreview}
+              file={logoFile}
+              onChange={(file, preview) => {
+                setLogoFile(file);
+                setLogoPreview(preview);
+              }}
             />
             <Input
               label="Veb-sayt"

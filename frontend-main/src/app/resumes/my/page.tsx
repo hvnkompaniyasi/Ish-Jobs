@@ -162,6 +162,14 @@ export default function MyResumesPage() {
                     Ko&apos;rish
                   </Button>
                 </Link>
+                <Link href={`/resumes/${r._id}/edit`}>
+                  <Button variant="outline" size="sm">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z" />
+                    </svg>
+                    Tahrirlash
+                  </Button>
+                </Link>
                 <Button
                   variant="danger"
                   size="sm"

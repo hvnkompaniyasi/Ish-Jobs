@@ -107,4 +107,51 @@ async function deleteResume(id, user) {
   return { id };
 }
 
-module.exports = { createResume, getMyResumes, getResumeById, updateResume, deleteResume };
+/**
+ * Public rezyumelar ro'yxati (employer uchun).
+ */
+async function listResumes(filters = {}, pagination = {}) {
+  const page = Number(pagination.page) || 1;
+  const limit = Number(pagination.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  const query = { isPublic: true };
+
+  if (filters.search) {
+    query.$text = { $search: filters.search };
+  }
+  if (filters.location) {
+    query.location = new RegExp(filters.location, 'i');
+  }
+  if (filters.skill) {
+    query.skills = filters.skill;
+  }
+
+  const [resumes, total] = await Promise.all([
+    Resume.find(query)
+      .sort({ isPrimary: -1, createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .populate('user', 'firstName lastName phone email avatarUrl'),
+    Resume.countDocuments(query),
+  ]);
+
+  return {
+    resumes,
+    pagination: {
+      page,
+      limit,
+      total,
+      pages: Math.ceil(total / limit) || 1,
+    },
+  };
+}
+
+module.exports = {
+  createResume,
+  getMyResumes,
+  getResumeById,
+  updateResume,
+  deleteResume,
+  listResumes,
+};

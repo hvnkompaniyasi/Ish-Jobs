@@ -37,12 +37,22 @@ export const authService = {
     return data;
   },
 
+  async uploadAvatar(file: File): Promise<User> {
+    const formData = new FormData();
+    formData.append('avatar', file);
+    const { data } = await api.post<User>('/users/avatar', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    this.setCachedUser(data);
+    return data;
+  },
+
   async changePassword(oldPassword: string, newPassword: string): Promise<void> {
     await api.patch("/auth/change-password", { oldPassword, newPassword });
   },
 
   async switchRole(role: UserRole): Promise<User> {
-    const { data } = await api.patch<User>("/auth/switch-role", { role });
+    const { data } = await api.patch<User>("/auth/switch-role", { role }, { timeout: 30000 });
     this.setCachedUser(data);
     return data;
   },

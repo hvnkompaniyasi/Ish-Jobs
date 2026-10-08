@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Spinner } from "@/components/ui/Spinner";
 import { DeleteAccountModal } from "@/components/auth/DeleteAccountModal";
+import { AvatarUploader } from "@/components/profile/AvatarUploader";
 import { useAuth } from "@/hooks";
 import { cn, initials, fullName } from "@/lib/utils";
 
@@ -16,8 +17,7 @@ export default function ProfilePage() {
     user,
     isAuthenticated,
     hydrated,
-    updateProfile,
-    changePassword,
+    updateProfile, changePassword, uploadAvatar,
   } = useAuth();
 
   const [profileForm, setProfileForm] = useState({ firstName: "", lastName: "" });
@@ -116,10 +116,7 @@ export default function ProfilePage() {
         <div className="pointer-events-none absolute -right-24 -top-24 h-56 w-56 rounded-full bg-gradient-to-br from-emerald-400/20 to-transparent blur-3xl" />
 
         <div className="relative flex flex-col items-center gap-4 sm:flex-row sm:items-start sm:gap-6">
-          {/* Avatar */}
-          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-2xl font-black text-white shadow-2xl shadow-emerald-500/40 ring-4 ring-white/40 dark:ring-white/10">
-            {initials(user.firstName, user.lastName)}
-          </div>
+          <AvatarUploader />
 
           <div className="flex-1 text-center sm:text-left">
             <h1 className="text-2xl font-black tracking-tight text-slate-900 sm:text-3xl dark:text-white">

@@ -105,6 +105,7 @@ const resumeSchema = new mongoose.Schema(
 // ============ INDEKSLAR ============
 resumeSchema.index({ user: 1, isPrimary: 1 });
 resumeSchema.index({ skills: 1 });
+resumeSchema.index({ user: 1, isPublic: 1, createdAt: -1 });
 resumeSchema.index({ 'expectedSalary.min': 1, 'expectedSalary.max': 1 });
 
 // Text index (qidiruv uchun)

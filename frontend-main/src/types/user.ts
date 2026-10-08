@@ -16,6 +16,8 @@ export interface User {
   roles: UserRole[];
   activeRole: UserRole;
   avatar?: string | null;
+  avatarUrl?: string | null;
+  avatarPublicId?: string | null;
   company?: CompanyInfo;
   bio?: string;
   isActive?: boolean;
