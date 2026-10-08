@@ -12,7 +12,7 @@ import type { UserRole } from "@/types";
 
 const navLinks = [
   { href: "/jobs", label: "Vakansiyalar" },
-  { href: "/resumes", label: "Rezyumelar" },
+  { href: "/resumes", label: "Mutaxassislar" },
 ];
 
 export function Navbar() {

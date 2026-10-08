@@ -7,7 +7,7 @@ export const resumesService = {
     return data;
   },
 
-  async getPublicResumes(filters: { search?: string; location?: string; page?: number; limit?: number } = {}): Promise<{ resumes: Resume[]; pagination: { page: number; limit: number; total: number; pages: number } }> {
+  async getPublicResumes(filters: { search?: string; location?: string; skill?: string; page?: number; limit?: number } = {}): Promise<{ resumes: Resume[]; pagination: { page: number; limit: number; total: number; pages: number } }> {
     const params = Object.fromEntries(
       Object.entries(filters).filter(([, v]) => v !== undefined && v !== null && v !== '')
     );

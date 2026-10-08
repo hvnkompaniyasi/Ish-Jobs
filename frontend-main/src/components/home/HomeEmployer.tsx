@@ -48,13 +48,6 @@ export function HomeEmployer() {
           <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-gradient-to-br from-indigo-400/25 to-violet-400/5 blur-3xl" />
 
           <div className="relative mx-auto max-w-2xl">
-            <div className="text-center">
-              <span className="inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-indigo-700 backdrop-blur-sm dark:text-indigo-400">
-                <span className="h-1.5 w-1.5 rounded-full bg-indigo-500 animate-pulse-soft" />
-                Ish beruvchi rejimi
-              </span>
-            </div>
-
             <h1 className="mt-5 text-center text-3xl font-black leading-tight tracking-tight text-slate-900 sm:text-5xl dark:text-white">
               Eng yaxshi{" "}
               <span className="bg-gradient-to-r from-indigo-500 to-violet-600 bg-clip-text text-transparent">
@@ -67,16 +60,20 @@ export function HomeEmployer() {
             </p>
 
             <form onSubmit={handleSearch} className="mt-6">
-              <div className="rim flex items-center gap-2 rounded-2xl border border-white/60 bg-white/70 p-1.5 backdrop-blur-2xl dark:border-white/10 dark:bg-zinc-900/50">
+              <div className="rim flex items-center gap-1.5 rounded-2xl border border-white/60 bg-white/70 p-1.5 backdrop-blur-2xl dark:border-white/10 dark:bg-zinc-900/50">
                 <input
                   type="text"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Lavozim, ko'nikma, kalit so'z..."
-                  className="flex-1 rounded-xl bg-transparent px-4 py-3 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none dark:text-white"
+                  className="min-w-0 flex-1 rounded-xl bg-transparent px-3 py-2.5 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none dark:text-white dark:placeholder:text-zinc-500"
                 />
-                <Button type="submit" size="md" className="shrink-0 rounded-xl">
-                  Qidirish
+                <Button type="submit" size="sm" className="shrink-0 rounded-xl">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="m21 21-4.3-4.3" />
+                  </svg>
+                  <span className="hidden sm:inline">Qidirish</span>
                 </Button>
               </div>
             </form>
