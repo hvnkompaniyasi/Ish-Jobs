@@ -111,6 +111,47 @@ async function updateApplicationStatus(id, status, user) {
   application.respondedAt = new Date();
   await application.save();
 
+  // Seeker'ga notification yuborish
+  try {
+    const statusMessages = {
+      reviewing: {
+        title: "Arizangiz ko'rilmoqda",
+        message: `\"${job.title}\" vakansiyasiga arizangiz ko'rib chiqilmoqda`,
+      },
+      shortlisted: {
+        title: "Siz tanlandingiz! 🎉",
+        message: `\"${job.title}\" vakansiyasida qisqa ro'yxatga kirdingiz`,
+      },
+      interview: {
+        title: "Suhbatga chaqirildingiz 📅",
+        message: `\"${job.title}\" vakansiyasi bo'yicha suhbatga taklif`,
+      },
+      accepted: {
+        title: "Qabul qilindingiz! 🎊",
+        message: `Tabriklaymiz! \"${job.title}\" vakansiyasiga qabul qilindingiz`,
+      },
+      rejected: {
+        title: "Ariza rad etildi",
+        message: `Afsuski, \"${job.title}\" vakansiyasi bo'yicha arizangiz rad etildi`,
+      },
+    };
+
+    const msg = statusMessages[status];
+    if (msg) {
+      await notificationService.createNotification({
+        recipient: application.applicant,
+        type: 'application_status',
+        title: msg.title,
+        message: msg.message,
+        sender: user._id,
+        link: '/applications/my',
+        meta: { jobId: job._id, applicationId: application._id },
+      });
+    }
+  } catch (err) {
+    console.error('Notification error:', err.message);
+  }
+
   return application.populate('applicant', 'firstName lastName phone email avatar');
 }
 
