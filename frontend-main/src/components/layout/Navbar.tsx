@@ -27,6 +27,7 @@ export function Navbar() {
 
   const userMenuRef = useRef<HTMLDivElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const mobileToggleRef = useRef<HTMLButtonElement>(null);
 
   const activeRole: UserRole = user?.activeRole || user?.role || "seeker";
   const isEmployer = activeRole === "employer";
@@ -36,24 +37,26 @@ export function Navbar() {
   useEffect(() => {
     if (!userMenuOpen && !menuOpen) return;
 
-    const handler = (e: MouseEvent | TouchEvent) => {
+    const handler = (e: MouseEvent) => {
       const target = e.target as Node;
 
-      // User menu
       if (userMenuOpen && userMenuRef.current && !userMenuRef.current.contains(target)) {
         setUserMenuOpen(false);
       }
-      // Mobile menu
-      if (menuOpen && mobileMenuRef.current && !mobileMenuRef.current.contains(target)) {
+
+      if (
+        menuOpen &&
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(target) &&
+        !mobileToggleRef.current?.contains(target)
+      ) {
         setMenuOpen(false);
       }
     };
 
-    document.addEventListener("mousedown", handler);
-    document.addEventListener("touchstart", handler);
+    document.addEventListener('mousedown', handler);
     return () => {
-      document.removeEventListener("mousedown", handler);
-      document.removeEventListener("touchstart", handler);
+      document.removeEventListener('mousedown', handler);
     };
   }, [userMenuOpen, menuOpen]);
 
@@ -339,6 +342,7 @@ export function Navbar() {
               )}
 
               <button
+                ref={mobileToggleRef}
                 onClick={() => setMenuOpen((v) => !v)}
                 className="flex h-10 w-10 items-center justify-center rounded-full text-slate-700 transition hover:bg-white/60 md:hidden dark:text-zinc-300 dark:hover:bg-white/5"
                 aria-label="Menu"
