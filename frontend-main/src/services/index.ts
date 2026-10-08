@@ -5,3 +5,4 @@ export { resumesService } from "./resumes.service";
 export { applicationsService } from "./applications.service";
 
 export { notificationsService } from "./notifications.service";
+export { dashboardService } from "./dashboard.service";

@@ -135,6 +135,20 @@ export function Navbar() {
                   Mening e&apos;lonlarim
                 </Link>
               )}
+
+              {isAuthenticated && isEmployer && (
+                <Link
+                  href="/dashboard"
+                  className={cn(
+                    "relative rounded-full px-3.5 py-2 text-sm font-semibold transition",
+                    pathname === "/dashboard"
+                      ? "text-emerald-700 dark:text-emerald-400"
+                      : "text-slate-600 hover:bg-white/60 hover:text-slate-900 dark:text-zinc-400 dark:hover:bg-white/5 dark:hover:text-white"
+                  )}
+                >
+                  Dashboard
+                </Link>
+              )}
             </nav>
 
             {/* Right side */}
@@ -259,6 +273,17 @@ export function Navbar() {
                                   <path d="M3 10h18M8 2v4M16 2v4" />
                                 </svg>
                                 Mening e&apos;lonlarim
+                              </Link>
+
+                              <Link
+                                href="/dashboard"
+                                onClick={() => setUserMenuOpen(false)}
+                                className="flex items-center gap-2.5 rounded-2xl px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100/80 dark:text-zinc-300 dark:hover:bg-white/5"
+                              >
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                  <path d="M3 3v18h18M7 15l4-4 4 4 5-6" />
+                                </svg>
+                                Dashboard
                               </Link>
                               <Link
                                 href="/jobs/create"
