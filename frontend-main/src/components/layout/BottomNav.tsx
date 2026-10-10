@@ -16,28 +16,21 @@ export function BottomNav() {
     isAuthenticated &&
     (user?.activeRole === "employer" || user?.role === "employer");
 
-  // Notification count — har 30 sekundda yangilanadi
   useEffect(() => {
     if (!isAuthenticated) return;
-
     const fetchCount = async () => {
       try {
         const { count } = await notificationsService.getUnreadCount();
         setUnreadCount(count);
-      } catch {
-        // ignore
-      }
+      } catch {}
     };
-
     fetchCount();
     const timer = setInterval(fetchCount, 30000);
     return () => clearInterval(timer);
   }, [isAuthenticated]);
 
   const isActive = (href: string) =>
-    href === "/"
-      ? pathname === "/"
-      : pathname === href || pathname.startsWith(href + "/");
+    href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(href + "/");
 
   const items = [
     {
@@ -94,56 +87,62 @@ export function BottomNav() {
   ];
 
   return (
-    <nav
-      className={cn(
-        "fixed bottom-3 left-1/2 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 md:hidden",
-        "rim rounded-full border border-white/20 dark:border-white/10",
-        "bg-white/70 dark:bg-zinc-900/80 backdrop-blur-2xl",
-        "shadow-2xl shadow-emerald-950/10 dark:shadow-black/60",
-        "px-3 py-2 flex justify-between items-center gap-1"
-      )}
+    // OUTER — fixed, transform YO'Q
+    <div
+      className="fixed inset-x-0 bottom-3 z-[100] px-4 md:hidden"
+      style={{ pointerEvents: "none" }}
     >
-      {items.map((item) => {
-        const active = isActive(item.href);
-        return (
-          <Link
-            key={item.href}
-            href={item.href}
-            aria-label={item.label}
-            className={cn(
-              "relative flex flex-1 flex-col items-center justify-center gap-0.5 rounded-full py-1.5 transition-all duration-200",
-              "active:scale-95",
-              active
-                ? "text-emerald-600 dark:text-emerald-400"
-                : "text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
-            )}
-          >
-            {/* Neon glow for active */}
-            {active && (
-              <span className="pointer-events-none absolute inset-0 rounded-full bg-emerald-500/10 dark:bg-emerald-400/15 shadow-inner shadow-emerald-500/30" />
-            )}
-
-            <span className="relative">
-              {item.icon}
-              {item.badge && (
-                <span className="absolute -right-1 -top-1 flex h-3 w-3">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose-400 opacity-75" />
-                  <span className="relative inline-flex h-3 w-3 rounded-full bg-rose-500 ring-2 ring-white dark:ring-zinc-900" />
-                </span>
-              )}
-            </span>
-
-            <span
+      {/* INNER — markaziy, transform bilan, pointer events yoniq */}
+      <nav
+        style={{ pointerEvents: "auto" }}
+        className={cn(
+          "mx-auto flex max-w-md items-center justify-between gap-1",
+          "rounded-full border border-white/20 dark:border-white/10",
+          "bg-white/80 dark:bg-zinc-900/85",
+          "backdrop-blur-2xl",
+          "shadow-2xl shadow-emerald-950/15 dark:shadow-black/60",
+          "px-3 py-2"
+        )}
+      >
+        {items.map((item) => {
+          const active = isActive(item.href);
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              aria-label={item.label}
               className={cn(
-                "text-[9px] font-bold uppercase tracking-wide",
-                active && "drop-shadow-[0_0_6px_rgba(16,185,129,0.6)]"
+                "relative flex flex-1 flex-col items-center justify-center gap-0.5 rounded-full py-1.5 transition-all duration-200",
+                "active:scale-95",
+                active
+                  ? "text-emerald-600 dark:text-emerald-400"
+                  : "text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
               )}
             >
-              {item.label}
-            </span>
-          </Link>
-        );
-      })}
-    </nav>
+              {active && (
+                <span className="pointer-events-none absolute inset-0 rounded-full bg-emerald-500/10 dark:bg-emerald-400/15" />
+              )}
+              <span className="relative">
+                {item.icon}
+                {item.badge && (
+                  <span className="absolute -right-1 -top-1 flex h-3 w-3">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose-400 opacity-75" />
+                    <span className="relative inline-flex h-3 w-3 rounded-full bg-rose-500 ring-2 ring-white dark:ring-zinc-900" />
+                  </span>
+                )}
+              </span>
+              <span
+                className={cn(
+                  "text-[9px] font-bold uppercase tracking-wide",
+                  active && "drop-shadow-[0_0_6px_rgba(16,185,129,0.6)]"
+                )}
+              >
+                {item.label}
+              </span>
+            </Link>
+          );
+        })}
+      </nav>
+    </div>
   );
 }
