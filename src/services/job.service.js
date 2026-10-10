@@ -194,11 +194,30 @@ async function getMyJobs(user, pagination = {}) {
   };
 }
 
+/**
+ * Xarita uchun yengil vakansiyalar ro'yxati.
+ * Faqat koordinatali va aktiv vakansiyalar.
+ */
+async function getJobsForMap() {
+  const jobs = await Job.find({
+    status: 'active',
+    'locationPoint.coordinates.0': { $exists: true },
+  })
+    .select(
+      '_id title salary company.name company.logo location.city locationPoint location.isRemote'
+    )
+    .limit(500)
+    .lean();
+
+  return jobs;
+}
+
 module.exports = {
   createJob,
   getJobs,
   getJobById,
   updateJob,
   deleteJob,
+  getJobsForMap,
   getMyJobs,
 };

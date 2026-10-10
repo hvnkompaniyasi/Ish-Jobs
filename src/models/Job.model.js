@@ -77,6 +77,18 @@ const jobSchema = new mongoose.Schema(
     // Joylashuv
     location: {
       city: { type: String, trim: true, default: null },
+    // Geospatial (xarita uchun)
+    locationPoint: {
+      type: {
+        type: String,
+        enum: ['Point'],
+        default: 'Point',
+      },
+      coordinates: {
+        type: [Number], // [lng, lat]
+        default: undefined,
+      },
+    },
       country: { type: String, trim: true, default: 'UZ' },
       isRemote: { type: Boolean, default: false },
     },
@@ -125,6 +137,7 @@ jobSchema.index({ status: 1, createdAt: -1 });
 jobSchema.index({ 'location.city': 1, status: 1 });
 jobSchema.index({ category: 1, status: 1 });
 jobSchema.index({ createdAt: -1 });
+jobSchema.index({ locationPoint: '2dsphere' }, { sparse: true });
 
 // ============ VIRTUAL ============
 jobSchema.virtual('isExpired').get(function () {

@@ -118,6 +118,17 @@ const deleteJob = asyncHandler(async (req, res) => {
 /**
  * GET /api/jobs/my
  */
+/**
+ * GET /api/jobs/map
+ * Xarita uchun yengil vakansiyalar ro'yxati.
+ */
+const getJobsForMap = asyncHandler(async (req, res) => {
+  const jobs = await jobService.getJobsForMap();
+  res
+    .status(200)
+    .json(new ApiResponse(200, jobs, 'Xarita uchun vakansiyalar'));
+});
+
 const getMyJobs = asyncHandler(async (req, res) => {
   const result = await jobService.getMyJobs(req.user, {
     page: req.query.page,
@@ -133,5 +144,6 @@ module.exports = {
   updateJob,
   updateJobStatus,
   deleteJob,
+  getJobsForMap,
   getMyJobs,
 };

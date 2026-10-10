@@ -56,6 +56,13 @@ const createJobSchema = Joi.object({
     country: Joi.string().trim().default('UZ'),
     isRemote: Joi.boolean().default(false),
   }).default({}),
+  locationPoint: Joi.object({
+    type: Joi.string().valid('Point').default('Point'),
+    coordinates: Joi.array()
+      .items(Joi.number())
+      .length(2)
+      .required(),
+  }),
   company: Joi.object({
     name: Joi.string().trim().max(100),
     logo: Joi.string().uri().allow(null, ''),
@@ -87,6 +94,13 @@ const updateJobSchema = Joi.object({
     city: Joi.string().trim().allow(null, ''),
     country: Joi.string().trim(),
     isRemote: Joi.boolean(),
+  }),
+  locationPoint: Joi.object({
+    type: Joi.string().valid('Point').default('Point'),
+    coordinates: Joi.array()
+      .items(Joi.number())
+      .length(2)
+      .required(),
   }),
   company: Joi.object({
     name: Joi.string().trim().max(100),

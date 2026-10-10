@@ -1,12 +1,12 @@
 /**
  * Form-data JSON parse middleware.
- * Multipart'dagi string maydonlarni (salary, location, company, ...) JSON.parse qiladi.
- * Multer'dan keyin, validate'dan oldin ishlatiladi.
+ * Multipart'dagi string maydonlarni (salary, location, locationPoint, ...) JSON.parse qiladi.
  */
 
 const JSON_FIELDS = [
   'salary',
   'location',
+  'locationPoint',
   'company',
   'skills',
   'requirements',
@@ -17,11 +17,12 @@ const parseFormData = (req, res, next) => {
   if (!req.body) return next();
 
   JSON_FIELDS.forEach((field) => {
-    if (typeof req.body[field] === 'string') {
+    const value = req.body[field];
+    if (typeof value === 'string') {
       try {
-        req.body[field] = JSON.parse(req.body[field]);
-      } catch {
-        // String sifatida qoldiriladi — Joi o'zi xato qaytaradi
+        req.body[field] = JSON.parse(value);
+      } catch (err) {
+        // String sifatida qoldiriladi
       }
     }
   });

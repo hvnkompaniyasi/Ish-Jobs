@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { Navbar } from "@/components/layout/Navbar";
+import { BottomNav } from "@/components/layout/BottomNav";
 import { AmbientBackground } from "@/components/layout/AmbientBackground";
 
 const inter = Inter({
@@ -22,14 +23,15 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="uz" suppressHydrationWarning className={inter.variable}>
-      <body className="min-h-screen overflow-x-hidden antialiased">
+      <body className="min-h-screen antialiased">
         <ThemeProvider>
           <AuthProvider>
             <AmbientBackground />
             <Navbar />
-            <main className="page-enter mx-auto max-w-7xl px-4 pb-10 pt-24 sm:px-6 sm:pt-28">
+            <main className="page-enter mx-auto max-w-7xl px-4 pb-24 pt-24 sm:px-6 sm:pt-28 md:pb-10">
               {children}
             </main>
+            <BottomNav />
           </AuthProvider>
         </ThemeProvider>
       </body>

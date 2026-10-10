@@ -28,6 +28,9 @@ router.get(
   jobController.getMyJobs
 );
 
+
+// Xarita uchun — /:id dan OLDIN turishi shart
+router.get('/map', jobController.getJobsForMap);
 router.post(
   '/',
   protect,
