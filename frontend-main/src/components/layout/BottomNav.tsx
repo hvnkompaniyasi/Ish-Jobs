@@ -96,7 +96,7 @@ export function BottomNav() {
   return (
     <nav
       className={cn(
-        "fixed bottom-3 inset-x-4 max-w-md mx-auto z-50 md:hidden",
+        "fixed bottom-3 left-1/2 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 md:hidden",
         "rim rounded-full border border-white/20 dark:border-white/10",
         "bg-white/70 dark:bg-zinc-900/80 backdrop-blur-2xl",
         "shadow-2xl shadow-emerald-950/10 dark:shadow-black/60",
