@@ -46,14 +46,12 @@ function escapeHtml(s: string): string {
 function formatSalaryPill(salary: unknown): string {
   if (salary == null) return "Kelishilgan";
 
-  // String holat (masalan: "12 mln UZS")
   if (typeof salary === "string") {
     const s = salary.trim();
     if (!s) return "Kelishilgan";
     return s.length > 14 ? s.slice(0, 12) + "…" : s;
   }
 
-  // Object holat (SalaryInfo)
   if (typeof salary === "object") {
     const s = salary as {
       min?: number | null;
