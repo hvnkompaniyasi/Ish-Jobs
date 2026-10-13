@@ -38,6 +38,8 @@ export interface CompanyFullInfo {
   name?: string;
   logo?: string | null;
   website?: string | null;
+  telegramContact?: string | null;
+  telegramPhone?: string | null;
 }
 
 export interface Job {

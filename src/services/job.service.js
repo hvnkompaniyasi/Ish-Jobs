@@ -217,7 +217,7 @@ async function getJobsForMap() {
     'locationPoint.coordinates.0': { $exists: true },
   })
     .select(
-      '_id title salary company.name company.logo location.city locationPoint location.isRemote'
+      '_id title salary company.name company.logo company.telegramContact company.telegramPhone location.city locationPoint location.isRemote'
     )
     .limit(500)
     .lean();

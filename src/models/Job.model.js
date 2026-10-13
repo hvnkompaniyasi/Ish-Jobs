@@ -99,6 +99,9 @@ const jobSchema = new mongoose.Schema(
       name: { type: String, trim: true },
       logo: { type: String, default: null },
       website: { type: String, default: null },
+      // 1-Click Telegram bog'lanish uchun username (@ belgisisiz)
+      telegramContact: { type: String, trim: true, default: null },
+      telegramPhone: { type: String, trim: true, default: null },
     },
 
     // Muddat va status
