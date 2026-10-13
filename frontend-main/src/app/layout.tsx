@@ -28,7 +28,7 @@ export default function RootLayout({
           <AuthProvider>
             <AmbientBackground />
             <Navbar />
-            <main className="page-enter mx-auto max-w-7xl px-4 pb-24 pt-24 sm:px-6 sm:pt-28 md:pb-10">
+            <main className="page-enter mx-auto max-w-7xl px-4 pb-32 pt-24 sm:px-6 sm:pt-28 md:pb-10" style={{ paddingBottom: "calc(8rem + env(safe-area-inset-bottom))" }}>
               {children}
             </main>
             <BottomNav />

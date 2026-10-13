@@ -77,6 +77,10 @@ const jobSchema = new mongoose.Schema(
     // Joylashuv
     location: {
       city: { type: String, trim: true, default: null },
+      country: { type: String, trim: true, default: 'UZ' },
+      isRemote: { type: Boolean, default: false },
+    },
+
     // Geospatial (xarita uchun)
     locationPoint: {
       type: {
@@ -88,9 +92,6 @@ const jobSchema = new mongoose.Schema(
         type: [Number], // [lng, lat]
         default: undefined,
       },
-    },
-      country: { type: String, trim: true, default: 'UZ' },
-      isRemote: { type: Boolean, default: false },
     },
 
     // Kompaniya

@@ -89,6 +89,11 @@ export const jobsService = {
     await api.delete(`/jobs/${id}`);
   },
 
+  async getJobsForMap(): Promise<Job[]> {
+    const { data } = await api.get<Job[]>("/jobs/map");
+    return data;
+  },
+
   async getMyJobs(): Promise<JobsResponse> {
     const { data } = await api.get<JobsResponse>("/jobs/my");
     return data;

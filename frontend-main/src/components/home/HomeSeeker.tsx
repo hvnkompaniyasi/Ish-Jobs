@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { JobCard } from "@/components/jobs/JobCard";
 import { Spinner } from "@/components/ui/Spinner";
+import { SkeletonJobGrid } from "@/components/jobs/SkeletonJobCard";
 import { jobsService, getErrorMessage } from "@/services";
 import type { Job } from "@/types";
 
@@ -124,11 +125,7 @@ export function HomeSeeker() {
           </Link>
         </div>
 
-        {loading && (
-          <div className="flex justify-center py-16">
-            <Spinner className="h-8 w-8" />
-          </div>
-        )}
+        {loading && <SkeletonJobGrid count={6} />}
 
         {error && (
           <div className="rim rounded-3xl glass p-6 text-center text-sm text-rose-700 dark:text-rose-400">

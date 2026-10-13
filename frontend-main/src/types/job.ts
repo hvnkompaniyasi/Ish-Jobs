@@ -29,6 +29,11 @@ export interface LocationInfo {
   isRemote?: boolean;
 }
 
+export interface LocationPoint {
+  type: "Point";
+  coordinates: [number, number];
+}
+
 export interface CompanyFullInfo {
   name?: string;
   logo?: string | null;
@@ -47,6 +52,7 @@ export interface Job {
   experienceLevel: ExperienceLevel;
   salary: SalaryInfo;
   location: LocationInfo;
+  locationPoint?: LocationPoint;
   company: CompanyFullInfo;
   employer: User | string;
   deadline?: string | null;
