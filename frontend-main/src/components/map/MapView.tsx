@@ -36,6 +36,13 @@ interface MapViewProps {
   defaultZoom?: number;
 }
 
+
+/** O'zbekiston chegaralari — xarita tashqariga chiqmasligi uchun */
+const UZBEKISTAN_BOUNDS: L.LatLngBoundsExpression = [
+  [37.0, 55.9], // Janubi-g'arbiy
+  [45.6, 73.2], // Shimoli-sharqiy
+];
+
 // ═══════════════════════════════════════════════════════
 // HELPERS
 // ═══════════════════════════════════════════════════════
@@ -113,7 +120,7 @@ function FitBoundsToJobs({ jobs }: { jobs: Job[] }) {
       .filter((v): v is [number, number] => v !== null);
     if (pts.length === 0) return;
     if (pts.length === 1) { map.setView(pts[0], 12, { animate: true }); return; }
-    map.fitBounds(L.latLngBounds(pts), { padding: [80, 80], maxZoom: 13, animate: true });
+    map.fitBounds(L.latLngBounds(pts), { padding: [50, 50], maxZoom: 12, animate: true });
   }, [jobs, map]);
   return null;
 }
@@ -156,6 +163,9 @@ export default function MapView({
       zoom={defaultZoom}
       scrollWheelZoom
       worldCopyJump
+      maxBounds={UZBEKISTAN_BOUNDS}
+      maxBoundsViscosity={0.85}
+      minZoom={5}
       className="h-full w-full"
     >
       <TileLayer
