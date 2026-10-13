@@ -169,7 +169,7 @@ export default function JobsMapPage() {
   return (
     <div className="fixed inset-0 z-0 flex flex-col bg-slate-950">
       {/* ═════════ HEADER ═════════ */}
-      <div className="pointer-events-none absolute left-0 right-0 top-0 z-[1000] flex flex-col gap-2 bg-gradient-to-b from-slate-950/95 via-slate-950/70 to-transparent p-4 pb-12">
+      <div className="pointer-events-none absolute left-0 right-0 top-[76px] z-[900] flex flex-col gap-2 bg-gradient-to-b from-slate-950/95 via-slate-950/70 to-transparent px-4 pb-12 pt-2">
         <div className="flex items-center justify-between gap-3">
           <div className="pointer-events-auto">
             <h1 className="text-lg font-black text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
