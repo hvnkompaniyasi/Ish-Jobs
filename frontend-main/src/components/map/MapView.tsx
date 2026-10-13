@@ -43,15 +43,17 @@ function escapeHtml(s: string): string {
 }
 
 /** Maoshni marker uchun qisqa formatda qaytaradi: "12 mln", "$800", "8–12 mln" */
-function formatSalaryPill(salary: Job["salary"] | undefined): string {
+function formatSalaryPill(salary: unknown): string {
   if (salary == null) return "Kelishilgan";
 
+  // String holat (masalan: "12 mln UZS")
   if (typeof salary === "string") {
     const s = salary.trim();
     if (!s) return "Kelishilgan";
     return s.length > 14 ? s.slice(0, 12) + "…" : s;
   }
 
+  // Object holat (SalaryInfo)
   if (typeof salary === "object") {
     const s = salary as {
       min?: number | null;
@@ -65,22 +67,23 @@ function formatSalaryPill(salary: Job["salary"] | undefined): string {
     if (isNegotiable && min == null && max == null) return "Kelishilgan";
 
     const fmtNum = (n: number): string => {
-      if (currency === "USD") return `$${Math.round(n)}`;
-      if (currency === "EUR") return `€${Math.round(n)}`;
-      if (currency === "RUB") return `${Math.round(n)}₽`;
-      if (n >= 1_000_000) {
-        const v = n / 1_000_000;
-        return `${v >= 10 ? Math.round(v) : +v.toFixed(1)} mln`;
+      if (currency === "USD") return "$" + Math.round(n);
+      if (currency === "EUR") return "€" + Math.round(n);
+      if (currency === "RUB") return Math.round(n) + "₽";
+      if (n >= 1000000) {
+        const v = n / 1000000;
+        return (v >= 10 ? Math.round(v) : +v.toFixed(1)) + " mln";
       }
-      if (n >= 1_000) return `${Math.round(n / 1_000)}k`;
+      if (n >= 1000) return Math.round(n / 1000) + "k";
       return String(n);
     };
 
     if (min != null && max != null && min !== max) {
-      return `${fmtNum(min)}–${fmtNum(max)}`;
+      return fmtNum(min) + "–" + fmtNum(max);
     }
-    if (min != null) return `${fmtNum(min)}+`;
-    return fmtNum(max!);
+    if (min != null) return fmtNum(min) + "+";
+    if (max != null) return fmtNum(max);
+    return "Kelishilgan";
   }
 
   return "Kelishilgan";
