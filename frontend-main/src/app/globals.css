@@ -301,28 +301,23 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 /* ═══════════════════════════════════════════════════════
-   LEAFLET DARK MAP — OSM Standard tiles'ni dark rejimga o'girish
-   Barcha ko'chalar, mahallalar, metro va daryolar ko'rinadi.
+   LEAFLET MAP — Theme-aware (light/dark)
+   Light mode: natural OSM colors (ko'chalar, mahallalar tabiiy)
+   Dark mode:  inverted + hue-rotated (qorong'u fon, ko'chalar ko'rinadi)
    ═══════════════════════════════════════════════════════ */
+
+/* ═══ BASE (Light mode default) ═══ */
 .leaflet-container {
-  background: #0b1220 !important;
+  background: #e2e8f0;
   font-family: inherit;
 }
 
-/* OSM tiles — invert qilib dark ko'rinishga keltirish */
 .leaflet-tile-pane .leaflet-tile {
-  filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.92)
-    saturate(0.7);
+  /* Light mode — hech qanday filter yo'q, tabiiy OSM */
+  filter: none;
+  transition: filter 0.3s ease;
 }
 
-/* Marker wrapper — bizning custom divIcon uchun */
-.ishjobs-salary-marker {
-  background: transparent !important;
-  border: none !important;
-  overflow: visible !important;
-}
-
-/* Leaflet popup — glassmorphism o'ram */
 .leaflet-popup-content-wrapper {
   background: transparent !important;
   box-shadow: none !important;
@@ -335,11 +330,11 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   width: auto !important;
 }
 .leaflet-popup-tip {
-  background: rgba(15, 23, 42, 0.95) !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
 }
 .leaflet-popup-close-button {
-  color: #94a3b8 !important;
+  color: #64748b !important;
   padding: 6px !important;
   font-size: 18px !important;
   z-index: 10;
@@ -348,24 +343,94 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   color: #10b981 !important;
 }
 
-/* Attribution — dark fon */
 .leaflet-control-attribution {
-  background: rgba(15, 23, 42, 0.75) !important;
-  color: #94a3b8 !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  color: #475569 !important;
   backdrop-filter: blur(8px);
+  border-radius: 6px 0 0 0;
+  font-size: 11px;
+  padding: 2px 6px;
 }
 .leaflet-control-attribution a {
-  color: #10b981 !important;
+  color: #059669 !important;
 }
 
-/* Zoom tugmalari — dark glassmorphism */
 .leaflet-control-zoom a {
-  background: rgba(15, 23, 42, 0.75) !important;
-  color: #e2e8f0 !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  color: #0f172a !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
   backdrop-filter: blur(8px);
 }
 .leaflet-control-zoom a:hover {
+  background: #ecfdf5 !important;
+  color: #10b981 !important;
+}
+
+.ishjobs-salary-marker {
+  background: transparent !important;
+  border: none !important;
+  overflow: visible !important;
+}
+
+/* ═══ DARK MODE (faqat dark rejimda filter ishlaydi) ═══ */
+/* Tailwind 4 / next-themes / custom — barcha mumkin bo'lgan selectorlar */
+
+html.dark .leaflet-container,
+html[data-theme="dark"] .leaflet-container,
+.dark .leaflet-container,
+[data-theme="dark"] .leaflet-container {
+  background: #0b1220;
+}
+
+html.dark .leaflet-tile-pane .leaflet-tile,
+html[data-theme="dark"] .leaflet-tile-pane .leaflet-tile,
+.dark .leaflet-tile-pane .leaflet-tile,
+[data-theme="dark"] .leaflet-tile-pane .leaflet-tile {
+  filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.92)
+    saturate(0.7);
+}
+
+html.dark .leaflet-popup-tip,
+html[data-theme="dark"] .leaflet-popup-tip,
+.dark .leaflet-popup-tip,
+[data-theme="dark"] .leaflet-popup-tip {
+  background: rgba(15, 23, 42, 0.95) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+}
+
+html.dark .leaflet-popup-close-button,
+html[data-theme="dark"] .leaflet-popup-close-button,
+.dark .leaflet-popup-close-button,
+[data-theme="dark"] .leaflet-popup-close-button {
+  color: #94a3b8 !important;
+}
+
+html.dark .leaflet-control-attribution,
+html[data-theme="dark"] .leaflet-control-attribution,
+.dark .leaflet-control-attribution,
+[data-theme="dark"] .leaflet-control-attribution {
+  background: rgba(15, 23, 42, 0.8) !important;
+  color: #94a3b8 !important;
+}
+html.dark .leaflet-control-attribution a,
+html[data-theme="dark"] .leaflet-control-attribution a,
+.dark .leaflet-control-attribution a,
+[data-theme="dark"] .leaflet-control-attribution a {
+  color: #10b981 !important;
+}
+
+html.dark .leaflet-control-zoom a,
+html[data-theme="dark"] .leaflet-control-zoom a,
+.dark .leaflet-control-zoom a,
+[data-theme="dark"] .leaflet-control-zoom a {
+  background: rgba(15, 23, 42, 0.8) !important;
+  color: #e2e8f0 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+html.dark .leaflet-control-zoom a:hover,
+html[data-theme="dark"] .leaflet-control-zoom a:hover,
+.dark .leaflet-control-zoom a:hover,
+[data-theme="dark"] .leaflet-control-zoom a:hover {
   background: rgba(16, 185, 129, 0.2) !important;
   color: #10b981 !important;
 }

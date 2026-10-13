@@ -252,29 +252,29 @@ export default function MapView({
             icon={icon}
           >
             <Popup autoPan closeButton>
-              <div className="w-[260px] overflow-hidden rounded-2xl bg-slate-900/95 p-4 text-white backdrop-blur-xl">
+              <div className="w-[260px] overflow-hidden rounded-2xl border border-white/60 bg-white/95 p-4 text-slate-900 shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/95 dark:text-white">
                 {/* Kompaniya */}
                 <div className="flex items-center gap-2">
                   <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_10px_#10b981]" />
-                  <span className="truncate text-[11px] font-semibold uppercase tracking-wider text-emerald-300">
+                  <span className="truncate text-[11px] font-semibold uppercase tracking-wider text-emerald-600 dark:text-emerald-300">
                     {companyName}
                   </span>
                 </div>
 
                 {/* Sarlavha */}
-                <h3 className="mt-2 line-clamp-2 text-[15px] font-bold leading-snug text-white">
+                <h3 className="mt-2 line-clamp-2 text-[15px] font-bold leading-snug text-slate-900 dark:text-white">
                   {job.title}
                 </h3>
 
                 {/* Meta */}
                 <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
                   {job.location?.city && (
-                    <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[11px] font-medium text-emerald-300">
+                    <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2 py-0.5 text-[11px] font-medium text-emerald-700 dark:border-emerald-500/30 dark:text-emerald-300">
                       📍 {job.location.city}
                     </span>
                   )}
                   {job.employmentType && (
-                    <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] text-slate-300">
+                    <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-100 px-2 py-0.5 text-[11px] text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-slate-300">
                       {job.employmentType}
                     </span>
                   )}
@@ -282,7 +282,7 @@ export default function MapView({
 
                 {/* Maosh */}
                 <div className="mt-3 flex items-baseline gap-1">
-                  <span className="text-[11px] text-slate-400">Maosh:</span>
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400">Maosh:</span>
                   <span className="text-[15px] font-bold text-emerald-400">
                     {formatSalaryPill(job.salary)}
                   </span>
