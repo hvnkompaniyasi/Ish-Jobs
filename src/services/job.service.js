@@ -5,6 +5,8 @@
 const mongoose = require('mongoose');
 const { Job } = require('../models');
 const ApiError = require('../utils/ApiError');
+const { cache, PREFIXES, buildJobsListKey, invalidateJobCache } = require('../utils/cache');
+const viewsBatcher = require('../utils/viewsBatcher');
 
 /**
  * Yangi vakansiya yaratish.
@@ -24,6 +26,7 @@ async function createJob(data, user) {
   }
 
   const job = await Job.create(payload);
+  invalidateJobCache(String(job._id));
   return job;
 }
 
@@ -31,6 +34,9 @@ async function createJob(data, user) {
  * Vakansiyalar ro'yxati (qidiruv, filter, pagination).
  */
 async function getJobs(filters = {}, pagination = {}) {
+  const cacheKey = buildJobsListKey(filters, pagination);
+  const cached = cache.get(cacheKey);
+  if (cached) return cached;
   const {
     search,
     category,
@@ -73,7 +79,7 @@ async function getJobs(filters = {}, pagination = {}) {
     Job.countDocuments(query),
   ]);
 
-  return {
+  const result = {
     jobs,
     pagination: {
       page,
@@ -82,6 +88,8 @@ async function getJobs(filters = {}, pagination = {}) {
       pages: Math.ceil(total / limit) || 1,
     },
   };
+  cache.set(cacheKey, result, 60);
+  return result;
 }
 
 /**
@@ -102,7 +110,7 @@ async function getJobById(id, incrementViews = false) {
   }
 
   if (incrementViews) {
-    await Job.findByIdAndUpdate(id, { $inc: { viewsCount: 1 } });
+    viewsBatcher.trackView(id);
   }
 
   return job;
@@ -145,6 +153,7 @@ async function updateJob(id, data, user) {
   });
 
   await job.save();
+  invalidateJobCache(String(job._id));
   return job;
 }
 
@@ -165,6 +174,7 @@ async function deleteJob(id, user) {
   }
 
   await job.deleteOne();
+  invalidateJobCache(String(job._id));
   return { id };
 }
 
@@ -199,6 +209,9 @@ async function getMyJobs(user, pagination = {}) {
  * Faqat koordinatali va aktiv vakansiyalar.
  */
 async function getJobsForMap() {
+  const cached = cache.get(PREFIXES.JOBS_MAP);
+  if (cached) return cached;
+
   const jobs = await Job.find({
     status: 'active',
     'locationPoint.coordinates.0': { $exists: true },
@@ -209,6 +222,7 @@ async function getJobsForMap() {
     .limit(500)
     .lean();
 
+  cache.set(PREFIXES.JOBS_MAP, jobs, 60);
   return jobs;
 }
 

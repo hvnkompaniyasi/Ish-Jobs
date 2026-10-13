@@ -12,6 +12,10 @@ let server;
 async function start() {
   logger.info('Ishjobs server ishga tushirilmoqda...');
 
+  // ViewsBatcher — bulkWrite har 20s
+  const { Job } = require('./src/models');
+  require('./src/utils/viewsBatcher').start(Job);
+
   // MongoDB'ga ulanish (muvaffaqiyatsiz bo'lsa ham davom etamiz)
   await connectDB();
 
