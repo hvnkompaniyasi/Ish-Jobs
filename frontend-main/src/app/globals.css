@@ -299,3 +299,73 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   background-size: 200% 100%;
   animation: shimmer 1.8s ease-in-out infinite;
 }
+
+/* ═══════════════════════════════════════════════════════
+   LEAFLET DARK MAP — OSM Standard tiles'ni dark rejimga o'girish
+   Barcha ko'chalar, mahallalar, metro va daryolar ko'rinadi.
+   ═══════════════════════════════════════════════════════ */
+.leaflet-container {
+  background: #0b1220 !important;
+  font-family: inherit;
+}
+
+/* OSM tiles — invert qilib dark ko'rinishga keltirish */
+.leaflet-tile-pane .leaflet-tile {
+  filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.92)
+    saturate(0.7);
+}
+
+/* Marker wrapper — bizning custom divIcon uchun */
+.ishjobs-salary-marker {
+  background: transparent !important;
+  border: none !important;
+  overflow: visible !important;
+}
+
+/* Leaflet popup — glassmorphism o'ram */
+.leaflet-popup-content-wrapper {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  border-radius: 18px !important;
+}
+.leaflet-popup-content {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: auto !important;
+}
+.leaflet-popup-tip {
+  background: rgba(15, 23, 42, 0.95) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+}
+.leaflet-popup-close-button {
+  color: #94a3b8 !important;
+  padding: 6px !important;
+  font-size: 18px !important;
+  z-index: 10;
+}
+.leaflet-popup-close-button:hover {
+  color: #10b981 !important;
+}
+
+/* Attribution — dark fon */
+.leaflet-control-attribution {
+  background: rgba(15, 23, 42, 0.75) !important;
+  color: #94a3b8 !important;
+  backdrop-filter: blur(8px);
+}
+.leaflet-control-attribution a {
+  color: #10b981 !important;
+}
+
+/* Zoom tugmalari — dark glassmorphism */
+.leaflet-control-zoom a {
+  background: rgba(15, 23, 42, 0.75) !important;
+  color: #e2e8f0 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(8px);
+}
+.leaflet-control-zoom a:hover {
+  background: rgba(16, 185, 129, 0.2) !important;
+  color: #10b981 !important;
+}
