@@ -523,3 +523,14 @@ html.dark .leaflet-control-zoom a:hover {
   border: none !important;
   overflow: visible !important;
 }
+
+/* ═══ Foydalanuvchi joylashuvi — pulsatsiya ═══ */
+@keyframes ishjobs-user-pulse {
+  0%   { transform: scale(0.9); opacity: 0.9; }
+  70%  { transform: scale(1.8); opacity: 0;   }
+  100% { transform: scale(1.8); opacity: 0;   }
+}
+.ishjobs-user-dot {
+  transform-origin: center;
+  animation: ishjobs-user-pulse 1.8s ease-out infinite;
+}
