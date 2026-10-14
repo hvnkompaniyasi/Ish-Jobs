@@ -71,8 +71,8 @@ export function BottomNav() {
       ),
     },
     {
-      href: isAuthenticated ? (isEmployer ? "/dashboard" : "/profile") : "/login",
-      label: isAuthenticated ? (isEmployer ? t("nav.dashboard") : t("nav.profile")) : t("nav.login"),
+      href: isAuthenticated ? "/profile" : "/login",
+      label: isAuthenticated ? t("nav.profile") : t("nav.login"),
       badge: unreadCount > 0,
       icon: (
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

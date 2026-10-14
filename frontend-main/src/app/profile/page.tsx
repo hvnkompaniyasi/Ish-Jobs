@@ -388,6 +388,40 @@ export default function ProfilePage() {
       {/* ─── TAB: Faoliyatim ─── */}
       {tab === "faoliyatim" && (
         <div className="space-y-3 animate-fade-in">
+          {isEmployer && (
+            <Link
+              href="/dashboard"
+              className="rim group flex items-center gap-4 rounded-3xl glass p-5 transition-colors hover:bg-slate-50 dark:hover:bg-white/5"
+            >
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-md shadow-amber-500/30">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <rect x="3" y="3" width="7" height="9" />
+                  <rect x="14" y="3" width="7" height="5" />
+                  <rect x="14" y="12" width="7" height="9" />
+                  <rect x="3" y="16" width="7" height="5" />
+                </svg>
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="font-bold text-slate-900 dark:text-white">
+                  {t("profile.dashboard")}
+                </p>
+                <p className="mt-0.5 text-xs text-slate-500 dark:text-zinc-400">
+                  {t("profile.dashboardDesc")}
+                </p>
+              </div>
+              <svg
+                className="shrink-0 text-slate-400 transition-transform group-hover:translate-x-1"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </Link>
+          )}
           <Link
             href={isEmployer ? "/jobs/my" : "/applications/my"}
             className="rim group flex items-center gap-4 rounded-3xl glass p-5 transition-colors hover:bg-slate-50 dark:hover:bg-white/5"

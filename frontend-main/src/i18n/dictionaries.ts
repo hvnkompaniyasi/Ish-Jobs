@@ -56,6 +56,10 @@ const uz: Dict = {
     firstName: "Ism",
     lastName: "Familiya",
     phone: "Telefon raqam",
+    dashboard: "Boshqaruv paneli",
+    dashboardDesc: "Vakansiyalar va arizalar statistikasi",
+    myJobs: "Mening e'lonlarim",
+    myJobsDesc: "Joylashtirilgan vakansiyalar ro'yxati",
   },
   map: {
     title: "Xaritada ishlar",
@@ -116,6 +120,10 @@ const ru: Dict = {
     firstName: "Имя",
     lastName: "Фамилия",
     phone: "Телефон",
+    dashboard: "Панель управления",
+    dashboardDesc: "Статистика по вакансиям и заявкам",
+    myJobs: "Мои объявления",
+    myJobsDesc: "Список размещённых вакансий",
   },
   map: {
     title: "Работа на карте",
@@ -176,6 +184,10 @@ const en: Dict = {
     firstName: "First name",
     lastName: "Last name",
     phone: "Phone",
+    dashboard: "Dashboard",
+    dashboardDesc: "Vacancy & application statistics",
+    myJobs: "My listings",
+    myJobsDesc: "List of published vacancies",
   },
   map: {
     title: "Jobs on map",
