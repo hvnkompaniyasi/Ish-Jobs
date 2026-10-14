@@ -54,7 +54,7 @@ function formatSalaryShort(salary: Job["salary"] | undefined): string {
     if (n >= 1_000_000) { const v = n / 1_000_000; return (v >= 10 ? Math.round(v) : +v.toFixed(1)) + " mln"; }
     return String(Math.round(n));
   };
-  if (min != null && max != null) return f(min) + "\u2013" + f(max);
+  if (min != null && max != null) return f(min) + "–" + f(max);
   if (min != null) return f(min) + "+";
   return f(max!);
 }
@@ -121,7 +121,7 @@ export default function JobsMapPage() {
 
   const handleLocate = () => {
     if (!navigator.geolocation) {
-      setGpsError("Brauzeringiz geolokatsiyani qo\u2019llab-quvvatlamaydi");
+      setGpsError("Brauzeringiz geolokatsiyani qo'llab-quvvatlamaydi");
       return;
     }
     setGpsLoading(true);
@@ -134,7 +134,7 @@ export default function JobsMapPage() {
         setGpsLoading(false);
       },
       (err) => {
-        setGpsError(err.message || "Joylashuvni aniqlab bo\u2019lmadi");
+        setGpsError(err.message || "Joylashuvni aniqlab bo'lmadi");
         setGpsLoading(false);
       },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 },
@@ -186,7 +186,7 @@ export default function JobsMapPage() {
             </h1>
             <p className="text-xs text-zinc-300">
               {loading ? "Yuklanmoqda..." : filteredJobs.length + " ta vakansiya"}
-              {userLocation && radiusKm ? " \u00b7 " + radiusKm + " km radiusda" : ""}
+              {userLocation && radiusKm ? " · " + radiusKm + " km radiusda" : ""}
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -201,21 +201,21 @@ export default function JobsMapPage() {
                   : "border border-white/15 bg-white/10 text-white hover:bg-white/20",
               )}
             >
-              {gpsLoading ? <Spinner className="h-3.5 w-3.5" /> : <span>\ud83d\udccd</span>}
+              {gpsLoading ? <Spinner className="h-3.5 w-3.5" /> : <span>📍</span>}
               <span className="hidden sm:inline">{userLocation ? "Yoqilgan" : "Yaqinimda"}</span>
             </button>
             <Link
               href="/jobs"
               className="pointer-events-auto rounded-xl border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-md transition-colors hover:bg-white/20"
             >
-              \u2190
+              ←
             </Link>
           </div>
         </div>
 
         {gpsError && (
           <div className="pointer-events-auto rounded-lg border border-rose-500/40 bg-rose-500/15 px-3 py-1.5 text-[11px] text-rose-200 backdrop-blur-md">
-            \u26a0\ufe0f {gpsError}
+            ⚠️ {gpsError}
           </div>
         )}
 
@@ -251,7 +251,7 @@ export default function JobsMapPage() {
                   : "border border-white/15 bg-white/10 text-white backdrop-blur-md hover:bg-white/20",
               )}
             >
-              \ud83d\udccd Barchasi
+              📍 Barchasi
             </button>
             {CITIES.map((c) => (
               <button
@@ -298,7 +298,7 @@ export default function JobsMapPage() {
                   : "border border-white/10 bg-white/5 text-slate-200 backdrop-blur-md hover:bg-white/15",
               )}
             >
-              \ud83d\udcb0 Maoshli
+              💰 Maoshli
             </button>
           </div>
         )}
@@ -318,7 +318,7 @@ export default function JobsMapPage() {
                 href="/jobs"
                 className="rounded-lg border border-zinc-800 bg-zinc-900 px-2.5 py-1 text-xs font-medium text-zinc-300 transition-colors hover:bg-zinc-800"
               >
-                \u2190 Ro&apos;yxat
+                ← Ro&apos;yxat
               </Link>
             </div>
           </div>
@@ -336,7 +336,7 @@ export default function JobsMapPage() {
                     : "border border-zinc-800 bg-zinc-900 text-zinc-300 hover:bg-zinc-800",
                 )}
               >
-                {gpsLoading ? <Spinner className="h-3.5 w-3.5" /> : <span>\ud83d\udccd</span>}
+                {gpsLoading ? <Spinner className="h-3.5 w-3.5" /> : <span>📍</span>}
                 <span>{userLocation ? "Yoqilgan" : "Yaqinimda"}</span>
               </button>
               {hasActiveFilter && (
@@ -352,7 +352,7 @@ export default function JobsMapPage() {
 
             {gpsError && (
               <div className="rounded-lg border border-rose-500/40 bg-rose-500/10 px-2.5 py-1.5 text-[11px] text-rose-300">
-                \u26a0\ufe0f {gpsError}
+                ⚠️ {gpsError}
               </div>
             )}
 
@@ -432,7 +432,7 @@ export default function JobsMapPage() {
                     : "border border-zinc-800 bg-zinc-900 text-zinc-300 hover:bg-zinc-800",
                 )}
               >
-                \ud83d\udcb0 Maoshli
+                💰 Maoshli
               </button>
             </div>
           </div>
@@ -452,7 +452,7 @@ export default function JobsMapPage() {
 
             {!loading && !error && filteredJobs.length === 0 && (
               <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 text-center">
-                <div className="text-3xl">\ud83d\uddfa\ufe0f</div>
+                <div className="text-3xl">🗺️</div>
                 <h3 className="mt-2 text-sm font-semibold text-white">
                   Vakansiya topilmadi
                 </h3>
@@ -510,9 +510,9 @@ export default function JobsMapPage() {
                   </h3>
 
                   <div className="mt-1.5 flex items-center gap-2 text-[11px] text-zinc-400">
-                    {job.location?.city && <span>\ud83d\udccd {job.location.city}</span>}
+                    {job.location?.city && <span>📍 {job.location.city}</span>}
                     {distanceLabel && (
-                      <span className="text-blue-300">\ud83d\udeb6 {distanceLabel}</span>
+                      <span className="text-blue-300">🚶 {distanceLabel}</span>
                     )}
                   </div>
 
@@ -543,7 +543,7 @@ export default function JobsMapPage() {
           {!loading && !error && jobs.length === 0 && (
             <div className="flex h-full items-center justify-center bg-slate-900 p-8">
               <div className="max-w-sm rounded-2xl border border-white/10 bg-white/5 p-6 text-center backdrop-blur-xl">
-                <div className="text-4xl">\ud83d\uddfa\ufe0f</div>
+                <div className="text-4xl">🗺️</div>
                 <h3 className="mt-3 text-base font-bold text-white">
                   Xaritada vakansiya yo&apos;q
                 </h3>
@@ -605,10 +605,10 @@ export default function JobsMapPage() {
                     </h4>
                     <div className="mt-1.5 flex items-center gap-1.5">
                       {job.location?.city && (
-                        <span className="text-[10px] text-slate-400">\ud83d\udccd {job.location.city}</span>
+                        <span className="text-[10px] text-slate-400">📍 {job.location.city}</span>
                       )}
                       {distanceLabel && (
-                        <span className="text-[10px] text-blue-300">\ud83d\udeb6 {distanceLabel}</span>
+                        <span className="text-[10px] text-blue-300">🚶 {distanceLabel}</span>
                       )}
                     </div>
                     <div className="mt-2 flex items-center justify-between gap-2">
