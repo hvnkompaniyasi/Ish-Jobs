@@ -13,7 +13,10 @@ import type { UserRole } from "@/types";
 
 const navLinks = [
   { href: "/jobs", label: "Vakansiyalar" },
+  { href: "/jobs/map", label: "Xarita" },
   { href: "/resumes", label: "Mutaxassislar" },
+  { href: "/applications", label: "Arizalar", auth: true },
+  { href: "/dashboard", label: "Boshqaruv", auth: true },
 ];
 
 export function Navbar() {
@@ -100,7 +103,9 @@ export function Navbar() {
 
             {/* ═══════ Desktop nav ═══════ */}
             <nav className="hidden items-center gap-0.5 md:flex">
-              {navLinks.map((l) => {
+              {navLinks
+                .filter((l) => !(l as { auth?: boolean }).auth || isAuthenticated)
+                .map((l) => {
                 const active = pathname === l.href || pathname.startsWith(l.href + "/");
                 return (
                   <Link
@@ -345,7 +350,9 @@ export function Navbar() {
             ref={mobileMenuRef}
             className="mt-2 overflow-hidden rounded-3xl border border-white/60 bg-white/90 p-2 shadow-2xl shadow-emerald-950/10 backdrop-blur-2xl animate-fade-in-up md:hidden dark:border-white/10 dark:bg-zinc-900/90 dark:shadow-black/60"
           >
-            {navLinks.map((l) => (
+            {navLinks
+              .filter((l) => !(l as { auth?: boolean }).auth || isAuthenticated)
+              .map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
