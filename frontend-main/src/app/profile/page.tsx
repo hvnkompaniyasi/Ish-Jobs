@@ -169,16 +169,39 @@ export default function ProfilePage() {
               {user.phone || user.email}
             </p>
             <div className="mt-3 flex flex-wrap justify-center gap-2 sm:justify-start">
-              <span
-                className={cn(
-                  "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider",
+              <button
+                type="button"
+                onClick={handleSwitchRole}
+                disabled={switching}
+                title={
                   isEmployer
-                    ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400"
-                    : "bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-400",
+                    ? "Ish qidiruvchi rejimiga o'tish"
+                    : "Ish beruvchi rejimiga o'tish"
+                }
+                className={cn(
+                  "inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-colors",
+                  isEmployer
+                    ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-200 dark:bg-emerald-500/20 dark:text-emerald-400 dark:hover:bg-emerald-500/30"
+                    : "bg-indigo-100 text-indigo-700 hover:bg-indigo-200 dark:bg-indigo-500/20 dark:text-indigo-400 dark:hover:bg-indigo-500/30",
+                  switching && "cursor-wait opacity-60",
                 )}
               >
+                {switching ? (
+                  <Spinner className="h-3 w-3" />
+                ) : (
+                  <svg
+                    width="11"
+                    height="11"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                  >
+                    <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5" />
+                  </svg>
+                )}
                 {isEmployer ? "Ish beruvchi" : "Ish qidiruvchi"}
-              </span>
+              </button>
             </div>
           </div>
         </div>
