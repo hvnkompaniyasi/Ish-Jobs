@@ -274,7 +274,7 @@ export default function MapView({
                   <span className="text-[15px] font-bold text-emerald-400">{salaryLabel}</span>
                 </div>
 
-                <div className="mt-3 flex gap-2">
+                <div className="mt-3 grid grid-cols-2 gap-2">
                   <Link
                     href={href}
                     className="flex-1 block rounded-xl bg-emerald-500 py-2 text-[12.5px] font-semibold text-white transition hover:bg-emerald-400"
