@@ -7,7 +7,8 @@ import { useAuth } from "@/hooks";
 import { Button } from "@/components/ui/Button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { NotificationBell } from "./NotificationBell";
-import { cn, initials } from "@/lib/utils";
+import { cn } from "@/lib/utils";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 import type { UserRole } from "@/types";
 
 const navLinks = [
@@ -144,23 +145,8 @@ export function Navbar() {
                     </Link>
                   )}
 
-                  {/* Avatar → /profile link */}
-                  <Link
-                    href="/profile"
-                    aria-label="Profil"
-                    className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-sm font-bold text-white shadow-lg shadow-emerald-500/40 transition-transform hover:scale-105"
-                  >
-                    {user?.avatarUrl ? (
-                      <img
-                        src={user.avatarUrl}
-                        alt={user.firstName || "Avatar"}
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      initials(user?.firstName, user?.lastName)
-                    )}
-                    <span className="absolute inset-0 rounded-full ring-1 ring-inset ring-white/40" />
-                  </Link>
+                  {/* Til almashtirish */}
+                  <LanguageSwitcher />
                 </>
               ) : (
                 <div className="hidden items-center gap-2 md:flex">

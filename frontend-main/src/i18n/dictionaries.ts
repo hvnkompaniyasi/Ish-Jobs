@@ -1,0 +1,163 @@
+export type Locale = "uz" | "ru" | "en";
+
+export const LOCALES: Record<Locale, { label: string; flag: string }> = {
+  uz: { label: "O'zbekcha", flag: "🇺🇿" },
+  ru: { label: "Русский", flag: "🇷🇺" },
+  en: { label: "English", flag: "🇬🇧" },
+};
+
+export const DEFAULT_LOCALE: Locale = "uz";
+
+type Dict = Record<string, unknown>;
+
+const uz: Dict = {
+  nav: {
+    jobs: "Vakansiyalar",
+    map: "Xarita",
+    resumes: "Mutaxassislar",
+    applications: "Arizalar",
+    dashboard: "Boshqaruv",
+    myJobs: "Mening e'lonlarim",
+    login: "Kirish",
+    register: "Ro'yxatdan o'tish",
+  },
+  common: {
+    save: "Saqlash",
+    cancel: "Bekor qilish",
+    delete: "O'chirish",
+    edit: "Tahrirlash",
+    loading: "Yuklanmoqda...",
+    search: "Qidirish",
+    all: "Barchasi",
+    close: "Yopish",
+    back: "Orqaga",
+    language: "Til",
+    switchRole: "Rolni almashtirish",
+    logout: "Chiqish",
+  },
+  profile: {
+    title: "Profil",
+    myInfo: "Profil ma'lumotlari",
+    security: "Xavfsizlik",
+    activity: "Faoliyatim",
+    password: "Parolni o'zgartirish",
+    logout: "Hisobdan chiqish",
+    danger: "Xavfli hudud",
+    deleteAccount: "Hisobni o'chirish",
+    employer: "Ish beruvchi",
+    seeker: "Ish qidiruvchi",
+  },
+  map: {
+    title: "Xaritada ishlar",
+    locations: "vakansiya",
+    radiusAll: "Barchasi",
+    region: "Viloyat",
+    district: "Tuman / shahar",
+    details: "Batafsil",
+    telegram: "Telegram",
+    nearby: "Yaqinimda",
+    active: "Yoqilgan",
+  },
+};
+
+const ru: Dict = {
+  nav: {
+    jobs: "Вакансии",
+    map: "Карта",
+    resumes: "Специалисты",
+    applications: "Заявки",
+    dashboard: "Панель",
+    myJobs: "Мои объявления",
+    login: "Войти",
+    register: "Регистрация",
+  },
+  common: {
+    save: "Сохранить",
+    cancel: "Отмена",
+    delete: "Удалить",
+    edit: "Изменить",
+    loading: "Загрузка...",
+    search: "Поиск",
+    all: "Все",
+    close: "Закрыть",
+    back: "Назад",
+    language: "Язык",
+    switchRole: "Сменить роль",
+    logout: "Выход",
+  },
+  profile: {
+    title: "Профиль",
+    myInfo: "Личные данные",
+    security: "Безопасность",
+    activity: "Активность",
+    password: "Изменить пароль",
+    logout: "Выйти из аккаунта",
+    danger: "Опасная зона",
+    deleteAccount: "Удалить аккаунт",
+    employer: "Работодатель",
+    seeker: "Соискатель",
+  },
+  map: {
+    title: "Работа на карте",
+    locations: "вакансий",
+    radiusAll: "Все",
+    region: "Регион",
+    district: "Район / город",
+    details: "Подробнее",
+    telegram: "Телеграм",
+    nearby: "Рядом со мной",
+    active: "Включено",
+  },
+};
+
+const en: Dict = {
+  nav: {
+    jobs: "Jobs",
+    map: "Map",
+    resumes: "Specialists",
+    applications: "Applications",
+    dashboard: "Dashboard",
+    myJobs: "My listings",
+    login: "Sign in",
+    register: "Sign up",
+  },
+  common: {
+    save: "Save",
+    cancel: "Cancel",
+    delete: "Delete",
+    edit: "Edit",
+    loading: "Loading...",
+    search: "Search",
+    all: "All",
+    close: "Close",
+    back: "Back",
+    language: "Language",
+    switchRole: "Switch role",
+    logout: "Log out",
+  },
+  profile: {
+    title: "Profile",
+    myInfo: "Profile details",
+    security: "Security",
+    activity: "My activity",
+    password: "Change password",
+    logout: "Log out",
+    danger: "Danger zone",
+    deleteAccount: "Delete account",
+    employer: "Employer",
+    seeker: "Job seeker",
+  },
+  map: {
+    title: "Jobs on map",
+    locations: "vacancies",
+    radiusAll: "All",
+    region: "Region",
+    district: "District / city",
+    details: "View details",
+    telegram: "Telegram",
+    nearby: "Nearby",
+    active: "Enabled",
+  },
+};
+
+export const dictionaries: Record<Locale, Dict> = { uz, ru, en };

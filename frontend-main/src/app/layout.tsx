@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/context/ThemeContext";
 import { Navbar } from "@/components/layout/Navbar";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { AmbientBackground } from "@/components/layout/AmbientBackground";
+import { I18nProvider } from "@/i18n/I18nProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,14 +26,16 @@ export default function RootLayout({
     <html lang="uz" suppressHydrationWarning className={inter.variable}>
       <body className="min-h-screen antialiased">
         <ThemeProvider>
-          <AuthProvider>
-            <AmbientBackground />
-            <Navbar />
-            <main className="page-enter mx-auto max-w-7xl px-4 pb-32 pt-24 sm:px-6 sm:pt-28 md:pb-10" style={{ paddingBottom: "calc(8rem + env(safe-area-inset-bottom))" }}>
-              {children}
-            </main>
-            <BottomNav />
-          </AuthProvider>
+          <I18nProvider>
+            <AuthProvider>
+              <AmbientBackground />
+              <Navbar />
+              <main className="page-enter mx-auto max-w-7xl px-4 pb-32 pt-24 sm:px-6 sm:pt-28 md:pb-10" style={{ paddingBottom: "calc(8rem + env(safe-area-inset-bottom))" }}>
+                {children}
+              </main>
+              <BottomNav />
+            </AuthProvider>
+          </I18nProvider>
         </ThemeProvider>
       </body>
     </html>
