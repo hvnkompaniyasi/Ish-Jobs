@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/hooks";
+import { useT } from "@/i18n/I18nProvider";
 import { Button } from "@/components/ui/Button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { NotificationBell } from "./NotificationBell";
@@ -11,16 +12,19 @@ import { cn } from "@/lib/utils";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import type { UserRole } from "@/types";
 
-const navLinks = [
-  { href: "/jobs", label: "Vakansiyalar", exact: true },
-  { href: "/jobs/map", label: "Xarita", exact: true },
-  { href: "/resumes", label: "Mutaxassislar" },
-  { href: "/applications", label: "Arizalar", auth: true },
-  { href: "/dashboard", label: "Boshqaruv", auth: true },
-];
+function getNavLinks(t: (k: string) => string) {
+  return [
+    { href: "/jobs", label: t("nav.jobs"), exact: true },
+    { href: "/jobs/map", label: t("nav.map"), exact: true },
+    { href: "/resumes", label: t("nav.resumes") },
+    { href: "/applications", label: t("nav.applications"), auth: true },
+    { href: "/dashboard", label: t("nav.dashboard"), auth: true },
+  ] as const;
+}
 
 export function Navbar() {
   const { user, isAuthenticated } = useAuth();
+  const t = useT();
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -74,7 +78,7 @@ export function Navbar() {
 
             {/* ═══════ Desktop nav ═══════ */}
             <nav className="hidden items-center gap-0.5 md:flex">
-              {navLinks
+              {getNavLinks(t)
                 .filter((l) => !(l as { auth?: boolean }).auth || isAuthenticated)
                 .map((l) => {
                   const active =
@@ -110,7 +114,7 @@ export function Navbar() {
                         : "text-slate-600 hover:bg-white/60 hover:text-slate-900 dark:text-zinc-400 dark:hover:bg-white/5 dark:hover:text-white",
                     )}
                   >
-                    Mening e&apos;lonlarim
+                    {t("nav.myJobs")}
                   </Link>
                 </>
               )}
@@ -152,12 +156,12 @@ export function Navbar() {
                 <div className="hidden items-center gap-2 md:flex">
                   <Link href="/login">
                     <Button variant="ghost" size="sm" className="rounded-full">
-                      Kirish
+                      {t("nav.login")}
                     </Button>
                   </Link>
                   <Link href="/register">
                     <Button size="sm" className="rounded-full">
-                      Ro&apos;yxatdan o&apos;tish
+                      {t("nav.register")}
                     </Button>
                   </Link>
                 </div>
@@ -190,7 +194,7 @@ export function Navbar() {
             ref={mobileMenuRef}
             className="mt-2 overflow-hidden rounded-3xl border border-white/60 bg-white/90 p-2 shadow-2xl shadow-emerald-950/10 backdrop-blur-2xl animate-fade-in-up md:hidden dark:border-white/10 dark:bg-zinc-900/90 dark:shadow-black/60"
           >
-            {navLinks
+            {getNavLinks(t)
               .filter((l) => !(l as { auth?: boolean }).auth)
               .map((l) => (
                 <Link
@@ -208,14 +212,14 @@ export function Navbar() {
               onClick={() => setMenuOpen(false)}
               className="block rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-white/60 dark:text-zinc-300 dark:hover:bg-white/5"
             >
-              Kirish
+              {t("nav.login")}
             </Link>
             <Link
               href="/register"
               onClick={() => setMenuOpen(false)}
               className="block rounded-2xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-500"
             >
-              Ro&apos;yxatdan o&apos;tish
+              {t("nav.register")}
             </Link>
           </div>
         )}

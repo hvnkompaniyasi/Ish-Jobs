@@ -4,12 +4,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks";
+import { useT } from "@/i18n/I18nProvider";
 import { notificationsService } from "@/services";
 import { cn } from "@/lib/utils";
 
 export function BottomNav() {
   const pathname = usePathname();
   const { isAuthenticated, user } = useAuth();
+  const t = useT();
   const [unreadCount, setUnreadCount] = useState(0);
 
   const isEmployer =
@@ -37,7 +39,7 @@ export function BottomNav() {
   const leftItems = [
     {
       href: "/",
-      label: "Asosiy",
+      label: t("nav.home"),
       icon: (
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
@@ -47,7 +49,7 @@ export function BottomNav() {
     },
     {
       href: "/jobs",
-      label: "Ishlar",
+      label: t("nav.jobs"),
       icon: (
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <rect x="2" y="7" width="20" height="14" rx="2" />
@@ -60,7 +62,7 @@ export function BottomNav() {
   const rightItems = [
     {
       href: "/jobs/map",
-      label: "Xarita",
+      label: t("nav.map"),
       icon: (
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0z" />
@@ -70,7 +72,7 @@ export function BottomNav() {
     },
     {
       href: isAuthenticated ? (isEmployer ? "/dashboard" : "/profile") : "/login",
-      label: isAuthenticated ? (isEmployer ? "Panel" : "Profil") : "Kirish",
+      label: isAuthenticated ? (isEmployer ? t("nav.dashboard") : t("nav.profile")) : t("nav.login"),
       badge: unreadCount > 0,
       icon: (
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -88,9 +90,9 @@ export function BottomNav() {
     : "/register";
   const centerLabel = isAuthenticated
     ? isEmployer
-      ? "E'lon berish"
-      : "Rezyume"
-    : "Boshlash";
+      ? t("nav.createJob")
+      : t("nav.createResume")
+    : t("nav.start");
 
   const NavItem = ({ item }: { item: (typeof leftItems)[0] & { badge?: boolean } }) => {
     const active = isActive(item.href);

@@ -9,25 +9,29 @@ import { Spinner } from "@/components/ui/Spinner";
 import { DeleteAccountModal } from "@/components/auth/DeleteAccountModal";
 import { AvatarUploader } from "@/components/profile/AvatarUploader";
 import { useAuth } from "@/hooks";
+import { useT } from "@/i18n/I18nProvider";
 import { cn, fullName } from "@/lib/utils";
 import { notificationsService } from "@/services";
 
 type Tab = "profil" | "xavfsizlik" | "faoliyatim";
 
-const TABS: { id: Tab; label: string }[] = [
-  { id: "profil", label: "Profil" },
-  { id: "faoliyatim", label: "Faoliyatim" },
-  { id: "xavfsizlik", label: "Xavfsizlik" },
-];
+function getTabs(t: (k: string) => string): { id: Tab; label: string }[] {
+  return [
+    { id: "profil", label: t("profile.title") },
+    { id: "faoliyatim", label: t("profile.activity") },
+    { id: "xavfsizlik", label: t("profile.security") },
+  ];
+}
 
 export default function ProfilePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, isAuthenticated, hydrated, updateProfile, changePassword, logout, switchRole } = useAuth();
+  const t = useT();
 
   const initialTab = (searchParams.get("tab") as Tab) || "profil";
   const [tab, setTab] = useState<Tab>(
-    TABS.some((t) => t.id === initialTab) ? initialTab : "profil",
+    getTabs(t).some((x) => x.id === initialTab) ? initialTab : "profil",
   );
 
   const [profileForm, setProfileForm] = useState({ firstName: "", lastName: "" });
@@ -213,16 +217,16 @@ export default function ProfilePage() {
           role="tablist"
           className="flex gap-1 overflow-x-auto p-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
-          {TABS.map((t) => {
-            const active = tab === t.id;
+          {getTabs(t).map((tb) => {
+            const active = tab === tb.id;
             const isDanger = false;
             return (
               <button
-                key={t.id}
+                key={tb.id}
                 type="button"
                 role="tab"
                 aria-selected={active}
-                onClick={() => handleTabChange(t.id)}
+                onClick={() => handleTabChange(tb.id)}
                 className={cn(
                   "shrink-0 rounded-xl px-4 py-2 text-xs font-bold uppercase tracking-wider transition-colors",
                   active
@@ -234,7 +238,7 @@ export default function ProfilePage() {
                       : "text-slate-600 hover:bg-slate-100 dark:text-zinc-400 dark:hover:bg-white/5",
                 )}
               >
-                {t.label}
+                {tb.label}
               </button>
             );
           })}

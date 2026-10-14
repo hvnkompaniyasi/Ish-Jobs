@@ -12,12 +12,16 @@ type Dict = Record<string, unknown>;
 
 const uz: Dict = {
   nav: {
+    home: "Asosiy",
     jobs: "Vakansiyalar",
     map: "Xarita",
     resumes: "Mutaxassislar",
     applications: "Arizalar",
     dashboard: "Boshqaruv",
     myJobs: "Mening e'lonlarim",
+    createJob: "E'lon berish",
+    createResume: "Rezyume",
+    start: "Boshlash",
     login: "Kirish",
     register: "Ro'yxatdan o'tish",
   },
@@ -62,12 +66,16 @@ const uz: Dict = {
 
 const ru: Dict = {
   nav: {
+    home: "Главная",
     jobs: "Вакансии",
     map: "Карта",
     resumes: "Специалисты",
     applications: "Заявки",
     dashboard: "Панель",
     myJobs: "Мои объявления",
+    createJob: "Разместить",
+    createResume: "Резюме",
+    start: "Начать",
     login: "Войти",
     register: "Регистрация",
   },
@@ -112,12 +120,16 @@ const ru: Dict = {
 
 const en: Dict = {
   nav: {
+    home: "Home",
     jobs: "Jobs",
     map: "Map",
     resumes: "Specialists",
     applications: "Applications",
     dashboard: "Dashboard",
     myJobs: "My listings",
+    createJob: "Post job",
+    createResume: "Resume",
+    start: "Start",
     login: "Sign in",
     register: "Sign up",
   },
