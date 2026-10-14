@@ -16,14 +16,14 @@ type Tab = "profil" | "xavfsizlik" | "faoliyatim";
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "profil", label: "Profil" },
-  { id: "xavfsizlik", label: "Xavfsizlik" },
   { id: "faoliyatim", label: "Faoliyatim" },
+  { id: "xavfsizlik", label: "Xavfsizlik" },
 ];
 
 export default function ProfilePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { user, isAuthenticated, hydrated, updateProfile, changePassword } = useAuth();
+  const { user, isAuthenticated, hydrated, updateProfile, changePassword, logout, switchRole } = useAuth();
 
   const initialTab = (searchParams.get("tab") as Tab) || "profil";
   const [tab, setTab] = useState<Tab>(
@@ -44,6 +44,7 @@ export default function ProfilePage() {
   const [passwordMsg, setPasswordMsg] = useState<string | null>(null);
   const [passwordErr, setPasswordErr] = useState<string | null>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [switching, setSwitching] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
   // Auth guard
@@ -128,6 +129,23 @@ export default function ProfilePage() {
     }
   };
 
+  const isEmployer = (user?.activeRole || user?.role) === "employer";
+
+  const handleSwitchRole = async () => {
+    setSwitching(true);
+    try {
+      await switchRole(isEmployer ? "seeker" : "employer");
+      router.push(isEmployer ? "/jobs" : "/jobs/my");
+    } finally {
+      setSwitching(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    router.push("/");
+  };
+
   if (!hydrated || !user) {
     return (
       <div className="flex justify-center py-20">
@@ -135,8 +153,6 @@ export default function ProfilePage() {
       </div>
     );
   }
-
-  const isEmployer = (user.activeRole || user.role) === "employer";
 
   return (
     <div className="mx-auto max-w-3xl space-y-5 pb-24 md:pb-6">
@@ -448,7 +464,79 @@ export default function ProfilePage() {
         </div>
       )}
 
-      {/* ─── DANGER ZONE (xavfsizlik ichida) ─── */}
+      {/* ─── ROL O'ZGARTIRISH ─── */}
+        <div className="rim rounded-3xl glass p-6 sm:p-8 animate-fade-in">
+          <div className="mb-4 flex items-center gap-2.5">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500 to-blue-600 text-white shadow-md shadow-sky-500/30">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5" />
+              </svg>
+            </span>
+            <div>
+              <h2 className="text-lg font-black tracking-tight text-slate-900 dark:text-white">
+                Rol o&apos;zgartirish
+              </h2>
+              <p className="text-xs text-slate-500 dark:text-zinc-400">
+                {isEmployer
+                  ? "Ish qidiruvchi rejimiga o'tish"
+                  : "Ish beruvchi rejimiga o'tish"}
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleSwitchRole}
+            disabled={switching}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-sky-500/40 bg-sky-50 px-4 py-2.5 text-sm font-bold text-sky-700 transition-colors hover:bg-sky-100 disabled:opacity-50 dark:border-sky-500/30 dark:bg-sky-500/10 dark:text-sky-300 dark:hover:bg-sky-500/20"
+          >
+            {switching ? (
+              <>
+                <Spinner className="h-4 w-4" />
+                O&apos;tilmoqda...
+              </>
+            ) : (
+              <>
+                {isEmployer ? "👤 Ish qidiruvchi" : "🏢 Ish beruvchi"}
+                {" rejimiga o'tish"}
+              </>
+            )}
+          </button>
+        </div>
+
+        {/* ─── CHIQISH ─── */}
+        <div className="rim rounded-3xl glass p-6 sm:p-8 animate-fade-in">
+          <div className="mb-4 flex items-center gap-2.5">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-slate-600 to-slate-800 text-white shadow-md shadow-slate-500/30">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <path d="m16 17 5-5-5-5M21 12H9" />
+              </svg>
+            </span>
+            <div>
+              <h2 className="text-lg font-black tracking-tight text-slate-900 dark:text-white">
+                Hisobdan chiqish
+              </h2>
+              <p className="text-xs text-slate-500 dark:text-zinc-400">
+                Boshqa akkaunt bilan kirish
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 transition-colors hover:bg-slate-50 dark:border-white/10 dark:bg-white/5 dark:text-zinc-200 dark:hover:bg-white/10"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <path d="m16 17 5-5-5-5M21 12H9" />
+            </svg>
+            Chiqish
+          </button>
+        </div>
+
+        {/* ─── DANGER ZONE (xavfsizlik ichida) ─── */}
       {tab === "xavfsizlik" && (
         <section className="rim rounded-3xl border border-rose-200/60 bg-rose-50/40 p-6 backdrop-blur-xl animate-fade-in dark:border-rose-500/20 dark:bg-rose-500/5 sm:p-8">
           <div className="mb-4 flex items-center gap-2.5">
