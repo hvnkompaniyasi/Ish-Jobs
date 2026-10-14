@@ -277,9 +277,9 @@ export default function MapView({
                 <div className="mt-3 flex gap-2">
                   <Link
                     href={href}
-                    className="flex-1 block rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-400 py-2 text-center text-[12.5px] font-bold text-slate-950 transition-all hover:from-emerald-400 hover:to-emerald-300 shadow-[0_0_20px_rgba(16,185,129,0.45)]"
+                    className="flex-1 block rounded-xl bg-emerald-500 py-2 text-[12.5px] font-semibold text-white transition hover:bg-emerald-400"
                   >
-                    Batafsil ↗
+                    Batafsil
                   </Link>
                   {(job.company as { telegramContact?: string | null } | undefined)?.telegramContact && (
                     <a
@@ -289,7 +289,7 @@ export default function MapView({
                       )}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 block rounded-xl bg-gradient-to-r from-sky-500 to-blue-500 py-2 text-center text-[12.5px] font-bold text-white transition-all hover:from-sky-400 hover:to-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.45)]"
+                      className="flex-1 block rounded-xl bg-sky-500 py-2 text-[12.5px] font-semibold text-white transition hover:bg-sky-400"
                     >
                       <span className="inline-flex items-center justify-center gap-1.5">
                         <svg
