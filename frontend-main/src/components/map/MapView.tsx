@@ -31,6 +31,7 @@ interface MapViewProps {
   flyTarget?: MapFlyTarget | null;
   userLocation?: LatLng | null;
   selectedJobId?: string | null;
+  hoveredJobId?: string | null;
   onJobSelect?: (id: string | null) => void;
   defaultCenter?: [number, number];
   defaultZoom?: number;
@@ -160,6 +161,7 @@ export default function MapView({
   flyTarget,
   userLocation,
   selectedJobId,
+  hoveredJobId,
   onJobSelect,
   defaultCenter = [41.3111, 69.2797],
   defaultZoom = 6,
@@ -220,7 +222,7 @@ export default function MapView({
             ? (job.company as { name?: string }).name ?? "Kompaniya"
             : job.company || "Kompaniya";
         const salaryLabel = formatSalaryPill(job.salary);
-        const isSelected = selectedJobId === job._id;
+        const isSelected = selectedJobId === job._id || hoveredJobId === job._id;
         const icon = createSalaryIcon(salaryLabel, isSelected);
         const href = `/jobs/${job._id}`;
 
