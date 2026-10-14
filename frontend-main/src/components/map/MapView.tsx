@@ -204,7 +204,6 @@ export default function MapView({
             fillOpacity: 0.35,
             weight: 2,
           }}
-          className="ishjobs-user-dot"
         />
       )}
       {userLocation && (

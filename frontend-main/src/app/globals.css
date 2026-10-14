@@ -436,7 +436,6 @@ html[data-theme="dark"] .leaflet-control-zoom a:hover,
   color: #10b981 !important;
 }
 
-
 /* ═══════════════════════════════════════════════════════
    LEAFLET MAP — Theme-aware (class-based: html.dark)
    ═══════════════════════════════════════════════════════ */
@@ -517,18 +516,6 @@ html.dark .leaflet-control-zoom a:hover {
   overflow: visible !important;
 }
 
-/* ═══ Foydalanuvchi joylashuvi — pulsatsiya ═══ */
-@keyframes ishjobs-user-pulse {
-  0%   { transform: scale(0.9); opacity: 0.9; }
-  70%  { transform: scale(1.8); opacity: 0;   }
-  100% { transform: scale(1.8); opacity: 0;   }
-}
-.ishjobs-user-dot {
-  transform-origin: center;
-  animation: ishjobs-user-pulse 1.8s ease-out infinite;
-}
-
-
 /* ═══════════════════════════════════════════════════════
    LEAFLET POPUP CSS SPECIFICITY OVERRIDE
    Leaflet default: .leaflet-container a { color: #0078A8 }
@@ -554,7 +541,6 @@ html.dark .leaflet-control-zoom a:hover {
   justify-content: center !important;
   width: 100% !important;
 }
-
 
 /* ═══════════════════════════════════════════════════════
    MAP CONTAINER BACKGROUND — theme-aware
