@@ -384,7 +384,7 @@ export default function JobsMapPage() {
                   "rounded-full px-3 py-1 text-xs font-semibold transition-colors",
                   activeCity === null
                     ? "bg-emerald-500 text-slate-950"
-                    : "border border-zinc-800 bg-zinc-900 text-zinc-300 hover:bg-zinc-800",
+                    : "border border-zinc-200 bg-zinc-50 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800",
                 )}
               >
                 Barchasi
@@ -398,7 +398,7 @@ export default function JobsMapPage() {
                     "rounded-full px-3 py-1 text-xs font-semibold transition-colors",
                     activeCity === c.name
                       ? "bg-emerald-500 text-slate-950"
-                      : "border border-zinc-800 bg-zinc-900 text-zinc-300 hover:bg-zinc-800",
+                      : "border border-zinc-200 bg-zinc-50 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800",
                   )}
                 >
                   {c.name}
@@ -416,7 +416,7 @@ export default function JobsMapPage() {
                     "rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors",
                     activeCategory === cat.value
                       ? "bg-emerald-500/90 text-slate-950"
-                      : "border border-zinc-800 bg-zinc-900 text-zinc-300 hover:bg-zinc-800",
+                      : "border border-zinc-200 bg-zinc-50 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800",
                   )}
                 >
                   {cat.label}
@@ -429,7 +429,7 @@ export default function JobsMapPage() {
                   "rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors",
                   onlyWithSalary
                     ? "bg-emerald-500/90 text-slate-950"
-                    : "border border-zinc-800 bg-zinc-900 text-zinc-300 hover:bg-zinc-800",
+                    : "border border-zinc-200 bg-zinc-50 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800",
                 )}
               >
                 💰 Maoshli
