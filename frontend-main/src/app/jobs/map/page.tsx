@@ -304,9 +304,9 @@ export default function JobsMapPage() {
         )}
       </div>
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden md:pt-[76px]">
         <aside className="hidden w-[400px] shrink-0 flex-col border-r border-zinc-800/60 bg-zinc-950 md:flex">
-          <div className="border-b border-zinc-800/60 px-5 py-4">
+          <div className="px-5 pb-4 pt-2">
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-lg font-bold text-white">Xaritada ishlar</h1>
