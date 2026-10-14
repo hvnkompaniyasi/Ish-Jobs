@@ -116,6 +116,21 @@ export function JobFilters({ filters, onChange }: Props) {
         <LocationFilter value={locationValue} onChange={handleLocationChange} />
       </div>
 
+      <div>
+        <h3 className="mb-2.5 text-sm font-bold text-slate-900 dark:text-white">
+          Saralash
+        </h3>
+        <select
+          value={filters.sort ?? "newest"}
+          onChange={(e) => update("sort", e.target.value as "newest" | "salary" | "views")}
+          className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2.5 text-sm font-medium text-zinc-700 outline-none transition-colors hover:border-zinc-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-zinc-700"
+        >
+          <option value="newest">Eng yangilari</option>
+          <option value="salary">Katta maosh</option>
+          <option value="views">Ko'p ko'rilganlar</option>
+        </select>
+      </div>
+
       <label className="flex cursor-pointer items-center gap-2">
         <input
           type="checkbox"

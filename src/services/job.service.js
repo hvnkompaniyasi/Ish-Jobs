@@ -46,11 +46,19 @@ async function getJobs(filters = {}, pagination = {}) {
     isRemote,
     minSalary,
     maxSalary,
+    sort = 'newest',
     status = 'active',
   } = filters;
 
   const page = Number(pagination.page) || 1;
   const limit = Number(pagination.limit) || 10;
+
+  const sortMap = {
+    newest: { createdAt: -1 },
+    salary: { 'salary.max': -1, 'salary.min': -1, createdAt: -1 },
+    views: { viewsCount: -1, createdAt: -1 },
+  };
+  const sortBy = sortMap[sort] || sortMap.newest;
 
   const query = { status };
 
@@ -72,7 +80,7 @@ async function getJobs(filters = {}, pagination = {}) {
 
   const [jobs, total] = await Promise.all([
     Job.find(query)
-      .sort({ createdAt: -1 })
+      .sort(sortBy)
       .skip(skip)
       .limit(limit)
       .populate('employer', 'firstName lastName email company avatar'),

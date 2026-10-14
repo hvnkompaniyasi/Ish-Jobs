@@ -79,6 +79,7 @@ export interface JobFilters {
   isRemote?: boolean;
   minSalary?: number;
   maxSalary?: number;
+  sort?: "newest" | "salary" | "views";
   page?: number;
   limit?: number;
 }
