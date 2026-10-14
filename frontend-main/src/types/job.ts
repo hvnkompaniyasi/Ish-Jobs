@@ -74,6 +74,8 @@ export interface JobFilters {
   employmentType?: EmploymentType | "";
   experienceLevel?: ExperienceLevel | "";
   city?: string;
+  region?: string;
+  district?: string;
   isRemote?: boolean;
   minSalary?: number;
   maxSalary?: number;

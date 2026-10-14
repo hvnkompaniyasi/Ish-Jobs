@@ -2,6 +2,8 @@
 
 import { cn, EMPLOYMENT_TYPE_LABELS, EXPERIENCE_LABELS } from "@/lib/utils";
 import type { EmploymentType, ExperienceLevel, JobFilters as Filters } from "@/types";
+import { LocationFilter, type LocationValue } from "@/components/map/LocationFilter";
+import { findRegion } from "@/data/uzbekistan";
 
 interface Props {
   filters: Filters;
@@ -29,9 +31,36 @@ export function JobFilters({ filters, onChange }: Props) {
     onChange({ ...filters, [key]: value, page: 1 });
   };
 
+  const locationValue: LocationValue = {
+    region: filters.region ?? null,
+    district: filters.district ?? null,
+  };
+
+  const handleLocationChange = (v: LocationValue) => {
+    // Region tanlangan bo'lsa, backend city maydoniga region.short yuboramiz
+    const region = findRegion(v.region);
+    const cityQuery = v.district
+      ? v.district
+      : region
+        ? region.cityMatch[0] ?? region.short
+        : "";
+
+    onChange({
+      ...filters,
+      region: v.region ?? undefined,
+      district: v.district ?? undefined,
+      city: cityQuery || undefined,
+      page: 1,
+    });
+  };
+
+  const chipActive =
+    "bg-emerald-600 text-white shadow-md shadow-emerald-500/30 dark:bg-emerald-500";
+  const chipIdle =
+    "border border-slate-200/60 bg-white/60 text-slate-700 hover:border-emerald-500/40 hover:text-emerald-700 dark:border-white/10 dark:bg-white/5 dark:text-zinc-300 dark:hover:border-emerald-500/40 dark:hover:text-emerald-400";
+
   return (
     <div className="rim space-y-5 rounded-3xl glass p-5">
-      {/* Ish turi */}
       <div>
         <h3 className="mb-2.5 text-sm font-bold text-slate-900 dark:text-white">
           Ish turi
@@ -45,10 +74,8 @@ export function JobFilters({ filters, onChange }: Props) {
                 type="button"
                 onClick={() => update("employmentType", active ? "" : t)}
                 className={cn(
-                  "rounded-full px-3 py-1.5 text-xs font-semibold transition",
-                  active
-                    ? "bg-emerald-600 text-white shadow-md shadow-emerald-500/30 dark:bg-emerald-500"
-                    : "border border-slate-200/60 bg-white/60 text-slate-700 hover:border-emerald-500/40 hover:text-emerald-700 dark:border-white/10 dark:bg-white/5 dark:text-zinc-300 dark:hover:border-emerald-500/40 dark:hover:text-emerald-400"
+                  "rounded-full px-3 py-1.5 text-xs font-semibold transition-colors",
+                  active ? chipActive : chipIdle,
                 )}
               >
                 {EMPLOYMENT_TYPE_LABELS[t]}
@@ -58,7 +85,6 @@ export function JobFilters({ filters, onChange }: Props) {
         </div>
       </div>
 
-      {/* Tajriba */}
       <div>
         <h3 className="mb-2.5 text-sm font-bold text-slate-900 dark:text-white">
           Tajriba
@@ -72,10 +98,8 @@ export function JobFilters({ filters, onChange }: Props) {
                 type="button"
                 onClick={() => update("experienceLevel", active ? "" : l)}
                 className={cn(
-                  "rounded-full px-3 py-1.5 text-xs font-semibold transition",
-                  active
-                    ? "bg-emerald-600 text-white shadow-md shadow-emerald-500/30 dark:bg-emerald-500"
-                    : "border border-slate-200/60 bg-white/60 text-slate-700 hover:border-emerald-500/40 hover:text-emerald-700 dark:border-white/10 dark:bg-white/5 dark:text-zinc-300 dark:hover:border-emerald-500/40 dark:hover:text-emerald-400"
+                  "rounded-full px-3 py-1.5 text-xs font-semibold transition-colors",
+                  active ? chipActive : chipIdle,
                 )}
               >
                 {EXPERIENCE_LABELS[l]}
@@ -85,21 +109,13 @@ export function JobFilters({ filters, onChange }: Props) {
         </div>
       </div>
 
-      {/* Shahar */}
       <div>
         <h3 className="mb-2.5 text-sm font-bold text-slate-900 dark:text-white">
-          Shahar
+          Manzil
         </h3>
-        <input
-          type="text"
-          value={filters.city || ""}
-          onChange={(e) => update("city", e.target.value)}
-          placeholder="Toshkent, Samarqand..."
-          className="w-full rounded-xl border border-slate-200/60 bg-white/60 px-3 py-2.5 text-sm font-medium text-slate-900 placeholder:text-slate-400 backdrop-blur-xl focus:border-emerald-500/60 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-zinc-500"
-        />
+        <LocationFilter value={locationValue} onChange={handleLocationChange} />
       </div>
 
-      {/* Remote */}
       <label className="flex cursor-pointer items-center gap-2">
         <input
           type="checkbox"
@@ -112,11 +128,10 @@ export function JobFilters({ filters, onChange }: Props) {
         </span>
       </label>
 
-      {/* Tozalash */}
       <button
         type="button"
         onClick={() => onChange({ page: 1, limit: 10 })}
-        className="w-full rounded-xl border border-slate-200/60 bg-white/60 py-2.5 text-sm font-semibold text-slate-700 backdrop-blur-xl transition hover:border-emerald-500/40 hover:text-emerald-700 dark:border-white/10 dark:bg-white/5 dark:text-zinc-300 dark:hover:border-emerald-500/40 dark:hover:text-emerald-400"
+        className="w-full rounded-xl border border-slate-200/60 bg-white/60 py-2.5 text-sm font-semibold text-slate-700 backdrop-blur-xl transition-colors hover:border-emerald-500/40 hover:text-emerald-700 dark:border-white/10 dark:bg-white/5 dark:text-zinc-300 dark:hover:border-emerald-500/40 dark:hover:text-emerald-400"
       >
         Filtrlarni tozalash
       </button>
