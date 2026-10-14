@@ -527,3 +527,30 @@ html.dark .leaflet-control-zoom a:hover {
   transform-origin: center;
   animation: ishjobs-user-pulse 1.8s ease-out infinite;
 }
+
+
+/* ═══════════════════════════════════════════════════════
+   LEAFLET POPUP CSS SPECIFICITY OVERRIDE
+   Leaflet default: .leaflet-container a { color: #0078A8 }
+   Bu Tailwind text-white klassini yengadi. !important bilan tuzatamiz.
+   ═══════════════════════════════════════════════════════ */
+.leaflet-popup-content-wrapper {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+.leaflet-popup-content {
+  margin: 0 !important;
+  line-height: inherit !important;
+}
+.leaflet-popup-content a {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+/* Popup tugmalar — flex/grid ichida to'liq kengayish uchun */
+.leaflet-popup-content a[class*="rounded-xl"] {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+}

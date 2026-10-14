@@ -274,10 +274,10 @@ export default function MapView({
                   <span className="text-[15px] font-bold text-emerald-400">{salaryLabel}</span>
                 </div>
 
-                <div className="mt-3 grid grid-cols-2 gap-2">
+                <div className="mt-3 grid grid-cols-2 gap-2 !text-white">
                   <Link
                     href={href}
-                    className="flex-1 block rounded-xl bg-emerald-500 py-2 text-[12.5px] font-semibold text-white transition hover:bg-emerald-400"
+                    className="flex-1 !block w-full rounded-xl bg-emerald-500 py-2 text-center text-[12.5px] font-semibold !text-white no-underline transition hover:bg-emerald-400"
                   >
                     Batafsil
                   </Link>
@@ -289,7 +289,7 @@ export default function MapView({
                       )}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 block rounded-xl bg-sky-500 py-2 text-[12.5px] font-semibold text-white transition hover:bg-sky-400"
+                      className="flex-1 !block w-full rounded-xl bg-sky-500 py-2 text-center text-[12.5px] font-semibold !text-white no-underline transition hover:bg-sky-400"
                     >
                       <span className="inline-flex items-center justify-center gap-1.5">
                         <svg
