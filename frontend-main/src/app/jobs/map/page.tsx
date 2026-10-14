@@ -384,11 +384,14 @@ export default function JobsMapPage() {
                   </div>
                   <div className="mt-2 flex items-center justify-between gap-2">
                     <span className="text-[13px] font-bold text-emerald-400">{salaryStr}</span>
-                    {(job.company as any)?.telegramContact && (
-                      <a href={`https://t.me/${((job.company as any).telegramContact as string).replace(/^@/,"")}`} target="_blank" rel="noopener noreferrer" onClick={(e:any)=>e.stopPropagation()} className="shrink-0 inline-flex items-center justify-center text-sky-500 hover:text-sky-400 transition" aria-label="Telegram">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0z"/></svg>
-                      </a>
-                    )}
+                    <a
+                      href={`/jobs/${job._id}`}
+                      onClick={(e) => e.stopPropagation()}
+                      className="shrink-0 inline-flex items-center gap-1 rounded-lg bg-emerald-500 px-2.5 py-1 text-[11px] font-semibold text-white transition hover:bg-emerald-400"
+                    >
+                      Batafsil
+                      <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                    </a>
                   </div>
                 </button>
               );
