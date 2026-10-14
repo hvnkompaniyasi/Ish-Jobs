@@ -140,7 +140,7 @@ export default function JobDetailPage() {
     typeof coords[0] === "number" && typeof coords[1] === "number";
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-24 md:pb-6">
       <Link
         href="/jobs"
         className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-emerald-700 dark:text-zinc-400 dark:hover:text-emerald-400"
@@ -330,7 +330,7 @@ export default function JobDetailPage() {
         </div>
 
         {/* O'ng ustun (sidebar) */}
-        <aside className="space-y-4 lg:sticky lg:top-24 lg:h-fit">
+        <aside className="space-y-4 pb-4 lg:pb-0 lg:sticky lg:top-24 lg:h-fit">
           {/* 1-Click Telegram CTA */}
           {telegramUrl && !isOwnJob && (
             <a

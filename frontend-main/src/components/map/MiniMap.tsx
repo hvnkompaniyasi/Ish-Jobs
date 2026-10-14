@@ -26,7 +26,7 @@ export default function MiniMap({ lat, lng, label, zoom = 14 }: MiniMapProps) {
       scrollWheelZoom={false}
       dragging
       zoomControl={false}
-      className="h-44 w-full rounded-2xl overflow-hidden"
+      className="h-36 w-full rounded-2xl overflow-hidden sm:h-44"
       style={{ background: "#0b1220" }}
     >
       <TileLayer
