@@ -382,7 +382,22 @@ export default function JobsMapPage() {
                       <span className="text-[10px] text-blue-300">🚶 {distanceLabel}</span>
                     )}
                   </div>
-                  <div className="mt-2 text-[13px] font-bold text-emerald-400">{salaryStr}</div>
+                  <div className="mt-2 flex items-center justify-between">
+                    <span className="text-[13px] font-bold text-emerald-400">{salaryStr}</span>
+                    {(job.company as { telegramContact?: string | null } | undefined)?.telegramContact && (
+                      <a
+                        href={`https://t.me/${((job.company as { telegramContact: string }).telegramContact).replace(/^@/, "")}?text=${encodeURIComponent(
+                          `Assalomu alaykum! IshJobs orqali "${job.title}" vakansiyasini ko'rdim.`,
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="rounded-full bg-sky-500/20 border border-sky-500/40 px-2 py-0.5 text-[11px] font-semibold text-sky-300 hover:bg-sky-500/30 transition"
+                      >
+                        ✈️
+                      </a>
+                    )}
+                  </div>
                 </button>
               );
             })}

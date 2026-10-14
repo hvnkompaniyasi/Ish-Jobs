@@ -46,6 +46,18 @@ const UZBEKISTAN_BOUNDS: L.LatLngBoundsExpression = [
 // ═══════════════════════════════════════════════════════
 // HELPERS
 // ═══════════════════════════════════════════════════════
+/**
+ * Telegram deep-link: @username + tayyor xabar shabloni
+ * @ belgisisiz username'ni qabul qiladi.
+ */
+function buildTelegramUrl(username: string, jobTitle: string): string {
+  const clean = username.replace(/^@/, "").trim();
+  const text = encodeURIComponent(
+    `Assalomu alaykum! IshJobs orqali "${jobTitle}" vakansiyasini ko'rdim. Suhbatga yozilmoqchiman.`
+  );
+  return `https://t.me/${clean}?text=${text}`;
+}
+
 function escapeHtml(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
@@ -262,12 +274,27 @@ export default function MapView({
                   <span className="text-[15px] font-bold text-emerald-400">{salaryLabel}</span>
                 </div>
 
-                <Link
-                  href={href}
-                  className="mt-3 block w-full rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-400 py-2 text-center text-[12.5px] font-bold text-slate-950 transition-all hover:from-emerald-400 hover:to-emerald-300 shadow-[0_0_20px_rgba(16,185,129,0.45)]"
-                >
-                  Batafsil ko&apos;rish ↗
-                </Link>
+                <div className="mt-3 flex gap-2">
+                  <Link
+                    href={href}
+                    className="flex-1 block rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-400 py-2 text-center text-[12.5px] font-bold text-slate-950 transition-all hover:from-emerald-400 hover:to-emerald-300 shadow-[0_0_20px_rgba(16,185,129,0.45)]"
+                  >
+                    Batafsil ↗
+                  </Link>
+                  {(job.company as { telegramContact?: string | null } | undefined)?.telegramContact && (
+                    <a
+                      href={buildTelegramUrl(
+                        (job.company as { telegramContact: string }).telegramContact,
+                        job.title,
+                      )}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 block rounded-xl bg-gradient-to-r from-sky-500 to-blue-500 py-2 text-center text-[12.5px] font-bold text-white transition-all hover:from-sky-400 hover:to-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.45)]"
+                    >
+                      ✈️ Telegram
+                    </a>
+                  )}
+                </div>
               </div>
             </Popup>
           </Marker>
