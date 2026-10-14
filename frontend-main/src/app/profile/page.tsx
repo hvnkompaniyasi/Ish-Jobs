@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -9,16 +9,27 @@ import { Spinner } from "@/components/ui/Spinner";
 import { DeleteAccountModal } from "@/components/auth/DeleteAccountModal";
 import { AvatarUploader } from "@/components/profile/AvatarUploader";
 import { useAuth } from "@/hooks";
-import { cn, initials, fullName } from "@/lib/utils";
+import { cn, fullName } from "@/lib/utils";
+import { notificationsService } from "@/services";
+
+type Tab = "profil" | "xavfsizlik" | "faollik" | "xavfli";
+
+const TABS: { id: Tab; label: string }[] = [
+  { id: "profil", label: "Profil" },
+  { id: "xavfsizlik", label: "Xavfsizlik" },
+  { id: "faollik", label: "Faollik" },
+  { id: "xavfli", label: "Xavfli" },
+];
 
 export default function ProfilePage() {
   const router = useRouter();
-  const {
-    user,
-    isAuthenticated,
-    hydrated,
-    updateProfile, changePassword, uploadAvatar,
-  } = useAuth();
+  const searchParams = useSearchParams();
+  const { user, isAuthenticated, hydrated, updateProfile, changePassword } = useAuth();
+
+  const initialTab = (searchParams.get("tab") as Tab) || "profil";
+  const [tab, setTab] = useState<Tab>(
+    TABS.some((t) => t.id === initialTab) ? initialTab : "profil",
+  );
 
   const [profileForm, setProfileForm] = useState({ firstName: "", lastName: "" });
   const [passwordForm, setPasswordForm] = useState({
@@ -34,6 +45,7 @@ export default function ProfilePage() {
   const [passwordMsg, setPasswordMsg] = useState<string | null>(null);
   const [passwordErr, setPasswordErr] = useState<string | null>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   // Auth guard
   useEffect(() => {
@@ -52,6 +64,24 @@ export default function ProfilePage() {
       });
     }
   }, [user]);
+
+  // Unread count
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    (async () => {
+      try {
+        const { count } = await notificationsService.getUnreadCount();
+        setUnreadCount(count);
+      } catch {}
+    })();
+  }, [isAuthenticated]);
+
+  // Tab URL'da saqlash
+  const handleTabChange = (newTab: Tab) => {
+    setTab(newTab);
+    const url = newTab === "profil" ? "/profile" : `/profile?tab=${newTab}`;
+    window.history.replaceState(null, "", url);
+  };
 
   const handleProfileSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -110,14 +140,12 @@ export default function ProfilePage() {
   const isEmployer = (user.activeRole || user.role) === "employer";
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
-      {/* ═══════ HEADER CARD ═══════ */}
-      <div className="rim relative overflow-hidden rounded-3xl glass p-6 sm:p-8 animate-fade-in-up">
+    <div className="mx-auto max-w-3xl space-y-5 pb-24 md:pb-6">
+      {/* ═══════ HEADER ═══════ */}
+      <div className="rim relative overflow-hidden rounded-3xl glass p-6 sm:p-8">
         <div className="pointer-events-none absolute -right-24 -top-24 h-56 w-56 rounded-full bg-gradient-to-br from-emerald-400/20 to-transparent blur-3xl" />
-
         <div className="relative flex flex-col items-center gap-4 sm:flex-row sm:items-start sm:gap-6">
           <AvatarUploader />
-
           <div className="flex-1 text-center sm:text-left">
             <h1 className="text-2xl font-black tracking-tight text-slate-900 sm:text-3xl dark:text-white">
               {fullName(user)}
@@ -125,223 +153,336 @@ export default function ProfilePage() {
             <p className="mt-1 text-sm text-slate-500 dark:text-zinc-400">
               {user.phone || user.email}
             </p>
-
             <div className="mt-3 flex flex-wrap justify-center gap-2 sm:justify-start">
               <span
                 className={cn(
                   "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider",
                   isEmployer
                     ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400"
-                    : "bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-400"
+                    : "bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-400",
                 )}
               >
-                {isEmployer ? (
-                  <>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <rect x="4" y="2" width="16" height="20" rx="2" />
-                      <path d="M9 22v-4h6v4" />
-                    </svg>
-                    Ish beruvchi
-                  </>
-                ) : (
-                  <>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-                      <circle cx="12" cy="7" r="4" />
-                    </svg>
-                    Ish qidiruvchi
-                  </>
-                )}
+                {isEmployer ? "Ish beruvchi" : "Ish qidiruvchi"}
               </span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ═══════ PROFILE EDIT ═══════ */}
-      <section className="rim rounded-3xl glass p-6 sm:p-8 animate-fade-in-up delay-100">
-        <div className="mb-5 flex items-center gap-2.5">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-md shadow-emerald-500/30">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-              <circle cx="12" cy="7" r="4" />
-            </svg>
-          </span>
-          <div>
-            <h2 className="text-lg font-black tracking-tight text-slate-900 dark:text-white">
-              Profil ma&apos;lumotlari
-            </h2>
-            <p className="text-xs text-slate-500 dark:text-zinc-400">
-              Ism va familiyani tahrirlash
-            </p>
-          </div>
-        </div>
-
-        <form onSubmit={handleProfileSubmit} className="space-y-4">
-          <div className="grid gap-3 sm:grid-cols-2">
-            <Input
-              label="Ism"
-              value={profileForm.firstName}
-              onChange={(e) => setProfileForm((f) => ({ ...f, firstName: e.target.value }))}
-              placeholder="Ismingiz"
-              required
-            />
-            <Input
-              label="Familiya"
-              value={profileForm.lastName}
-              onChange={(e) => setProfileForm((f) => ({ ...f, lastName: e.target.value }))}
-              placeholder="Familiyangiz"
-              required
-            />
-          </div>
-
-          <Input
-            label="Telefon raqam"
-            value={user.phone || ""}
-            disabled
-            hint="Telefon raqamni o'zgartirish mumkin emas"
-          />
-
-          {profileMsg && (
-            <div className="flex items-center gap-2 rounded-2xl border border-emerald-200/60 bg-emerald-50/60 px-4 py-3 text-sm font-medium text-emerald-700 backdrop-blur-xl animate-fade-in dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-400">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M20 6L9 17l-5-5" />
-              </svg>
-              {profileMsg}
-            </div>
-          )}
-
-          {profileErr && (
-            <div className="rounded-2xl border border-rose-200/60 bg-rose-50/60 px-4 py-3 text-sm font-medium text-rose-700 backdrop-blur-xl animate-fade-in dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-400">
-              {profileErr}
-            </div>
-          )}
-
-          <div className="flex justify-end">
-            <Button type="submit" loading={savingProfile}>
-              Saqlash
-            </Button>
-          </div>
-        </form>
-      </section>
-
-      {/* ═══════ PASSWORD CHANGE ═══════ */}
-      <section className="rim rounded-3xl glass p-6 sm:p-8 animate-fade-in-up delay-200">
-        <div className="mb-5 flex items-center gap-2.5">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-md shadow-emerald-500/30">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <rect x="3" y="11" width="18" height="11" rx="2" />
-              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-            </svg>
-          </span>
-          <div>
-            <h2 className="text-lg font-black tracking-tight text-slate-900 dark:text-white">
-              Parolni o&apos;zgartirish
-            </h2>
-            <p className="text-xs text-slate-500 dark:text-zinc-400">
-              Xavfsizlik uchun eski parolni kiriting
-            </p>
-          </div>
-        </div>
-
-        <form onSubmit={handlePasswordSubmit} className="space-y-4">
-          <Input
-            label="Eski parol"
-            type="password"
-            value={passwordForm.oldPassword}
-            onChange={(e) => setPasswordForm((f) => ({ ...f, oldPassword: e.target.value }))}
-            placeholder="••••••••"
-            required
-            autoComplete="current-password"
-          />
-          <div className="grid gap-3 sm:grid-cols-2">
-            <Input
-              label="Yangi parol"
-              type="password"
-              value={passwordForm.newPassword}
-              onChange={(e) => setPasswordForm((f) => ({ ...f, newPassword: e.target.value }))}
-              placeholder="Kamida 8 belgi"
-              required
-              minLength={8}
-              autoComplete="new-password"
-            />
-            <Input
-              label="Yangi parolni takrorlash"
-              type="password"
-              value={passwordForm.confirmPassword}
-              onChange={(e) => setPasswordForm((f) => ({ ...f, confirmPassword: e.target.value }))}
-              placeholder="Yana kiriting"
-              required
-              minLength={8}
-              autoComplete="new-password"
-            />
-          </div>
-
-          {passwordMsg && (
-            <div className="flex items-center gap-2 rounded-2xl border border-emerald-200/60 bg-emerald-50/60 px-4 py-3 text-sm font-medium text-emerald-700 backdrop-blur-xl animate-fade-in dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-400">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M20 6L9 17l-5-5" />
-              </svg>
-              {passwordMsg}
-            </div>
-          )}
-
-          {passwordErr && (
-            <div className="rounded-2xl border border-rose-200/60 bg-rose-50/60 px-4 py-3 text-sm font-medium text-rose-700 backdrop-blur-xl animate-fade-in dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-400">
-              {passwordErr}
-            </div>
-          )}
-
-          <div className="flex justify-end">
-            <Button type="submit" loading={savingPassword}>
-              Parolni o&apos;zgartirish
-            </Button>
-          </div>
-        </form>
-      </section>
-
-      {/* ═══════ DANGER ZONE ═══════ */}
-      <section className="rim rounded-3xl border border-rose-200/60 bg-rose-50/40 p-6 backdrop-blur-xl animate-fade-in-up delay-300 dark:border-rose-500/20 dark:bg-rose-500/5 sm:p-8">
-        <div className="mb-4 flex items-center gap-2.5">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-rose-500 text-white shadow-md shadow-rose-500/30">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-              <line x1="12" y1="9" x2="12" y2="13" />
-              <line x1="12" y1="17" x2="12.01" y2="17" />
-            </svg>
-          </span>
-          <div>
-            <h2 className="text-lg font-black tracking-tight text-rose-900 dark:text-rose-400">
-              Xavfli hudud
-            </h2>
-            <p className="text-xs text-rose-700/70 dark:text-rose-400/70">
-              Hisobni o&apos;chirish — qaytarib bo&apos;lmaydi
-            </p>
-          </div>
-        </div>
-
-        <p className="mb-4 text-sm text-rose-900/80 dark:text-rose-300/80">
-          Hisobingizni o&apos;chirsangiz, barcha ma&apos;lumotlaringiz
-          (rezyumelar, vakansiyalar, arizalar) <strong>butunlay o&apos;chiriladi</strong>.
-        </p>
-
-        <Button variant="danger" onClick={() => setDeleteOpen(true)}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-          </svg>
-          Hisobni o&apos;chirish
-        </Button>
-      </section>
-
-      {/* Back link */}
-      <div className="text-center">
-        <Link
-          href="/"
-          className="text-sm font-medium text-slate-500 transition hover:text-emerald-700 dark:text-zinc-400 dark:hover:text-emerald-400"
+      {/* ═══════ TABLAR ═══════ */}
+      <div className="rim overflow-hidden rounded-2xl glass">
+        <div
+          role="tablist"
+          className="flex gap-1 overflow-x-auto p-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
-          ← Bosh sahifaga qaytish
-        </Link>
+          {TABS.map((t) => {
+            const active = tab === t.id;
+            const isDanger = t.id === "xavfli";
+            return (
+              <button
+                key={t.id}
+                type="button"
+                role="tab"
+                aria-selected={active}
+                onClick={() => handleTabChange(t.id)}
+                className={cn(
+                  "shrink-0 rounded-xl px-4 py-2 text-xs font-bold uppercase tracking-wider transition-colors",
+                  active
+                    ? isDanger
+                      ? "bg-rose-500 text-white shadow-md shadow-rose-500/30"
+                      : "bg-emerald-500 text-white shadow-md shadow-emerald-500/30"
+                    : isDanger
+                      ? "text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-500/10"
+                      : "text-slate-600 hover:bg-slate-100 dark:text-zinc-400 dark:hover:bg-white/5",
+                )}
+              >
+                {t.label}
+              </button>
+            );
+          })}
+        </div>
       </div>
+
+      {/* ═══════ KONTENT ═══════ */}
+
+      {/* ─── TAB: Profil ─── */}
+      {tab === "profil" && (
+        <section className="rim rounded-3xl glass p-6 sm:p-8 animate-fade-in">
+          <div className="mb-5 flex items-center gap-2.5">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-md shadow-emerald-500/30">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </span>
+            <div>
+              <h2 className="text-lg font-black tracking-tight text-slate-900 dark:text-white">
+                Profil ma&apos;lumotlari
+              </h2>
+              <p className="text-xs text-slate-500 dark:text-zinc-400">
+                Ism va familiyani tahrirlash
+              </p>
+            </div>
+          </div>
+
+          <form onSubmit={handleProfileSubmit} className="space-y-4">
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Input
+                label="Ism"
+                value={profileForm.firstName}
+                onChange={(e) => setProfileForm((f) => ({ ...f, firstName: e.target.value }))}
+                placeholder="Ismingiz"
+                required
+              />
+              <Input
+                label="Familiya"
+                value={profileForm.lastName}
+                onChange={(e) => setProfileForm((f) => ({ ...f, lastName: e.target.value }))}
+                placeholder="Familiyangiz"
+                required
+              />
+            </div>
+
+            <Input
+              label="Telefon raqam"
+              value={user.phone || ""}
+              disabled
+              hint="Telefon raqamni o'zgartirish mumkin emas"
+            />
+
+            {profileMsg && (
+              <div className="rounded-2xl border border-emerald-200/60 bg-emerald-50/60 px-4 py-3 text-sm font-medium text-emerald-700 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-400">
+                ✓ {profileMsg}
+              </div>
+            )}
+            {profileErr && (
+              <div className="rounded-2xl border border-rose-200/60 bg-rose-50/60 px-4 py-3 text-sm font-medium text-rose-700 dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-400">
+                {profileErr}
+              </div>
+            )}
+
+            <div className="flex justify-end">
+              <Button type="submit" loading={savingProfile}>
+                Saqlash
+              </Button>
+            </div>
+          </form>
+        </section>
+      )}
+
+      {/* ─── TAB: Xavfsizlik ─── */}
+      {tab === "xavfsizlik" && (
+        <section className="rim rounded-3xl glass p-6 sm:p-8 animate-fade-in">
+          <div className="mb-5 flex items-center gap-2.5">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-md shadow-emerald-500/30">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <rect x="3" y="11" width="18" height="11" rx="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+            </span>
+            <div>
+              <h2 className="text-lg font-black tracking-tight text-slate-900 dark:text-white">
+                Parolni o&apos;zgartirish
+              </h2>
+              <p className="text-xs text-slate-500 dark:text-zinc-400">
+                Xavfsizlik uchun eski parolni kiriting
+              </p>
+            </div>
+          </div>
+
+          <form onSubmit={handlePasswordSubmit} className="space-y-4">
+            <Input
+              label="Eski parol"
+              type="password"
+              value={passwordForm.oldPassword}
+              onChange={(e) => setPasswordForm((f) => ({ ...f, oldPassword: e.target.value }))}
+              placeholder="••••••••"
+              required
+              autoComplete="current-password"
+            />
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Input
+                label="Yangi parol"
+                type="password"
+                value={passwordForm.newPassword}
+                onChange={(e) => setPasswordForm((f) => ({ ...f, newPassword: e.target.value }))}
+                placeholder="Kamida 8 belgi"
+                required
+                minLength={8}
+                autoComplete="new-password"
+              />
+              <Input
+                label="Yangi parolni takrorlash"
+                type="password"
+                value={passwordForm.confirmPassword}
+                onChange={(e) => setPasswordForm((f) => ({ ...f, confirmPassword: e.target.value }))}
+                placeholder="Yana kiriting"
+                required
+                minLength={8}
+                autoComplete="new-password"
+              />
+            </div>
+
+            {passwordMsg && (
+              <div className="rounded-2xl border border-emerald-200/60 bg-emerald-50/60 px-4 py-3 text-sm font-medium text-emerald-700 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-400">
+                ✓ {passwordMsg}
+              </div>
+            )}
+            {passwordErr && (
+              <div className="rounded-2xl border border-rose-200/60 bg-rose-50/60 px-4 py-3 text-sm font-medium text-rose-700 dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-400">
+                {passwordErr}
+              </div>
+            )}
+
+            <div className="flex justify-end">
+              <Button type="submit" loading={savingPassword}>
+                Parolni o&apos;zgartirish
+              </Button>
+            </div>
+          </form>
+        </section>
+      )}
+
+      {/* ─── TAB: Faollik ─── */}
+      {tab === "faollik" && (
+        <div className="space-y-3 animate-fade-in">
+          <Link
+            href={isEmployer ? "/jobs/my" : "/applications/my"}
+            className="rim group flex items-center gap-4 rounded-3xl glass p-5 transition-colors hover:bg-slate-50 dark:hover:bg-white/5"
+          >
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-md shadow-emerald-500/30">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <rect x="2" y="7" width="20" height="14" rx="2" />
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+              </svg>
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="font-bold text-slate-900 dark:text-white">
+                {isEmployer ? "Mening vakansiyalarim" : "Mening arizalarim"}
+              </p>
+              <p className="mt-0.5 text-xs text-slate-500 dark:text-zinc-400">
+                {isEmployer
+                  ? "Joylashtirilgan vakansiyalar ro'yxati"
+                  : "Yuborilgan arizalar va ularning holati"}
+              </p>
+            </div>
+            <svg
+              className="shrink-0 text-slate-400 transition-transform group-hover:translate-x-1"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+            >
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </Link>
+
+          <Link
+            href="/notifications"
+            className="rim group flex items-center gap-4 rounded-3xl glass p-5 transition-colors hover:bg-slate-50 dark:hover:bg-white/5"
+          >
+            <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-500 to-blue-600 text-white shadow-md shadow-sky-500/30">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+                <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+              </svg>
+              {unreadCount > 0 && (
+                <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-bold text-white ring-2 ring-white dark:ring-zinc-900">
+                  {unreadCount > 9 ? "9+" : unreadCount}
+                </span>
+              )}
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="font-bold text-slate-900 dark:text-white">Xabarlar</p>
+              <p className="mt-0.5 text-xs text-slate-500 dark:text-zinc-400">
+                {unreadCount > 0
+                  ? `${unreadCount} ta o'qilmagan xabar`
+                  : "Yangi vakansiya va ariza bildirishnomalari"}
+              </p>
+            </div>
+            <svg
+              className="shrink-0 text-slate-400 transition-transform group-hover:translate-x-1"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+            >
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </Link>
+
+          {!isEmployer && (
+            <Link
+              href="/resumes/my"
+              className="rim group flex items-center gap-4 rounded-3xl glass p-5 transition-colors hover:bg-slate-50 dark:hover:bg-white/5"
+            >
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 text-white shadow-md shadow-violet-500/30">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <path d="M14 2v6h6" />
+                  <path d="M8 13h8M8 17h5" />
+                </svg>
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="font-bold text-slate-900 dark:text-white">Mening rezyumelarim</p>
+                <p className="mt-0.5 text-xs text-slate-500 dark:text-zinc-400">
+                  Rezyumelarni tahrirlash va yangilash
+                </p>
+              </div>
+              <svg
+                className="shrink-0 text-slate-400 transition-transform group-hover:translate-x-1"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </Link>
+          )}
+        </div>
+      )}
+
+      {/* ─── TAB: Xavfli ─── */}
+      {tab === "xavfli" && (
+        <section className="rim rounded-3xl border border-rose-200/60 bg-rose-50/40 p-6 backdrop-blur-xl animate-fade-in dark:border-rose-500/20 dark:bg-rose-500/5 sm:p-8">
+          <div className="mb-4 flex items-center gap-2.5">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-rose-500 text-white shadow-md shadow-rose-500/30">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                <line x1="12" y1="9" x2="12" y2="13" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
+              </svg>
+            </span>
+            <div>
+              <h2 className="text-lg font-black tracking-tight text-rose-900 dark:text-rose-400">
+                Xavfli hudud
+              </h2>
+              <p className="text-xs text-rose-700/70 dark:text-rose-400/70">
+                Hisobni o&apos;chirish — qaytarib bo&apos;lmaydi
+              </p>
+            </div>
+          </div>
+
+          <p className="mb-4 text-sm text-rose-900/80 dark:text-rose-300/80">
+            Hisobingizni o&apos;chirsangiz, barcha ma&apos;lumotlaringiz
+            (rezyumelar, vakansiyalar, arizalar) <strong>butunlay o&apos;chiriladi</strong>.
+          </p>
+
+          <Button variant="danger" onClick={() => setDeleteOpen(true)}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+            </svg>
+            Hisobni o&apos;chirish
+          </Button>
+        </section>
+      )}
 
       <DeleteAccountModal open={deleteOpen} onClose={() => setDeleteOpen(false)} />
     </div>
