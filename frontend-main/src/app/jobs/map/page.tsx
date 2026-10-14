@@ -7,6 +7,8 @@ import { Spinner } from "@/components/ui/Spinner";
 import { jobsService, getErrorMessage } from "@/services";
 import type { Job } from "@/types";
 import type { MapFlyTarget } from "@/components/map/MapView";
+import { LocationFilter, type LocationValue } from "@/components/map/LocationFilter";
+import { REGIONS, findRegion } from "@/data/uzbekistan";
 import { cn } from "@/lib/utils";
 import { haversineKm, formatDistance, coordsToLatLng, type LatLng } from "@/lib/geo";
 
@@ -19,13 +21,6 @@ const MapView = dynamic(() => import("@/components/map/MapView"), {
   ),
 });
 
-const CITIES = [
-  { name: "Toshkent",  lat: 41.2995, lng: 69.2401, zoom: 12 },
-  { name: "Samarqand", lat: 39.6270, lng: 66.9750, zoom: 12 },
-  { name: "Buxoro",    lat: 39.7681, lng: 64.4217, zoom: 12 },
-  { name: "Namangan",  lat: 40.9983, lng: 71.6726, zoom: 12 },
-  { name: "Andijon",   lat: 40.7821, lng: 72.3442, zoom: 12 },
-] as const;
 
 const RADIUS_OPTIONS = [
   { label: "Barchasi", value: null },
@@ -71,7 +66,7 @@ export default function JobsMapPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [activeCity, setActiveCity] = useState<string | null>(null);
+  const [locationFilter, setLocationFilter] = useState<LocationValue>({ region: null, district: null });
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [radiusKm, setRadiusKm] = useState<number | null>(null);
   const [onlyWithSalary, setOnlyWithSalary] = useState(false);
@@ -114,10 +109,17 @@ export default function JobsMapPage() {
         const d = haversineKm(userLocation, coordsToLatLng(job.locationPoint.coordinates));
         if (d > radiusKm) return false;
       }
-      if (activeCity && job.location?.city !== activeCity) return false;
+      if (locationFilter.region) {
+        const region = findRegion(locationFilter.region);
+        if (region) {
+          const city = (job.location?.city ?? "").toLowerCase();
+          const matches = region.cityMatch.some((m) => city.includes(m.toLowerCase()));
+          if (!matches) return false;
+        }
+      }
       return true;
     });
-  }, [jobs, activeCategory, onlyWithSalary, radiusKm, userLocation, activeCity]);
+  }, [jobs, activeCategory, onlyWithSalary, radiusKm, userLocation, locationFilter]);
 
   const handleLocate = () => {
     if (!navigator.geolocation) {
@@ -141,11 +143,15 @@ export default function JobsMapPage() {
     );
   };
 
-  const handleCityClick = (cityName: string | null) => {
-    setActiveCity(cityName);
-    if (cityName === null) { setFlyTarget(null); return; }
-    const c = CITIES.find((x) => x.name === cityName);
-    if (c) setFlyTarget({ lat: c.lat, lng: c.lng, zoom: c.zoom, token: Date.now() });
+  const handleLocationChange = (v: LocationValue) => {
+    setLocationFilter(v);
+    const region = findRegion(v.region);
+    if (!region) { setFlyTarget(null); return; }
+    const district = v.district ? region.districts.find((d) => d.name === v.district) : null;
+    const lat = district?.lat ?? region.lat;
+    const lng = district?.lng ?? region.lng;
+    const zoom = district?.lat ? 13 : region.zoom;
+    setFlyTarget({ lat, lng, zoom, token: Date.now() });
   };
 
   const handleCardClick = (jobId: string) => {
@@ -166,7 +172,7 @@ export default function JobsMapPage() {
   };
 
   const resetFilters = () => {
-    setActiveCity(null);
+    setLocationFilter({ region: null, district: null });
     setActiveCategory(null);
     setRadiusKm(null);
     setOnlyWithSalary(false);
@@ -174,7 +180,7 @@ export default function JobsMapPage() {
   };
 
   const hasActiveFilter =
-    activeCity !== null || activeCategory !== null || radiusKm !== null || onlyWithSalary;
+    locationFilter.region !== null || activeCategory !== null || radiusKm !== null || onlyWithSalary;
 
   return (
     <div className="fixed inset-0 z-0 flex flex-col bg-slate-950">
@@ -219,57 +225,9 @@ export default function JobsMapPage() {
           </div>
         )}
 
-        {userLocation && (
-          <div className="pointer-events-auto -mx-4 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {RADIUS_OPTIONS.map((opt) => (
-              <button
-                key={String(opt.value)}
-                type="button"
-                onClick={() => setRadiusKm(opt.value)}
-                className={cn(
-                  "shrink-0 rounded-full px-3 py-1 text-[11px] font-semibold transition-colors",
-                  radiusKm === opt.value
-                    ? "bg-blue-500 text-white shadow-[0_0_16px_rgba(59,130,246,0.6)]"
-                    : "border border-white/15 bg-white/10 text-white backdrop-blur-md hover:bg-white/20",
-                )}
-              >
-                {opt.label}
-              </button>
-            ))}
-          </div>
-        )}
+        <LocationFilter value={locationFilter} onChange={handleLocationChange} />
 
-        {!loading && !error && jobs.length > 0 && (
-          <div className="pointer-events-auto -mx-4 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <button
-              type="button"
-              onClick={() => handleCityClick(null)}
-              className={cn(
-                "shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors",
-                activeCity === null
-                  ? "bg-emerald-500 text-slate-950 shadow-[0_0_18px_rgba(16,185,129,0.65)]"
-                  : "border border-white/15 bg-white/10 text-white backdrop-blur-md hover:bg-white/20",
-              )}
-            >
-              📍 Barchasi
-            </button>
-            {CITIES.map((c) => (
-              <button
-                key={c.name}
-                type="button"
-                onClick={() => handleCityClick(c.name)}
-                className={cn(
-                  "shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors",
-                  activeCity === c.name
-                    ? "bg-emerald-500 text-slate-950 shadow-[0_0_18px_rgba(16,185,129,0.65)]"
-                    : "border border-white/15 bg-white/10 text-white backdrop-blur-md hover:bg-white/20",
-                )}
-              >
-                {c.name}
-              </button>
-            ))}
-          </div>
-        )}
+
 
         {!loading && !error && jobs.length > 0 && (
           <div className="pointer-events-auto -mx-4 flex items-center gap-2 overflow-x-auto px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -376,35 +334,7 @@ export default function JobsMapPage() {
               </div>
             )}
 
-            <div className="flex flex-wrap gap-1.5">
-              <button
-                type="button"
-                onClick={() => handleCityClick(null)}
-                className={cn(
-                  "rounded-full px-3 py-1 text-xs font-semibold transition-colors",
-                  activeCity === null
-                    ? "bg-emerald-500 text-slate-950"
-                    : "border border-zinc-200 bg-zinc-50 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800",
-                )}
-              >
-                Barchasi
-              </button>
-              {CITIES.map((c) => (
-                <button
-                  key={c.name}
-                  type="button"
-                  onClick={() => handleCityClick(c.name)}
-                  className={cn(
-                    "rounded-full px-3 py-1 text-xs font-semibold transition-colors",
-                    activeCity === c.name
-                      ? "bg-emerald-500 text-slate-950"
-                      : "border border-zinc-200 bg-zinc-50 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800",
-                  )}
-                >
-                  {c.name}
-                </button>
-              ))}
-            </div>
+            <LocationFilter value={locationFilter} onChange={handleLocationChange} />
 
             <div className="flex flex-wrap gap-1.5">
               {CATEGORIES.map((cat) => (
