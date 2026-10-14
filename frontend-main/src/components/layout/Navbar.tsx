@@ -12,8 +12,8 @@ import { cn, initials, fullName } from "@/lib/utils";
 import type { UserRole } from "@/types";
 
 const navLinks = [
-  { href: "/jobs", label: "Vakansiyalar" },
-  { href: "/jobs/map", label: "Xarita" },
+  { href: "/jobs", label: "Vakansiyalar", exact: true },
+  { href: "/jobs/map", label: "Xarita", exact: true },
   { href: "/resumes", label: "Mutaxassislar" },
   { href: "/applications", label: "Arizalar", auth: true },
   { href: "/dashboard", label: "Boshqaruv", auth: true },
@@ -106,7 +106,7 @@ export function Navbar() {
               {navLinks
                 .filter((l) => !(l as { auth?: boolean }).auth || isAuthenticated)
                 .map((l) => {
-                const active = pathname === l.href || pathname.startsWith(l.href + "/");
+                const active = pathname === l.href || (!(l as { exact?: boolean }).exact && pathname.startsWith(l.href + "/"));
                 return (
                   <Link
                     key={l.href}

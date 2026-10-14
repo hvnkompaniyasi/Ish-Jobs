@@ -183,7 +183,7 @@ export default function JobsMapPage() {
     locationFilter.region !== null || activeCategory !== null || radiusKm !== null || onlyWithSalary;
 
   return (
-    <div className="fixed inset-0 z-0 flex flex-col bg-slate-950">
+    <div className="fixed inset-0 z-0 flex flex-col bg-slate-100 dark:bg-[#0b1220]">
       <div className="pointer-events-none absolute left-0 right-0 top-0 z-[900] flex flex-col gap-2 bg-gradient-to-b from-slate-950/95 via-slate-950/70 to-transparent px-4 pb-12 pt-[76px] md:hidden">
         <div className="flex items-center justify-between gap-3">
           <div className="pointer-events-auto">
