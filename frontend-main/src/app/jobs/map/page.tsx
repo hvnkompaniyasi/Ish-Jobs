@@ -196,7 +196,7 @@ export default function JobsMapPage() {
               ) : (
                 <span>📍</span>
               )}
-              <span className="hidden sm:inline">{userLocation ? "Joylashuv yoqilgan" : "Mening joylashuvim"}</span>
+              <span className="hidden sm:inline">{userLocation ? "Yoqilgan" : "Yaqinimda"}</span>
               <span className="sm:hidden">{userLocation ? "Yoqilgan" : "Yaqinimda"}</span>
             </button>
             <Link
@@ -337,7 +337,7 @@ export default function JobsMapPage() {
         {!loading && !error && filteredJobs.length > 0 && (
           <div
             ref={carouselRef}
-            className="pointer-events-none absolute bottom-[92px] left-0 right-0 z-[950] flex gap-3 overflow-x-auto px-4 pb-2 md:bottom-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="pointer-events-none absolute bottom-[92px] left-0 right-0 z-[950] flex gap-3 overflow-x-auto px-4 pb-2 md:bottom-24 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {filteredJobs.map((job) => {
               const companyName =
