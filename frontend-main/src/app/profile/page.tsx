@@ -179,8 +179,8 @@ export default function ProfilePage() {
                 disabled={switching}
                 title={
                   isEmployer
-                    ? "Ish qidiruvchi rejimiga o'tish"
-                    : "Ish beruvchi rejimiga o'tish"
+                    ? t("profile.switchToSeeker")
+                    : t("profile.switchToEmployer")
                 }
                 className={cn(
                   "inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-colors",
@@ -204,7 +204,7 @@ export default function ProfilePage() {
                     <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5" />
                   </svg>
                 )}
-                {isEmployer ? "Ish beruvchi" : "Ish qidiruvchi"}
+                {isEmployer ? t("profile.employer") : t("profile.seeker")}
               </button>
             </div>
           </div>
@@ -259,7 +259,7 @@ export default function ProfilePage() {
             </span>
             <div>
               <h2 className="text-lg font-black tracking-tight text-slate-900 dark:text-white">
-                Profil ma&apos;lumotlari
+                {t("profile.myInfo")}
               </h2>
               <p className="text-xs text-slate-500 dark:text-zinc-400">
                 Ism va familiyani tahrirlash
@@ -270,14 +270,14 @@ export default function ProfilePage() {
           <form onSubmit={handleProfileSubmit} className="space-y-4">
             <div className="grid gap-3 sm:grid-cols-2">
               <Input
-                label="Ism"
+                label={t("profile.firstName")}
                 value={profileForm.firstName}
                 onChange={(e) => setProfileForm((f) => ({ ...f, firstName: e.target.value }))}
                 placeholder="Ismingiz"
                 required
               />
               <Input
-                label="Familiya"
+                label={t("profile.lastName")}
                 value={profileForm.lastName}
                 onChange={(e) => setProfileForm((f) => ({ ...f, lastName: e.target.value }))}
                 placeholder="Familiyangiz"
@@ -286,7 +286,7 @@ export default function ProfilePage() {
             </div>
 
             <Input
-              label="Telefon raqam"
+              label={t("profile.phone")}
               value={user.phone || ""}
               disabled
               hint="Telefon raqamni o'zgartirish mumkin emas"
@@ -505,8 +505,8 @@ export default function ProfilePage() {
               </h2>
               <p className="text-xs text-slate-500 dark:text-zinc-400">
                 {isEmployer
-                  ? "Ish qidiruvchi rejimiga o'tish"
-                  : "Ish beruvchi rejimiga o'tish"}
+                  ? t("profile.switchToSeeker")
+                  : t("profile.switchToEmployer")}
               </p>
             </div>
           </div>
