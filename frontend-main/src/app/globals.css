@@ -554,3 +554,16 @@ html.dark .leaflet-control-zoom a:hover {
   justify-content: center !important;
   width: 100% !important;
 }
+
+
+/* ═══════════════════════════════════════════════════════
+   MAP CONTAINER BACKGROUND — theme-aware
+   ═══════════════════════════════════════════════════════ */
+.leaflet-container {
+  background: #f1f5f9 !important;
+}
+html.dark .leaflet-container,
+html[data-theme="dark"] .leaflet-container,
+.dark .leaflet-container {
+  background: #0b1220 !important;
+}
