@@ -12,13 +12,12 @@ import { useAuth } from "@/hooks";
 import { cn, fullName } from "@/lib/utils";
 import { notificationsService } from "@/services";
 
-type Tab = "profil" | "xavfsizlik" | "faollik" | "xavfli";
+type Tab = "profil" | "xavfsizlik" | "faoliyatim";
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "profil", label: "Profil" },
   { id: "xavfsizlik", label: "Xavfsizlik" },
-  { id: "faollik", label: "Faollik" },
-  { id: "xavfli", label: "Xavfli" },
+  { id: "faoliyatim", label: "Faoliyatim" },
 ];
 
 export default function ProfilePage() {
@@ -177,7 +176,7 @@ export default function ProfilePage() {
         >
           {TABS.map((t) => {
             const active = tab === t.id;
-            const isDanger = t.id === "xavfli";
+            const isDanger = false;
             return (
               <button
                 key={t.id}
@@ -343,8 +342,8 @@ export default function ProfilePage() {
         </section>
       )}
 
-      {/* ─── TAB: Faollik ─── */}
-      {tab === "faollik" && (
+      {/* ─── TAB: Faoliyatim ─── */}
+      {tab === "faoliyatim" && (
         <div className="space-y-3 animate-fade-in">
           <Link
             href={isEmployer ? "/jobs/my" : "/applications/my"}
@@ -449,8 +448,8 @@ export default function ProfilePage() {
         </div>
       )}
 
-      {/* ─── TAB: Xavfli ─── */}
-      {tab === "xavfli" && (
+      {/* ─── DANGER ZONE (xavfsizlik ichida) ─── */}
+      {tab === "xavfsizlik" && (
         <section className="rim rounded-3xl border border-rose-200/60 bg-rose-50/40 p-6 backdrop-blur-xl animate-fade-in dark:border-rose-500/20 dark:bg-rose-500/5 sm:p-8">
           <div className="mb-4 flex items-center gap-2.5">
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-rose-500 text-white shadow-md shadow-rose-500/30">
