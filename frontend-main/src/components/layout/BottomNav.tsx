@@ -30,7 +30,9 @@ export function BottomNav() {
   }, [isAuthenticated]);
 
   const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(href + "/");
+    href === "/"
+      ? pathname === "/"
+      : pathname === href || pathname.startsWith(href + "/");
 
   const leftItems = [
     {
@@ -79,7 +81,6 @@ export function BottomNav() {
     },
   ];
 
-  // Markaziy FAB
   const centerHref = isAuthenticated
     ? isEmployer
       ? "/jobs/create"
@@ -137,11 +138,8 @@ export function BottomNav() {
       className="fixed inset-x-0 bottom-0 z-[100] md:hidden"
       style={{ pointerEvents: "none" }}
     >
-      {/* Safe area padding */}
       <div
-        style={{
-          paddingBottom: "max(env(safe-area-inset-bottom), 0.75rem)",
-        }}
+        style={{ paddingBottom: "max(env(safe-area-inset-bottom), 0.75rem)" }}
         className="px-4"
       >
         <nav
@@ -160,7 +158,6 @@ export function BottomNav() {
             <NavItem key={item.href} item={item} />
           ))}
 
-          {/* CENTER FAB — Katta yashil + */}
           <Link
             href={centerHref}
             aria-label={centerLabel}
