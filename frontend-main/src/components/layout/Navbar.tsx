@@ -328,7 +328,7 @@ export function Navbar() {
                 <button
                   ref={mobileToggleRef}
                   onClick={() => setMenuOpen((v) => !v)}
-                  className="flex h-10 w-10 items-center justify-center rounded-full text-slate-700 transition hover:bg-white/60 md:hidden dark:text-zinc-300 dark:hover:bg-white/5"
+                  className="hidden h-10 w-10 items-center justify-center rounded-full text-slate-700 transition hover:bg-white/60 dark:text-zinc-300 dark:hover:bg-white/5"
                   aria-label="Menu"
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -348,7 +348,7 @@ export function Navbar() {
         {menuOpen && !isAuthenticated && (
           <div
             ref={mobileMenuRef}
-            className="mt-2 overflow-hidden rounded-3xl border border-white/60 bg-white/90 p-2 shadow-2xl shadow-emerald-950/10 backdrop-blur-2xl animate-fade-in-up md:hidden dark:border-white/10 dark:bg-zinc-900/90 dark:shadow-black/60"
+            className="hidden mt-2 overflow-hidden rounded-3xl border border-white/60 bg-white/90 p-2 shadow-2xl shadow-emerald-950/10 backdrop-blur-2xl animate-fade-in-up dark:border-white/10 dark:bg-zinc-900/90 dark:shadow-black/60"
           >
             {navLinks
               .filter((l) => !(l as { auth?: boolean }).auth || isAuthenticated)

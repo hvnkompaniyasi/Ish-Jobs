@@ -181,9 +181,11 @@ export function BottomNav() {
               </svg>
               <span className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-b from-white/30 to-transparent opacity-70" />
             </span>
-            <span className="mt-1 text-[9px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
-              {centerLabel}
-            </span>
+            {isAuthenticated && (
+              <span className="mt-1 text-[9px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                {centerLabel}
+              </span>
+            )}
           </Link>
 
           {rightItems.map((item) => (
