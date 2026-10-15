@@ -50,7 +50,7 @@ export function BottomNav() {
     isEmployer
       ? {
           href: "/resumes",
-          label: t("nav.resumes"),
+          label: t("nav.resumesShort"),
           icon: (
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -112,7 +112,7 @@ export function BottomNav() {
       <Link
         href={item.href}
         aria-label={item.label}
-        className="group relative flex flex-1 flex-col items-center justify-center gap-0.5 py-1"
+        className="group relative flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 py-1"
       >
         {active && (
           <span className="pointer-events-none absolute inset-x-1 -top-1 -bottom-1 rounded-2xl bg-emerald-500/10 dark:bg-emerald-400/15" />
@@ -135,7 +135,7 @@ export function BottomNav() {
         </span>
         <span
           className={cn(
-            "text-[9px] font-bold uppercase tracking-wider transition-all duration-300",
+            "block w-full truncate px-0.5 text-center text-[9px] font-bold uppercase tracking-wider transition-all duration-300",
             active
               ? "text-emerald-600 dark:text-emerald-400 drop-shadow-[0_0_6px_rgba(16,185,129,0.7)]"
               : "text-slate-500 dark:text-zinc-500"
