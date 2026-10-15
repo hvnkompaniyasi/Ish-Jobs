@@ -12,13 +12,25 @@ import { cn } from "@/lib/utils";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import type { UserRole } from "@/types";
 
-function getNavLinks(t: (k: string) => string) {
+function getNavLinks(
+  t: (k: string) => string,
+  isEmployer: boolean,
+  isAuthenticated: boolean,
+) {
+  if (isEmployer) {
+    return [
+      { href: "/resumes", label: t("nav.resumes"), exact: true },
+      { href: "/jobs/my", label: t("nav.myJobs"), exact: true },
+      { href: "/dashboard", label: t("nav.dashboard"), exact: true },
+    ] as const;
+  }
   return [
     { href: "/jobs", label: t("nav.jobs"), exact: true },
     { href: "/jobs/map", label: t("nav.map"), exact: true },
     { href: "/resumes", label: t("nav.resumes") },
-    { href: "/applications", label: t("nav.applications"), auth: true },
-    { href: "/dashboard", label: t("nav.dashboard"), auth: true },
+    ...(isAuthenticated
+      ? [{ href: "/applications/my", label: t("nav.applications"), exact: true } as const]
+      : []),
   ] as const;
 }
 
@@ -76,9 +88,34 @@ export function Navbar() {
               </span>
             </Link>
 
+            {isAuthenticated && (
+              <Link
+                href="/profile"
+                title={
+                  isEmployer
+                    ? t("nav.modeEmployer")
+                    : t("nav.modeSeeker")
+                }
+                className={cn(
+                  "ml-2 hidden shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider transition-colors md:inline-flex",
+                  isEmployer
+                    ? "bg-amber-100 text-amber-700 hover:bg-amber-200 dark:bg-amber-500/20 dark:text-amber-400 dark:hover:bg-amber-500/30"
+                    : "bg-indigo-100 text-indigo-700 hover:bg-indigo-200 dark:bg-indigo-500/20 dark:text-indigo-400 dark:hover:bg-indigo-500/30"
+                )}
+              >
+                <span
+                  className={cn(
+                    "h-1.5 w-1.5 rounded-full",
+                    isEmployer ? "bg-amber-500" : "bg-indigo-500"
+                  )}
+                />
+                {isEmployer ? t("nav.modeEmployerShort") : t("nav.modeSeekerShort")}
+              </Link>
+            )}
+
             {/* ═══════ Desktop nav ═══════ */}
             <nav className="hidden items-center gap-0.5 md:flex">
-              {getNavLinks(t)
+              {getNavLinks(t, isEmployer, isAuthenticated)
                 .filter((l) => !(l as { auth?: boolean }).auth || isAuthenticated)
                 .map((l) => {
                   const active =
@@ -194,7 +231,7 @@ export function Navbar() {
             ref={mobileMenuRef}
             className="mt-2 overflow-hidden rounded-3xl border border-white/60 bg-white/90 p-2 shadow-2xl shadow-emerald-950/10 backdrop-blur-2xl animate-fade-in-up md:hidden dark:border-white/10 dark:bg-zinc-900/90 dark:shadow-black/60"
           >
-            {getNavLinks(t)
+            {getNavLinks(t, isEmployer, isAuthenticated)
               .filter((l) => !(l as { auth?: boolean }).auth)
               .map((l) => (
                 <Link

@@ -525,47 +525,7 @@ export default function ProfilePage() {
         </div>
       )}
 
-      {/* ─── ROL O'ZGARTIRISH ─── */}
-        <div className="rim rounded-3xl glass p-6 sm:p-8 animate-fade-in">
-          <div className="mb-4 flex items-center gap-2.5">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500 to-blue-600 text-white shadow-md shadow-sky-500/30">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5" />
-              </svg>
-            </span>
-            <div>
-              <h2 className="text-lg font-black tracking-tight text-slate-900 dark:text-white">
-                Rol o&apos;zgartirish
-              </h2>
-              <p className="text-xs text-slate-500 dark:text-zinc-400">
-                {isEmployer
-                  ? t("profile.switchToSeeker")
-                  : t("profile.switchToEmployer")}
-              </p>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={handleSwitchRole}
-            disabled={switching}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-sky-500/40 bg-sky-50 px-4 py-2.5 text-sm font-bold text-sky-700 transition-colors hover:bg-sky-100 disabled:opacity-50 dark:border-sky-500/30 dark:bg-sky-500/10 dark:text-sky-300 dark:hover:bg-sky-500/20"
-          >
-            {switching ? (
-              <>
-                <Spinner className="h-4 w-4" />
-                O&apos;tilmoqda...
-              </>
-            ) : (
-              <>
-                {isEmployer ? "👤 Ish qidiruvchi" : "🏢 Ish beruvchi"}
-                {" rejimiga o'tish"}
-              </>
-            )}
-          </button>
-        </div>
-
-        {/* ─── CHIQISH ─── */}
+      {/* ─── CHIQISH ─── */}
         <div className="rim rounded-3xl glass p-6 sm:p-8 animate-fade-in">
           <div className="mb-4 flex items-center gap-2.5">
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-slate-600 to-slate-800 text-white shadow-md shadow-slate-500/30">
