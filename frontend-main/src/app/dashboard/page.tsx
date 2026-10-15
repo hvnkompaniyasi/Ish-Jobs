@@ -112,7 +112,7 @@ export default function DashboardPage() {
 
       {/* Error */}
       {error && !loading && (
-        <div className="rim rounded-3xl glass p-6 text-center">
+        <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5 text-center">
           <p className="text-sm text-rose-700 dark:text-rose-400">{error}</p>
           <Button
             variant="outline"

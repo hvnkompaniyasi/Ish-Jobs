@@ -82,13 +82,13 @@ export default function MyResumesPage() {
       )}
 
       {error && !loading && (
-        <div className="rim rounded-3xl glass p-6 text-center text-sm text-rose-700 dark:text-rose-400">
+        <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5 text-center text-sm text-rose-700 dark:text-rose-400">
           {error}
         </div>
       )}
 
       {!loading && !error && resumes.length === 0 && (
-        <div className="rim rounded-3xl glass p-12 text-center">
+        <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-10 text-center">
           <div className="text-4xl">📄</div>
           <h3 className="mt-3 text-lg font-bold text-slate-900 dark:text-white">
             Hozircha rezyume yo&apos;q
@@ -107,7 +107,7 @@ export default function MyResumesPage() {
           {resumes.map((r) => (
             <div
               key={r._id}
-              className="rim rounded-3xl glass p-5 transition-colors duration-200 hover:-translate-y-1 hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/10"
+              className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4 transition-colors duration-200 hover:border-emerald-500/40"
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="flex-1 min-w-0">
