@@ -13,6 +13,7 @@ import {
 import L from "leaflet";
 import Link from "next/link";
 import "leaflet/dist/leaflet.css";
+import MarkerClusterGroup from "react-leaflet-cluster";
 import type { Job } from "@/types";
 import { haversineKm, formatDistance, coordsToLatLng, type LatLng } from "@/lib/geo";
 
@@ -118,6 +119,49 @@ function createSalaryIcon(label: string, selected = false): L.DivIcon {
   return L.divIcon({ html, className: "ishjobs-salary-marker", iconSize: [0, 0], iconAnchor: [0, 0], popupAnchor: [0, -30] });
 }
 
+/**
+ * Cluster icon — yashil gradient doira + oq raqam
+ */
+function createClusterIcon(cluster: { getChildCount: () => number }): L.DivIcon {
+  const count = cluster.getChildCount();
+  const size = count < 10 ? 42 : count < 100 ? 50 : 58;
+  const fontSize = count < 10 ? 15 : count < 100 ? 16 : 17;
+
+  const html = `
+    <div style="
+      display:flex; align-items:center; justify-content:center;
+      width:${size}px; height:${size}px;
+      border-radius:9999px;
+      background:linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color:#ffffff;
+      font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+      font-size:${fontSize}px;
+      font-weight:800;
+      line-height:1;
+      letter-spacing:-0.3px;
+      box-shadow:
+        0 6px 20px rgba(16, 185, 129, 0.55),
+        0 0 0 3px rgba(255, 255, 255, 0.35) inset,
+        0 0 24px rgba(16, 185, 129, 0.4);
+      border:2px solid rgba(255, 255, 255, 0.5);
+      cursor:pointer;
+      user-select:none;
+      pointer-events:auto;
+      transition:transform 0.15s ease;
+    " onmouseover="this.style.transform='scale(1.08)'"
+      onmouseout="this.style.transform='scale(1)'">
+      ${count}
+    </div>
+  `;
+
+  return L.divIcon({
+    html,
+    className: "ishjobs-cluster-marker",
+    iconSize: L.point(size, size),
+    iconAnchor: L.point(size / 2, size / 2),
+  });
+}
+
 // ═══════════════════════════════════════════════════════
 // INTERNAL
 // ═══════════════════════════════════════════════════════
@@ -214,6 +258,14 @@ export default function MapView({
         />
       )}
 
+      <MarkerClusterGroup
+        chunkedLoading
+        maxClusterRadius={60}
+        spiderfyOnMaxZoom
+        showCoverageOnHover={false}
+        removeOutsideVisibleBounds
+        iconCreateFunction={createClusterIcon}
+      >
       {validJobs.map((job) => {
         const [lng, lat] = job.locationPoint!.coordinates;
         const companyName =
@@ -313,6 +365,7 @@ export default function MapView({
           </Marker>
         );
       })}
+      </MarkerClusterGroup>
     </MapContainer>
   );
 }

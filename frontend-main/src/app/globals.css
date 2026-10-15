@@ -553,3 +553,22 @@ html[data-theme="dark"] .leaflet-container,
 .dark .leaflet-container {
   background: #0b1220 !important;
 }
+
+/* ═══════════════════════════════════════════════════════
+   MARKER CLUSTER — custom icon
+   ═══════════════════════════════════════════════════════ */
+.ishjobs-cluster-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Cluster animatsiyasi — hover'da kattalashadi (inline style) */
+.ishjobs-cluster-marker > div {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Spiderfy — bir nuqtada ustma-ust markerlar */
+.leaflet-cluster-spider-leg {
+  stroke: #10b981 !important;
+  stroke-width: 2 !important;
+}
