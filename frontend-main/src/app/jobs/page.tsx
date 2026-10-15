@@ -7,6 +7,7 @@ import { JobFilters } from "@/components/jobs/JobFilters";
 import { Spinner } from "@/components/ui/Spinner";
 import { Button } from "@/components/ui/Button";
 import { jobsService, getErrorMessage } from "@/services";
+import { useT } from "@/i18n/I18nProvider";
 import type { Job, JobFilters as Filters, Pagination } from "@/types";
 
 const DEFAULT_FILTERS: Filters = {
@@ -15,6 +16,7 @@ const DEFAULT_FILTERS: Filters = {
 };
 
 export default function JobsPage() {
+  const t = useT();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [pagination, setPagination] = useState<Pagination | null>(null);
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
@@ -55,10 +57,10 @@ export default function JobsPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-black tracking-tight text-slate-900 sm:text-3xl dark:text-white">
-          Vakansiyalar
+        <h1 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+          {t("nav.jobs")}
         </h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-zinc-400">
+        <p className="mt-1 text-sm text-zinc-500">
           {pagination
             ? `${pagination.total} ta vakansiya topildi`
             : "Yuklanmoqda..."}
@@ -73,7 +75,7 @@ export default function JobsPage() {
         <Button
           variant="outline"
           onClick={() => setShowFilters((v) => !v)}
-          className="w-full"
+          className="w-full rounded-lg border-zinc-800 bg-zinc-900 text-zinc-300 hover:bg-zinc-800"
         >
           {showFilters ? "Filtrlarni yopish" : "Filtrlarni ko'rsatish"}
         </Button>
@@ -96,17 +98,17 @@ export default function JobsPage() {
         <div>
           {loading && (
             <div className="flex justify-center py-20">
-              <Spinner className="h-8 w-8" />
+              <Spinner className="h-8 w-8 text-emerald-500" />
             </div>
           )}
 
           {error && !loading && (
-            <div className="rim rounded-3xl glass p-6 text-center">
-              <p className="text-sm text-rose-700 dark:text-rose-400">{error}</p>
+            <div className="rounded-xl border border-rose-500/30 bg-rose-500/5 p-6 text-center">
+              <p className="text-sm text-rose-400">{error}</p>
               <Button
                 variant="outline"
                 onClick={() => fetchJobs(filters)}
-                className="mt-3"
+                className="mt-3 rounded-lg border-zinc-800 bg-zinc-900 text-zinc-300 hover:bg-zinc-800"
               >
                 Qayta urinish
               </Button>
@@ -114,20 +116,27 @@ export default function JobsPage() {
           )}
 
           {!loading && !error && jobs.length === 0 && (
-            <div className="rim rounded-3xl glass p-12 text-center">
-              <div className="text-4xl">🔍</div>
-              <h3 className="mt-3 text-lg font-bold text-slate-900 dark:text-white">
+            <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-12 text-center">
+              <div className="text-4xl opacity-60">🔍</div>
+              <h3 className="mt-3 text-base font-semibold text-white">
                 Vakansiya topilmadi
               </h3>
-              <p className="mt-1 text-sm text-slate-500 dark:text-zinc-400">
+              <p className="mt-1 text-sm text-zinc-500">
                 Filtrlarni o&apos;zgartirib, qayta urinib ko&apos;ring
               </p>
+              <Button
+                variant="outline"
+                onClick={() => setFilters(DEFAULT_FILTERS)}
+                className="mt-4 rounded-lg border-zinc-800 bg-zinc-900 text-zinc-300 hover:bg-zinc-800"
+              >
+                Filtrlarni tozalash
+              </Button>
             </div>
           )}
 
           {!loading && !error && jobs.length > 0 && (
             <>
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-3 sm:grid-cols-2">
                 {jobs.map((job) => (
                   <JobCard key={job._id} job={job} />
                 ))}
@@ -140,10 +149,11 @@ export default function JobsPage() {
                     size="sm"
                     onClick={() => goToPage(pagination.page - 1)}
                     disabled={pagination.page <= 1}
+                    className="rounded-lg border-zinc-800 bg-zinc-900 text-zinc-300 hover:bg-zinc-800 disabled:opacity-40"
                   >
                     ← Oldingi
                   </Button>
-                  <span className="px-3 text-sm font-medium text-slate-600 dark:text-zinc-400">
+                  <span className="px-3 text-sm font-medium text-zinc-400">
                     {pagination.page} / {pagination.pages}
                   </span>
                   <Button
@@ -151,6 +161,7 @@ export default function JobsPage() {
                     size="sm"
                     onClick={() => goToPage(pagination.page + 1)}
                     disabled={pagination.page >= pagination.pages}
+                    className="rounded-lg border-zinc-800 bg-zinc-900 text-zinc-300 hover:bg-zinc-800 disabled:opacity-40"
                   >
                     Keyingi →
                   </Button>

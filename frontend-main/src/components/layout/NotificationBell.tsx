@@ -106,7 +106,7 @@ export function NotificationBell() {
         onClick={() => setOpen((v) => !v)}
         aria-label="Xabarnomalar"
         className={cn(
-          "relative flex h-10 w-10 items-center justify-center rounded-xl border transition-all duration-300",
+          "relative flex h-10 w-10 items-center justify-center rounded-xl border transition-colors duration-200",
           "border-slate-200 bg-white text-slate-700 hover:border-emerald-500/40 hover:text-emerald-600",
           "dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-emerald-500/40 dark:hover:text-emerald-400",
           "active:scale-95"

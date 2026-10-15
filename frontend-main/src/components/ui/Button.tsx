@@ -42,7 +42,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(
           "inline-flex items-center justify-center gap-2 font-bold",
           // Micro-interactions: hover scale + active press
-          "transition-all duration-200 ease-out",
+          "transition-colors duration-200 ease-out",
           "hover:scale-[1.02] active:scale-95",
           "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:active:scale-100",
           "focus:outline-none focus:ring-2 focus:ring-emerald-500/60 focus:ring-offset-2 focus:ring-offset-transparent",

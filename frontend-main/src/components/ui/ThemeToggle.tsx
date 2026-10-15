@@ -12,7 +12,7 @@ export function ThemeToggle({ className }: { className?: string }) {
       onClick={toggleTheme}
       aria-label="Rejimni almashtirish"
       className={cn(
-        "group relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl border transition-all duration-300",
+        "group relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl border transition-colors duration-200",
         "border-slate-200 bg-white text-slate-700 hover:border-emerald-500/40 hover:text-emerald-600",
         "dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-emerald-500/40 dark:hover:text-emerald-400",
         "active:scale-95",
@@ -47,7 +47,7 @@ export function ThemeToggle({ className }: { className?: string }) {
               strokeLinecap="round"
               strokeLinejoin="round"
               className={cn(
-                "absolute transition-all duration-500 ease-out",
+                "absolute transition-colors duration-200 ease-out",
                 isDark
                   ? "rotate-0 scale-100 opacity-100"
                   : "-rotate-90 scale-0 opacity-0"
@@ -68,7 +68,7 @@ export function ThemeToggle({ className }: { className?: string }) {
               strokeLinecap="round"
               strokeLinejoin="round"
               className={cn(
-                "absolute transition-all duration-500 ease-out",
+                "absolute transition-colors duration-200 ease-out",
                 !isDark
                   ? "rotate-0 scale-100 opacity-100"
                   : "rotate-90 scale-0 opacity-0"

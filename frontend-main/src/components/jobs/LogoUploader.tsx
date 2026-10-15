@@ -69,7 +69,7 @@ export function LogoUploader({
           onClick={() => inputRef.current?.click()}
           className={cn(
             "group relative flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl",
-            "border-2 border-dashed border-slate-300 bg-white/40 transition-all",
+            "border-2 border-dashed border-slate-300 bg-white/40 transition-colors",
             "hover:border-emerald-500/60 hover:bg-emerald-50/40",
             "dark:border-zinc-700 dark:bg-white/[0.03] dark:hover:border-emerald-500/40",
             "active:scale-95"

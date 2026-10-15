@@ -74,7 +74,7 @@ export function PhoneInput({
       <div className="relative">
         <div
           className={cn(
-            "flex w-full items-stretch rounded-2xl border bg-white/60 backdrop-blur-xl transition-all duration-200 focus-within:ring-2",
+            "flex w-full items-stretch rounded-2xl border bg-white/60 backdrop-blur-xl transition-colors duration-200 focus-within:ring-2",
             error
               ? "border-rose-400 focus-within:border-rose-500 focus-within:ring-rose-500/20 dark:border-rose-500/40"
               : "border-slate-200/60 focus-within:border-emerald-500/60 focus-within:ring-emerald-500/20 dark:border-white/10 dark:bg-white/5 dark:focus-within:border-emerald-500/60"

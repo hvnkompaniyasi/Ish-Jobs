@@ -119,7 +119,7 @@ export function BottomNav() {
         )}
         <span
           className={cn(
-            "relative flex h-9 w-9 items-center justify-center rounded-xl transition-all duration-300",
+            "relative flex h-9 w-9 items-center justify-center rounded-xl transition-colors duration-200",
             active
               ? "text-emerald-600 dark:text-emerald-400 scale-110"
               : "text-slate-500 dark:text-zinc-400 group-hover:text-slate-900 dark:group-hover:text-white group-hover:scale-105"
@@ -135,7 +135,7 @@ export function BottomNav() {
         </span>
         <span
           className={cn(
-            "block w-full truncate px-0.5 text-center text-[9px] font-bold uppercase tracking-wider transition-all duration-300",
+            "block w-full truncate px-0.5 text-center text-[9px] font-bold uppercase tracking-wider transition-colors duration-200",
             active
               ? "text-emerald-600 dark:text-emerald-400 drop-shadow-[0_0_6px_rgba(16,185,129,0.7)]"
               : "text-slate-500 dark:text-zinc-500"
@@ -184,7 +184,7 @@ export function BottomNav() {
                 "bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-700",
                 "text-white shadow-[0_8px_20px_-4px_rgba(16,185,129,0.7),inset_0_1px_1px_rgba(255,255,255,0.4)]",
                 "ring-4 ring-white/90 dark:ring-zinc-900/90",
-                "transition-all duration-300 group-hover:scale-105 group-active:scale-95"
+                "transition-colors duration-200 group-hover:scale-105 group-active:scale-95"
               )}
             >
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
