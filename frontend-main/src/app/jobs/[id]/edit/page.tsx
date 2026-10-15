@@ -10,6 +10,7 @@ import { LogoUploader } from "@/components/jobs/LogoUploader";
 import { useAuth } from "@/hooks";
 import { jobsService, getErrorMessage } from "@/services";
 import { cn } from "@/lib/utils";
+import type { JobCategory } from "@/lib/categories";
 import type { CreateJobPayload, EmploymentType, ExperienceLevel, Job } from "@/types";
 
 const EMPLOYMENT_TYPES: { value: EmploymentType; label: string }[] = [
@@ -130,7 +131,7 @@ export default function EditJobPage() {
       const payload: Partial<CreateJobPayload> = {
         title: form.title.trim(),
         description: form.description.trim(),
-        category: form.category || "other",
+        category: (form.category as JobCategory) || "other",
         employmentType: form.employmentType,
         experienceLevel: form.experienceLevel,
         requirements: form.requirements.split("\n").map((s) => s.trim()).filter(Boolean),

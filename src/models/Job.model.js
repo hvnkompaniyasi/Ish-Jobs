@@ -45,7 +45,27 @@ const jobSchema = new mongoose.Schema(
     category: {
       type: String,
       trim: true,
+      enum: [
+        'it',
+        'sales',
+        'restaurant',
+        'logistics',
+        'construction',
+        'manufacturing',
+        'education',
+        'healthcare',
+        'finance',
+        'marketing',
+        'office',
+        'security',
+        'beauty',
+        'agriculture',
+        'services',
+        'gig',
+        'other',
+      ],
       default: 'other',
+      index: true,
     },
     skills: [
       {

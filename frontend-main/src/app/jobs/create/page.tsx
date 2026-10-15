@@ -10,6 +10,7 @@ import { useAuth } from "@/hooks";
 import { jobsService, getErrorMessage } from "@/services";
 import { cn } from "@/lib/utils";
 import { LogoUploader } from "@/components/jobs/LogoUploader";
+import type { JobCategory } from "@/lib/categories";
 import type {
   CreateJobPayload,
   EmploymentType,
@@ -102,7 +103,7 @@ export default function CreateJobPage() {
       const payload: CreateJobPayload = {
         title: form.title.trim(),
         description: form.description.trim(),
-        category: form.category || "other",
+        category: (form.category as JobCategory) || "other",
         employmentType: form.employmentType,
         experienceLevel: form.experienceLevel,
         requirements: form.requirements

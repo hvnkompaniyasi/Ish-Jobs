@@ -1,3 +1,5 @@
+import type { JobCategory } from "@/lib/categories";
+
 import type { User } from "./user";
 
 export type EmploymentType =
@@ -48,7 +50,7 @@ export interface Job {
   description: string;
   requirements?: string[];
   responsibilities?: string[];
-  category?: string;
+  category?: JobCategory;
   skills?: string[];
   employmentType: EmploymentType;
   experienceLevel: ExperienceLevel;
@@ -70,7 +72,7 @@ export interface Job {
 
 export interface JobFilters {
   search?: string;
-  category?: string;
+  category?: JobCategory;
   employmentType?: EmploymentType | "";
   experienceLevel?: ExperienceLevel | "";
   city?: string;
@@ -89,7 +91,7 @@ export interface CreateJobPayload {
   description: string;
   requirements?: string[];
   responsibilities?: string[];
-  category?: string;
+  category?: JobCategory;
   skills?: string[];
   employmentType?: EmploymentType;
   experienceLevel?: ExperienceLevel;
