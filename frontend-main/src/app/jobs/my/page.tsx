@@ -141,7 +141,7 @@ export default function MyJobsPage() {
               <div
                 key={job._id}
                 className={cn(
-                  "rim rounded-3xl glass p-5 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/10",
+                  "rim rounded-3xl glass p-5 transition-colors duration-200 hover:-translate-y-1 hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/10",
                   !isActive && "opacity-80"
                 )}
               >

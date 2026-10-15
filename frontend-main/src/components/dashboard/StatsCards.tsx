@@ -65,7 +65,7 @@ export function StatsCards({ stats }: Props) {
       {cards.map((c, i) => (
         <div
           key={c.label}
-          className="rim relative overflow-hidden rounded-3xl glass p-4 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/10 animate-fade-in-up"
+          className="rim relative overflow-hidden rounded-3xl glass p-4 transition-colors duration-200 hover:-translate-y-1 hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/10 animate-fade-in-up"
           style={{ animationDelay: `${i * 60}ms` }}
         >
           <div className={cn("pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-gradient-to-br blur-3xl", c.bg)} />

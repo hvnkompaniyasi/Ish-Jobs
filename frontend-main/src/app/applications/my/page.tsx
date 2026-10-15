@@ -98,7 +98,7 @@ export default function MyApplicationsPage() {
             return (
               <div
                 key={a._id}
-                className="rim rounded-3xl glass p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-500/40 hover:shadow-lg hover:shadow-emerald-500/10"
+                className="rim rounded-3xl glass p-5 transition-colors duration-200 hover:-translate-y-0.5 hover:border-emerald-500/40 hover:shadow-lg hover:shadow-emerald-500/10"
               >
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div className="flex-1 min-w-0">

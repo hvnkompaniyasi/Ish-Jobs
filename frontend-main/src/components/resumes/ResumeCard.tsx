@@ -8,7 +8,7 @@ export function ResumeCard({ resume }: { resume: Resume }) {
   return (
     <Link
       href={`/resumes/${resume._id}`}
-      className="rim group relative flex flex-col overflow-hidden rounded-3xl glass p-5 transition-all duration-300 hover:-translate-y-1.5 hover:border-indigo-500/40 hover:shadow-2xl hover:shadow-indigo-500/15"
+      className="rim group relative flex flex-col overflow-hidden rounded-3xl glass p-5 transition-colors duration-200 hover:-translate-y-1.5 hover:border-indigo-500/40 hover:shadow-2xl hover:shadow-indigo-500/15"
     >
       {/* Header */}
       <div className="flex items-start gap-3">

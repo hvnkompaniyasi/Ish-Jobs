@@ -59,7 +59,7 @@ export function TopJobsList({ jobs }: Props) {
                 <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-100 dark:bg-white/5">
                   <div
                     className={cn(
-                      "h-full rounded-full bg-gradient-to-r from-emerald-400 to-emerald-600 transition-all duration-700",
+                      "h-full rounded-full bg-gradient-to-r from-emerald-400 to-emerald-600 transition-colors duration-500",
                     )}
                     style={{ width: `${widthPct}%` }}
                   />

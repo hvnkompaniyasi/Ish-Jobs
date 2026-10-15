@@ -27,6 +27,9 @@ const EXPERIENCE_LEVELS: ExperienceLevel[] = [
   "lead",
 ];
 
+const selectCls =
+  "w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm font-medium text-zinc-200 outline-none transition-colors hover:border-zinc-700 focus:border-emerald-500";
+
 export function JobFilters({ filters, onChange }: Props) {
   const update = <K extends keyof Filters>(key: K, value: Filters[K]) => {
     onChange({ ...filters, [key]: value, page: 1 });
@@ -38,7 +41,6 @@ export function JobFilters({ filters, onChange }: Props) {
   };
 
   const handleLocationChange = (v: LocationValue) => {
-    // Region tanlangan bo'lsa, backend city maydoniga region.short yuboramiz
     const region = findRegion(v.region);
     const cityQuery = v.district
       ? v.district
@@ -55,37 +57,25 @@ export function JobFilters({ filters, onChange }: Props) {
     });
   };
 
+  const chipBase =
+    "shrink-0 rounded-md border px-2.5 py-1 text-xs font-medium transition-colors";
   const chipActive =
-    "bg-emerald-600 text-white shadow-md shadow-emerald-500/30 dark:bg-emerald-500";
+    "border-emerald-500/50 bg-emerald-500/15 text-emerald-400";
   const chipIdle =
-    "border border-slate-200/60 bg-white/60 text-slate-700 hover:border-emerald-500/40 hover:text-emerald-700 dark:border-white/10 dark:bg-white/5 dark:text-zinc-300 dark:hover:border-emerald-500/40 dark:hover:text-emerald-400";
+    "border-zinc-800 bg-zinc-900 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200";
 
   return (
-    <div className="rim space-y-5 rounded-3xl glass p-5">
-      {/* ═══ Kategoriya ═══ */}
+    <div className="space-y-5 rounded-xl border border-zinc-800 bg-zinc-900/40 p-4">
+      {/* Kategoriya */}
       <div>
-        <div className="mb-2.5 flex items-center justify-between">
-          <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-            Kategoriya
-          </h3>
-          {filters.category && (
-            <button
-              type="button"
-              onClick={() => update("category", "")}
-              className="text-[11px] font-medium text-emerald-600 hover:underline dark:text-emerald-400"
-            >
-              Tozalash
-            </button>
-          )}
-        </div>
-        <div className="-mx-1 flex flex-wrap gap-1.5 px-1">
+        <h3 className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+          Kategoriya
+        </h3>
+        <div className="flex flex-wrap gap-1.5">
           <button
             type="button"
             onClick={() => update("category", "")}
-            className={cn(
-              "shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors",
-              !filters.category ? chipActive : chipIdle,
-            )}
+            className={cn(chipBase, !filters.category ? chipActive : chipIdle)}
           >
             Barchasi
           </button>
@@ -99,10 +89,7 @@ export function JobFilters({ filters, onChange }: Props) {
                   update("category", (active ? "" : cat.value) as JobCategory | "")
                 }
                 title={cat.label}
-                className={cn(
-                  "shrink-0 inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors",
-                  active ? chipActive : chipIdle,
-                )}
+                className={cn(chipBase, "inline-flex items-center gap-1", active ? chipActive : chipIdle)}
               >
                 <span>{cat.emoji}</span>
                 <span>{cat.short}</span>
@@ -112,8 +99,9 @@ export function JobFilters({ filters, onChange }: Props) {
         </div>
       </div>
 
+      {/* Ish turi */}
       <div>
-        <h3 className="mb-2.5 text-sm font-bold text-slate-900 dark:text-white">
+        <h3 className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-zinc-500">
           Ish turi
         </h3>
         <div className="flex flex-wrap gap-1.5">
@@ -124,10 +112,7 @@ export function JobFilters({ filters, onChange }: Props) {
                 key={t}
                 type="button"
                 onClick={() => update("employmentType", active ? "" : t)}
-                className={cn(
-                  "rounded-full px-3 py-1.5 text-xs font-semibold transition-colors",
-                  active ? chipActive : chipIdle,
-                )}
+                className={cn(chipBase, active ? chipActive : chipIdle)}
               >
                 {EMPLOYMENT_TYPE_LABELS[t]}
               </button>
@@ -136,8 +121,9 @@ export function JobFilters({ filters, onChange }: Props) {
         </div>
       </div>
 
+      {/* Tajriba */}
       <div>
-        <h3 className="mb-2.5 text-sm font-bold text-slate-900 dark:text-white">
+        <h3 className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-zinc-500">
           Tajriba
         </h3>
         <div className="flex flex-wrap gap-1.5">
@@ -148,10 +134,7 @@ export function JobFilters({ filters, onChange }: Props) {
                 key={l}
                 type="button"
                 onClick={() => update("experienceLevel", active ? "" : l)}
-                className={cn(
-                  "rounded-full px-3 py-1.5 text-xs font-semibold transition-colors",
-                  active ? chipActive : chipIdle,
-                )}
+                className={cn(chipBase, active ? chipActive : chipIdle)}
               >
                 {EXPERIENCE_LABELS[l]}
               </button>
@@ -160,44 +143,50 @@ export function JobFilters({ filters, onChange }: Props) {
         </div>
       </div>
 
+      {/* Manzil */}
       <div>
-        <h3 className="mb-2.5 text-sm font-bold text-slate-900 dark:text-white">
+        <h3 className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-zinc-500">
           Manzil
         </h3>
         <LocationFilter value={locationValue} onChange={handleLocationChange} />
       </div>
 
+      {/* Saralash */}
       <div>
-        <h3 className="mb-2.5 text-sm font-bold text-slate-900 dark:text-white">
+        <h3 className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-zinc-500">
           Saralash
         </h3>
         <select
           value={filters.sort ?? "newest"}
-          onChange={(e) => update("sort", e.target.value as "newest" | "salary" | "views")}
-          className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2.5 text-sm font-medium text-zinc-700 outline-none transition-colors hover:border-zinc-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-zinc-700"
+          onChange={(e) =>
+            update("sort", e.target.value as "newest" | "salary" | "views")
+          }
+          className={selectCls}
         >
           <option value="newest">Eng yangilari</option>
           <option value="salary">Katta maosh</option>
-          <option value="views">Ko'p ko'rilganlar</option>
+          <option value="views">Ko&apos;p ko&apos;rilganlar</option>
         </select>
       </div>
 
+      {/* Faqat masofadan */}
       <label className="flex cursor-pointer items-center gap-2">
         <input
           type="checkbox"
           checked={!!filters.isRemote}
           onChange={(e) => update("isRemote", e.target.checked || undefined)}
-          className="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 dark:border-zinc-600 dark:bg-zinc-800"
+          className="h-4 w-4 rounded border-zinc-700 bg-zinc-900 text-emerald-500 focus:ring-emerald-500/30"
         />
-        <span className="text-sm font-medium text-slate-700 dark:text-zinc-300">
+        <span className="text-sm font-medium text-zinc-300">
           Faqat masofadan
         </span>
       </label>
 
+      {/* Tozalash */}
       <button
         type="button"
         onClick={() => onChange({ page: 1, limit: 10 })}
-        className="w-full rounded-xl border border-slate-200/60 bg-white/60 py-2.5 text-sm font-semibold text-slate-700 backdrop-blur-xl transition-colors hover:border-emerald-500/40 hover:text-emerald-700 dark:border-white/10 dark:bg-white/5 dark:text-zinc-300 dark:hover:border-emerald-500/40 dark:hover:text-emerald-400"
+        className="w-full rounded-lg border border-zinc-800 bg-zinc-900 py-2 text-xs font-semibold text-zinc-400 transition-colors hover:border-zinc-700 hover:text-zinc-200"
       >
         Filtrlarni tozalash
       </button>

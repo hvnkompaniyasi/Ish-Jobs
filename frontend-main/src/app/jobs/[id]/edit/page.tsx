@@ -265,7 +265,7 @@ export default function EditJobPage() {
                     type="button"
                     onClick={() => update("employmentType", t.value)}
                     className={cn(
-                      "rounded-xl px-3.5 py-2 text-sm font-bold transition-all duration-200",
+                      "rounded-xl px-3.5 py-2 text-sm font-bold transition-colors duration-150",
                       form.employmentType === t.value
                         ? "bg-emerald-600 text-white shadow-md shadow-emerald-500/30"
                         : "border border-slate-200/60 bg-white/60 text-slate-700 hover:border-emerald-500/40 dark:border-white/10 dark:bg-white/5 dark:text-zinc-300"
@@ -285,7 +285,7 @@ export default function EditJobPage() {
                     type="button"
                     onClick={() => update("experienceLevel", l.value)}
                     className={cn(
-                      "rounded-xl px-3.5 py-2 text-sm font-bold transition-all duration-200",
+                      "rounded-xl px-3.5 py-2 text-sm font-bold transition-colors duration-150",
                       form.experienceLevel === l.value
                         ? "bg-emerald-600 text-white shadow-md shadow-emerald-500/30"
                         : "border border-slate-200/60 bg-white/60 text-slate-700 hover:border-emerald-500/40 dark:border-white/10 dark:bg-white/5 dark:text-zinc-300"
@@ -310,7 +310,7 @@ export default function EditJobPage() {
                     type="button"
                     onClick={() => update("status", s.value)}
                     className={cn(
-                      "rounded-xl px-3 py-2.5 text-sm font-bold transition-all duration-200",
+                      "rounded-xl px-3 py-2.5 text-sm font-bold transition-colors duration-150",
                       form.status === s.value
                         ? s.color === "emerald"
                           ? "bg-emerald-600 text-white shadow-md shadow-emerald-500/30"

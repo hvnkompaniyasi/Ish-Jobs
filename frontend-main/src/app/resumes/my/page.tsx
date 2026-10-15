@@ -107,7 +107,7 @@ export default function MyResumesPage() {
           {resumes.map((r) => (
             <div
               key={r._id}
-              className="rim rounded-3xl glass p-5 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/10"
+              className="rim rounded-3xl glass p-5 transition-colors duration-200 hover:-translate-y-1 hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/10"
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="flex-1 min-w-0">

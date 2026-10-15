@@ -58,7 +58,7 @@ export function AvatarUploader() {
         className={cn(
           "group relative flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-full",
           "bg-gradient-to-br from-emerald-500 to-emerald-600 text-2xl font-black text-white",
-          "shadow-2xl shadow-emerald-500/40 ring-4 ring-white/40 transition-all",
+          "shadow-2xl shadow-emerald-500/40 ring-4 ring-white/40 transition-colors",
           "hover:scale-105 hover:ring-white/60 active:scale-95",
           "dark:ring-white/10",
           uploading && "cursor-wait"

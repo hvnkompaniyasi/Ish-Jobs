@@ -133,7 +133,7 @@ export function HomeEmployer() {
                 <Link
                   key={r._id}
                   href={`/resumes/${r._id}`}
-                  className="rim group relative flex flex-col overflow-hidden rounded-3xl glass p-5 transition-all duration-300 hover:-translate-y-1.5 hover:border-indigo-500/40 hover:shadow-2xl hover:shadow-indigo-500/15 animate-fade-in-up"
+                  className="rim group relative flex flex-col overflow-hidden rounded-3xl glass p-5 transition-colors duration-200 hover:-translate-y-1.5 hover:border-indigo-500/40 hover:shadow-2xl hover:shadow-indigo-500/15 animate-fade-in-up"
                   style={{ animationDelay: `${i * 60}ms` }}
                 >
                   {/* Avatar + name */}

@@ -150,7 +150,7 @@ export default function NotificationsPage() {
             type="button"
             onClick={() => { setTab("all"); setPage(1); }}
             className={cn(
-              "rounded-xl px-4 py-2.5 text-sm font-bold transition-all duration-200",
+              "rounded-xl px-4 py-2.5 text-sm font-bold transition-colors duration-150",
               tab === "all"
                 ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/30 dark:bg-emerald-500"
                 : "text-slate-600 hover:bg-white/60 dark:text-zinc-400 dark:hover:bg-white/5"
@@ -162,7 +162,7 @@ export default function NotificationsPage() {
             type="button"
             onClick={() => { setTab("unread"); setPage(1); }}
             className={cn(
-              "rounded-xl px-4 py-2.5 text-sm font-bold transition-all duration-200",
+              "rounded-xl px-4 py-2.5 text-sm font-bold transition-colors duration-150",
               tab === "unread"
                 ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/30 dark:bg-emerald-500"
                 : "text-slate-600 hover:bg-white/60 dark:text-zinc-400 dark:hover:bg-white/5"

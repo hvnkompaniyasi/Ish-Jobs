@@ -69,7 +69,7 @@ export function HiringFunnel({ funnel }: Props) {
               </div>
               <div className="h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-white/5">
                 <div
-                  className={cn("h-full rounded-full transition-all duration-700 ease-out", s.color)}
+                  className={cn("h-full rounded-full transition-colors duration-500 ease-out", s.color)}
                   style={{ width: `${widthPct}%` }}
                 />
               </div>
