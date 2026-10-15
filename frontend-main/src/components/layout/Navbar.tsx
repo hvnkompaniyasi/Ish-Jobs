@@ -97,7 +97,7 @@ export function Navbar() {
                     : t("nav.modeSeeker")
                 }
                 className={cn(
-                  "ml-2 hidden shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider transition-colors md:inline-flex",
+                  "ml-1 inline-flex shrink-0 items-center gap-1.5 rounded-full px-2 py-1 text-[10px] font-bold uppercase tracking-wider transition-colors sm:ml-2 sm:px-2.5",
                   isEmployer
                     ? "bg-amber-100 text-amber-700 hover:bg-amber-200 dark:bg-amber-500/20 dark:text-amber-400 dark:hover:bg-amber-500/30"
                     : "bg-indigo-100 text-indigo-700 hover:bg-indigo-200 dark:bg-indigo-500/20 dark:text-indigo-400 dark:hover:bg-indigo-500/30"
@@ -204,35 +204,57 @@ export function Navbar() {
                 </div>
               )}
 
-              {/* Hamburger — faqat guest */}
-              {!isAuthenticated && (
-                <button
-                  ref={mobileToggleRef}
-                  onClick={() => setMenuOpen((v) => !v)}
-                  className="flex h-10 w-10 items-center justify-center rounded-full text-slate-700 transition-colors hover:bg-white/60 md:hidden dark:text-zinc-300 dark:hover:bg-white/5"
-                  aria-label="Menu"
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    {menuOpen ? (
-                      <path d="M18 6L6 18M6 6l12 12" />
-                    ) : (
-                      <path d="M3 12h18M3 6h18M3 18h18" />
-                    )}
-                  </svg>
-                </button>
-              )}
+              {/* Hamburger — mobil uchun */}
+              <button
+                ref={mobileToggleRef}
+                onClick={() => setMenuOpen((v) => !v)}
+                className="flex h-10 w-10 items-center justify-center rounded-full text-slate-700 transition-colors hover:bg-white/60 md:hidden dark:text-zinc-300 dark:hover:bg-white/5"
+                aria-label="Menu"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  {menuOpen ? (
+                    <path d="M18 6L6 18M6 6l12 12" />
+                  ) : (
+                    <path d="M3 12h18M3 6h18M3 18h18" />
+                  )}
+                </svg>
+              </button>
             </div>
           </div>
         </header>
 
-        {/* ═══════ Mobile dropdown (faqat guest) ═══════ */}
-        {menuOpen && !isAuthenticated && (
+        {/* ═══════ Mobile dropdown ═══════ */}
+        {menuOpen && (
           <div
             ref={mobileMenuRef}
             className="mt-2 overflow-hidden rounded-3xl border border-white/60 bg-white/90 p-2 shadow-2xl shadow-emerald-950/10 backdrop-blur-2xl animate-fade-in-up md:hidden dark:border-white/10 dark:bg-zinc-900/90 dark:shadow-black/60"
           >
+            {/* Mode indicator — mobil */}
+            {isAuthenticated && (
+              <Link
+                href="/profile"
+                onClick={() => setMenuOpen(false)}
+                className={cn(
+                  "mx-2 mb-2 flex items-center gap-2 rounded-2xl px-3 py-2 text-xs font-bold uppercase tracking-wider",
+                  isEmployer
+                    ? "bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400"
+                    : "bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-400"
+                )}
+              >
+                <span
+                  className={cn(
+                    "h-2 w-2 rounded-full",
+                    isEmployer ? "bg-amber-500" : "bg-indigo-500"
+                  )}
+                />
+                {isEmployer
+                  ? t("nav.modeEmployerShort")
+                  : t("nav.modeSeekerShort")}
+              </Link>
+            )}
+
             {getNavLinks(t, isEmployer, isAuthenticated)
-              .filter((l) => !(l as { auth?: boolean }).auth)
+              .filter((l) => !(l as { auth?: boolean }).auth || isAuthenticated)
               .map((l) => (
                 <Link
                   key={l.href}
@@ -244,20 +266,42 @@ export function Navbar() {
                 </Link>
               ))}
             <div className="my-1 h-px bg-slate-100 dark:bg-white/5" />
-            <Link
-              href="/login"
-              onClick={() => setMenuOpen(false)}
-              className="block rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-white/60 dark:text-zinc-300 dark:hover:bg-white/5"
-            >
-              {t("nav.login")}
-            </Link>
-            <Link
-              href="/register"
-              onClick={() => setMenuOpen(false)}
-              className="block rounded-2xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-500"
-            >
-              {t("nav.register")}
-            </Link>
+
+            {isAuthenticated ? (
+              <>
+                <Link
+                  href="/profile"
+                  onClick={() => setMenuOpen(false)}
+                  className="block rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-white/60 dark:text-zinc-300 dark:hover:bg-white/5"
+                >
+                  {t("nav.profile")}
+                </Link>
+                <Link
+                  href="/notifications"
+                  onClick={() => setMenuOpen(false)}
+                  className="block rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-white/60 dark:text-zinc-300 dark:hover:bg-white/5"
+                >
+                  {t("nav.notifications")}
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  onClick={() => setMenuOpen(false)}
+                  className="block rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-white/60 dark:text-zinc-300 dark:hover:bg-white/5"
+                >
+                  {t("nav.login")}
+                </Link>
+                <Link
+                  href="/register"
+                  onClick={() => setMenuOpen(false)}
+                  className="block rounded-2xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-500"
+                >
+                  {t("nav.register")}
+                </Link>
+              </>
+            )}
           </div>
         )}
       </div>
