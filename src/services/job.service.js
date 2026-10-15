@@ -7,6 +7,7 @@ const { Job } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { cache, PREFIXES, buildJobsListKey, invalidateJobCache } = require('../utils/cache');
 const viewsBatcher = require('../utils/viewsBatcher');
+const telegramService = require('./telegram.service');
 
 /**
  * Yangi vakansiya yaratish.
@@ -27,6 +28,14 @@ async function createJob(data, user) {
 
   const job = await Job.create(payload);
   invalidateJobCache(String(job._id));
+
+  // Telegram kanalga avtomatik post (fon vazifasi — bloklamaydi)
+  if (job.status === 'active') {
+    telegramService.postToChannel(job).catch((e) => {
+      console.error('[job.service] Telegram post xatosi:', e.message);
+    });
+  }
+
   return job;
 }
 

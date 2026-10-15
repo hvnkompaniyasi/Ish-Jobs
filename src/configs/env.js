@@ -60,6 +60,7 @@ const env = {
 
   // ============ TELEGRAM ============
   TELEGRAM_BOT_TOKEN: optional('TELEGRAM_BOT_TOKEN', ''),
+  TELEGRAM_CHANNEL_ID: optional("TELEGRAM_CHANNEL_ID"),
   TELEGRAM_ADMIN_IDS: optional('TELEGRAM_ADMIN_IDS', '')
     .split(',')
     .map((id) => id.trim())
