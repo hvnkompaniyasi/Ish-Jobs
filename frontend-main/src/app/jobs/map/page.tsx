@@ -11,6 +11,7 @@ import { LocationFilter, type LocationValue } from "@/components/map/LocationFil
 import { REGIONS, findRegion } from "@/data/uzbekistan";
 import { cn } from "@/lib/utils";
 import { haversineKm, formatDistance, coordsToLatLng, type LatLng } from "@/lib/geo";
+import { CATEGORIES as JOB_CATEGORIES } from "@/lib/categories";
 
 const MapView = dynamic(() => import("@/components/map/MapView"), {
   ssr: false,
@@ -30,13 +31,10 @@ const RADIUS_OPTIONS = [
   { label: "10 km",    value: 10 },
 ] as const;
 
-const CATEGORIES = [
-  { label: "Barchasi", value: null },
-  { label: "IT",       value: "it" },
-  { label: "Savdo",    value: "sales" },
-  { label: "Servis",   value: "service" },
-  { label: "Ofis",     value: "office" },
-] as const;
+const CATEGORY_OPTIONS = [
+  { label: "Barchasi", value: null as string | null },
+  ...JOB_CATEGORIES.map((cat) => ({ label: cat.short, value: cat.value as string })),
+];
 
 function formatSalaryShort(salary: Job["salary"] | undefined): string {
   if (!salary) return "Kelishilgan";
@@ -231,7 +229,7 @@ export default function JobsMapPage() {
 
         {!loading && !error && jobs.length > 0 && (
           <div className="pointer-events-auto -mx-4 flex items-center gap-2 overflow-x-auto px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {CATEGORIES.map((cat) => (
+            {CATEGORY_OPTIONS.map((cat) => (
               <button
                 key={String(cat.value)}
                 type="button"
@@ -337,7 +335,7 @@ export default function JobsMapPage() {
             <LocationFilter value={locationFilter} onChange={handleLocationChange} />
 
             <div className="flex flex-wrap gap-1.5">
-              {CATEGORIES.map((cat) => (
+              {CATEGORY_OPTIONS.map((cat) => (
                 <button
                   key={String(cat.value)}
                   type="button"

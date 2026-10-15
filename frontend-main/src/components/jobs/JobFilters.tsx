@@ -4,6 +4,7 @@ import { cn, EMPLOYMENT_TYPE_LABELS, EXPERIENCE_LABELS } from "@/lib/utils";
 import type { EmploymentType, ExperienceLevel, JobFilters as Filters } from "@/types";
 import { LocationFilter, type LocationValue } from "@/components/map/LocationFilter";
 import { findRegion } from "@/data/uzbekistan";
+import { CATEGORIES, type JobCategory } from "@/lib/categories";
 
 interface Props {
   filters: Filters;
@@ -61,6 +62,56 @@ export function JobFilters({ filters, onChange }: Props) {
 
   return (
     <div className="rim space-y-5 rounded-3xl glass p-5">
+      {/* ═══ Kategoriya ═══ */}
+      <div>
+        <div className="mb-2.5 flex items-center justify-between">
+          <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+            Kategoriya
+          </h3>
+          {filters.category && (
+            <button
+              type="button"
+              onClick={() => update("category", "")}
+              className="text-[11px] font-medium text-emerald-600 hover:underline dark:text-emerald-400"
+            >
+              Tozalash
+            </button>
+          )}
+        </div>
+        <div className="-mx-1 flex flex-wrap gap-1.5 px-1">
+          <button
+            type="button"
+            onClick={() => update("category", "")}
+            className={cn(
+              "shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors",
+              !filters.category ? chipActive : chipIdle,
+            )}
+          >
+            Barchasi
+          </button>
+          {CATEGORIES.map((cat) => {
+            const active = filters.category === cat.value;
+            return (
+              <button
+                key={cat.value}
+                type="button"
+                onClick={() =>
+                  update("category", (active ? "" : cat.value) as JobCategory | "")
+                }
+                title={cat.label}
+                className={cn(
+                  "shrink-0 inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors",
+                  active ? chipActive : chipIdle,
+                )}
+              >
+                <span>{cat.emoji}</span>
+                <span>{cat.short}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       <div>
         <h3 className="mb-2.5 text-sm font-bold text-slate-900 dark:text-white">
           Ish turi

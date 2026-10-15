@@ -10,6 +10,7 @@ import { useAuth } from "@/hooks";
 import { jobsService, getErrorMessage } from "@/services";
 import { cn } from "@/lib/utils";
 import { LogoUploader } from "@/components/jobs/LogoUploader";
+import { CATEGORIES } from "@/lib/categories";
 import type { JobCategory } from "@/lib/categories";
 import type {
   CreateJobPayload,
@@ -241,12 +242,22 @@ export default function CreateJobPage() {
               </p>
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
-              <Input
-                label="Kategoriya"
-                placeholder="IT, Marketing, Dizayn..."
-                value={form.category}
-                onChange={(e) => update("category", e.target.value)}
-              />
+              <div>
+                <label className="mb-1.5 block text-sm font-bold text-slate-700 dark:text-zinc-300">
+                  Kategoriya
+                </label>
+                <select
+                  value={form.category || "other"}
+                  onChange={(e) => update("category", e.target.value as JobCategory)}
+                  className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2.5 text-sm font-medium text-zinc-700 outline-none transition-colors hover:border-zinc-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-zinc-700"
+                >
+                  {CATEGORIES.map((cat) => (
+                    <option key={cat.value} value={cat.value}>
+                      {cat.emoji} {cat.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <Input
                 label="Ko'nikmalar (vergul bilan)"
                 placeholder="Node.js, MongoDB, Express"

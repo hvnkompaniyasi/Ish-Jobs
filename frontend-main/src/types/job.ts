@@ -72,7 +72,7 @@ export interface Job {
 
 export interface JobFilters {
   search?: string;
-  category?: JobCategory;
+  category?: JobCategory | "";
   employmentType?: EmploymentType | "";
   experienceLevel?: ExperienceLevel | "";
   city?: string;
