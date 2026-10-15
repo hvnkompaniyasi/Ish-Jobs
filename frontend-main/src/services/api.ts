@@ -3,12 +3,13 @@ import axios, {
   type AxiosInstance,
   type InternalAxiosRequestConfig,
 } from "axios";
+import type { AuthResponse } from "@/types";
 
 // ═══════════════════════════════════════════════════════════
 // TOKEN STORE
 // ═══════════════════════════════════════════════════════════
 export const TOKEN_KEY = "ishjobs_token";
-export const REFRESH_KEY = "ishjobs_refresh_token";
+export const REFRESH_KEY = "ishjobs_refresh"; // ← eski qiymat (foydalanuvchilar tokenni yo'qotmasin)
 export const USER_KEY = "ishjobs_user";
 
 const isBrowser = () => typeof window !== "undefined";
@@ -20,19 +21,23 @@ export const tokenStore = {
   },
   getRefresh(): string | null {
     if (!isBrowser()) return null;
-    return localStorage.getItem(REFRESH_KEY);
+    // Yangi kalitni birinchi, keyin eskisini sinab ko'ramiz
+    return (
+      localStorage.getItem(REFRESH_KEY) ||
+      localStorage.getItem("ishjobs_refresh_token")
+    );
   },
-  set(token: string, refresh?: string) {
+  set(token: string, refresh?: string): void {
     if (!isBrowser()) return;
     localStorage.setItem(TOKEN_KEY, token);
     if (refresh) localStorage.setItem(REFRESH_KEY, refresh);
   },
-  setUser(user: unknown) {
+  setUser(user: unknown): void {
     if (!isBrowser()) return;
     try {
       localStorage.setItem(USER_KEY, JSON.stringify(user));
     } catch {
-      // ignore
+      /* ignore */
     }
   },
   getUser<T = unknown>(): T | null {
@@ -44,10 +49,11 @@ export const tokenStore = {
       return null;
     }
   },
-  clear() {
+  clear(): void {
     if (!isBrowser()) return;
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(REFRESH_KEY);
+    localStorage.removeItem("ishjobs_refresh_token");
     localStorage.removeItem(USER_KEY);
   },
 };
@@ -76,7 +82,7 @@ const api: AxiosInstance = axios.create({
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = tokenStore.get();
-    if (token && !config.headers.Authorization) {
+    if (token && config.headers && !config.headers.Authorization) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
@@ -86,11 +92,7 @@ api.interceptors.request.use(
 
 // ═══════════════════════════════════════════════════════════
 // SILENT REFRESH WITH QUEUE
-// ───────────────────────────────────────────────────────────
-// Agar bir vaqtda 5 ta so'rov 401 qaytarsa — faqat 1 marta
-// refresh qilamiz, qolganlari navbatda kutadi.
 // ═══════════════════════════════════════════════════════════
-
 interface RetryableConfig extends InternalAxiosRequestConfig {
   _retry?: boolean;
 }
@@ -116,13 +118,8 @@ async function refreshAccessToken(): Promise<string> {
     throw new Error("No refresh token");
   }
 
-  // To'g'ridan-to'g'ri axios (interceptor chetlab o'tiladi)
-  const res = await axios.post<{
-    data?: { token?: string; accessToken?: string; refreshToken?: string };
-    token?: string;
-    accessToken?: string;
-    refreshToken?: string;
-  }>(
+  // Interceptorni chetlab o'tib, to'g'ridan-to'g'ri so'rov
+  const res = await axios.post(
     `${API_URL}/auth/refresh`,
     { refreshToken },
     {
@@ -131,9 +128,18 @@ async function refreshAccessToken(): Promise<string> {
     },
   );
 
-  const body = res.data;
+  const body = res.data as {
+    data?: { token?: string; accessToken?: string; refreshToken?: string };
+    token?: string;
+    accessToken?: string;
+    refreshToken?: string;
+  };
+
   const newAccess =
-    body?.data?.token ?? body?.data?.accessToken ?? body?.token ?? body?.accessToken;
+    body?.data?.token ??
+    body?.data?.accessToken ??
+    body?.token ??
+    body?.accessToken;
   const newRefresh =
     body?.data?.refreshToken ?? body?.refreshToken ?? refreshToken;
 
@@ -149,7 +155,6 @@ function forceLogout() {
   tokenStore.clear();
   if (typeof window !== "undefined") {
     const path = window.location.pathname;
-    // Login/Register sahifasida bo'lmasa — yo'naltirish
     if (path !== "/login" && path !== "/register") {
       const next = encodeURIComponent(path + window.location.search);
       window.location.href = `/login?next=${next}`;
@@ -158,21 +163,32 @@ function forceLogout() {
 }
 
 // ═══════════════════════════════════════════════════════════
-// RESPONSE INTERCEPTOR — 401 bo'lsa silent refresh
+// RESPONSE INTERCEPTOR — backend formatini ochish + silent refresh
 // ═══════════════════════════════════════════════════════════
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // Backend formatini ochish: {statusCode, success, message, data} → data
+    const d = response.data;
+    if (
+      d &&
+      typeof d === "object" &&
+      "success" in d &&
+      "data" in d
+    ) {
+      response.data = d.data;
+    }
+    return response;
+  },
   async (error: AxiosError) => {
     const original = error.config as RetryableConfig | undefined;
     const status = error.response?.status;
 
-    // Refresh endpointining o'zida 401 bo'lsa — qayta urinmaymiz
     const isRefreshCall = original?.url?.includes("/auth/refresh");
     const isAuthCall =
       original?.url?.includes("/auth/login") ||
       original?.url?.includes("/auth/register");
 
-    // Faqat 401, bir marta retry, va auth/refresh emas
+    // Faqat 401, bir marta retry, auth endpoint emas
     if (
       status !== 401 ||
       !original ||
@@ -185,7 +201,7 @@ api.interceptors.response.use(
 
     original._retry = true;
 
-    // ─── Agar refresh jarayoni ketayotgan bo'lsa — navbatga qo'shamiz ───
+    // Refresh davom etayotgan bo'lsa — navbatga qo'shamiz
     if (isRefreshing && refreshPromise) {
       return new Promise<string>((resolve, reject) => {
         pendingQueue.push({ resolve, reject });
@@ -197,7 +213,7 @@ api.interceptors.response.use(
         .catch((err) => Promise.reject(err));
     }
 
-    // ─── Birinchi 401 — refresh boshlaymiz ───
+    // Birinchi 401 — refresh boshlaymiz
     isRefreshing = true;
     refreshPromise = refreshAccessToken();
 
@@ -220,20 +236,22 @@ api.interceptors.response.use(
 // ═══════════════════════════════════════════════════════════
 // HELPERS
 // ═══════════════════════════════════════════════════════════
-export function getErrorMessage(err: unknown): string {
-  if (axios.isAxiosError(err)) {
-    const data = err.response?.data as
-      | { message?: string; errors?: Array<{ message?: string }> }
+export function getErrorMessage(error: unknown): string {
+  if (axios.isAxiosError(error)) {
+    const data = error.response?.data as
+      | { message?: string; error?: string; errors?: Array<{ message?: string }> }
       | undefined;
     return (
       data?.message ||
+      data?.error ||
       data?.errors?.[0]?.message ||
-      err.message ||
+      error.message ||
       "Xatolik yuz berdi"
     );
   }
-  if (err instanceof Error) return err.message;
-  return "Xatolik yuz berdi";
+  if (error instanceof Error) return error.message;
+  return "Kutilmagan xatolik";
 }
 
 export default api;
+export type { AuthResponse };
