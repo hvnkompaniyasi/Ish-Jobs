@@ -16,6 +16,7 @@ import "leaflet/dist/leaflet.css";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import type { Job } from "@/types";
 import { haversineKm, formatDistance, coordsToLatLng, type LatLng } from "@/lib/geo";
+import { buildTelegramUrl } from "@/lib/telegram";
 
 // ═══════════════════════════════════════════════════════
 // TYPES
@@ -48,18 +49,6 @@ const UZBEKISTAN_BOUNDS: L.LatLngBoundsExpression = [
 // ═══════════════════════════════════════════════════════
 // HELPERS
 // ═══════════════════════════════════════════════════════
-/**
- * Telegram deep-link: @username + tayyor xabar shabloni
- * @ belgisisiz username'ni qabul qiladi.
- */
-function buildTelegramUrl(username: string, jobTitle: string): string {
-  const clean = username.replace(/^@/, "").trim();
-  const text = encodeURIComponent(
-    `Assalomu alaykum! IshJobs orqali "${jobTitle}" vakansiyasini ko'rdim. Suhbatga yozilmoqchiman.`
-  );
-  return `https://t.me/${clean}?text=${text}`;
-}
-
 function escapeHtml(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
@@ -337,9 +326,9 @@ export default function MapView({
                   {(job.company as { telegramContact?: string | null } | undefined)?.telegramContact && (
                     <a
                       href={buildTelegramUrl(
-                        (job.company as { telegramContact: string }).telegramContact,
-                        job.title,
-                      )}
+                        { username: (job.company as { telegramContact?: string | null }).telegramContact },
+                        { jobTitle: job.title },
+                      ) || "#"}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex-1 !block w-full rounded-xl bg-sky-500 py-2 text-center text-[12.5px] font-semibold !text-white no-underline transition hover:bg-sky-400"

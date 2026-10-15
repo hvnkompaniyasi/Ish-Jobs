@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import Link from "next/link";
 import { JobCard } from "@/components/jobs/JobCard";
 import { SearchBar } from "@/components/jobs/SearchBar";
 import { JobFilters } from "@/components/jobs/JobFilters";
@@ -116,21 +117,31 @@ export default function JobsPage() {
           )}
 
           {!loading && !error && jobs.length === 0 && (
-            <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-12 text-center">
-              <div className="text-4xl opacity-60">🔍</div>
-              <h3 className="mt-3 text-base font-semibold text-white">
-                Vakansiya topilmadi
+            <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-10 text-center">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-zinc-800/60 text-3xl">
+                🔍
+              </div>
+              <h3 className="mt-4 text-base font-semibold text-white">
+                Bu filtrlar bo&apos;yicha ish topilmadi
               </h3>
-              <p className="mt-1 text-sm text-zinc-500">
-                Filtrlarni o&apos;zgartirib, qayta urinib ko&apos;ring
+              <p className="mt-1.5 max-w-md mx-auto text-sm text-zinc-500">
+                Filtrlarni kengaytirib ko&apos;ring, yoki birinchi bo&apos;lib
+                shu yo&apos;nalishda ish e&apos;lonini joylashtiring.
               </p>
-              <Button
-                variant="outline"
-                onClick={() => setFilters(DEFAULT_FILTERS)}
-                className="mt-4 rounded-lg border-zinc-800 bg-zinc-900 text-zinc-300 hover:bg-zinc-800"
-              >
-                Filtrlarni tozalash
-              </Button>
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setFilters(DEFAULT_FILTERS)}
+                  className="rounded-lg border-zinc-800 bg-zinc-900 text-zinc-300 hover:bg-zinc-800"
+                >
+                  Filtrlarni tozalash
+                </Button>
+                <Link href="/jobs/create">
+                  <Button className="rounded-lg bg-emerald-500 text-white hover:bg-emerald-400">
+                    + E&apos;lon berish
+                  </Button>
+                </Link>
+              </div>
             </div>
           )}
 

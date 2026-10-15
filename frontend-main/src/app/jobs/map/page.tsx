@@ -12,6 +12,7 @@ import { REGIONS, findRegion } from "@/data/uzbekistan";
 import { cn } from "@/lib/utils";
 import { haversineKm, formatDistance, coordsToLatLng, type LatLng } from "@/lib/geo";
 import { CATEGORIES as JOB_CATEGORIES } from "@/lib/categories";
+import { buildTelegramUrl } from "@/lib/telegram";
 
 const MapView = dynamic(() => import("@/components/map/MapView"), {
   ssr: false,
