@@ -113,11 +113,8 @@ function flushQueue(error: unknown, token: string | null) {
 }
 
 async function refreshAccessToken(): Promise<string> {
-  console.log('[RA 1] refreshAccessToken() boshlandi');
   const refreshToken = tokenStore.getRefresh();
-  console.log('[RA 2] Refresh token:', refreshToken ? refreshToken.slice(0, 20) + '...' : 'YO\'Q');
   if (!refreshToken) {
-    console.error('[RA-ERR] Refresh token topilmadi!');
     throw new Error("No refresh token");
   }
 
@@ -130,8 +127,6 @@ async function refreshAccessToken(): Promise<string> {
       timeout: 15000,
     },
   );
-
-  console.log('[RA 3] Server javobi:', res.status);
   const body = res.data as {
     data?: { token?: string; accessToken?: string; refreshToken?: string };
     token?: string;
@@ -148,10 +143,8 @@ async function refreshAccessToken(): Promise<string> {
     body?.data?.refreshToken ?? body?.refreshToken ?? refreshToken;
 
   if (!newAccess) {
-    console.error('[RA-ERR] Javobda token yo\'q:', JSON.stringify(body));
     throw new Error("Refresh response missing access token");
   }
-  console.log('[RA 4] Yangi access token olingan');
 
   tokenStore.set(newAccess, newRefresh);
   return newAccess;
@@ -189,19 +182,6 @@ api.interceptors.response.use(
     const original = error.config as RetryableConfig | undefined;
     const status = error.response?.status;
 
-    // ═══════════════════════════════════════════════════
-    // DEBUG — har bir xato uchun log chiqaramiz
-    // ═══════════════════════════════════════════════════
-    console.log('[ERR]', {
-      url: original?.url,
-      method: original?.method,
-      status,
-      hasConfig: !!original,
-      retry: original?._retry,
-      isRefreshing,
-      hasRefresh: !!tokenStore.getRefresh(),
-    });
-
     const isRefreshCall = original?.url?.includes("/auth/refresh");
     const isAuthCall =
       original?.url?.includes("/auth/login") ||
@@ -218,13 +198,10 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    console.log('[STEP 1] Erta-return o\'tmadi. _retry = true qilindi');
-
     original._retry = true;
 
     // Refresh davom etayotgan bo'lsa — navbatga qo'shamiz
     if (isRefreshing && refreshPromise) {
-      console.log('[STEP 2] Refresh ketayapti — navbatga qo\'shildi');
       return new Promise<string>((resolve, reject) => {
         pendingQueue.push({ resolve, reject });
       })
@@ -236,28 +213,15 @@ api.interceptors.response.use(
     }
 
     // Birinchi 401 — refresh boshlaymiz
-    console.log('[STEP 3] Birinchi 401 — refresh boshlanyapti');
     isRefreshing = true;
-
-    try {
-      refreshPromise = refreshAccessToken();
-      console.log('[STEP 4] refreshAccessToken() chaqirildi');
-    } catch (syncErr) {
-      console.error('[STEP 4-ERR] Refresh sinxron xatosi:', syncErr);
-      isRefreshing = false;
-      refreshPromise = null;
-      forceLogout();
-      return Promise.reject(syncErr);
-    }
+    refreshPromise = refreshAccessToken();
 
     try {
       const newToken = await refreshPromise;
-      console.log('[STEP 5] Yangi token olindi:', newToken.slice(0, 20) + '...');
       flushQueue(null, newToken);
       original.headers.Authorization = `Bearer ${newToken}`;
       return api(original);
     } catch (err) {
-      console.error('[STEP 5-ERR] Refresh muvaffaqiyatsiz:', err);
       flushQueue(err, null);
       forceLogout();
       return Promise.reject(err);
