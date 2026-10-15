@@ -382,7 +382,21 @@ export default function ProfilePage() {
               </Button>
             </div>
           </form>
-        </section>
+        
+          <div className="mt-6 border-t border-slate-200/60 pt-5 dark:border-white/5">
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 transition-colors hover:bg-slate-50 dark:border-white/10 dark:bg-white/5 dark:text-zinc-200 dark:hover:bg-white/10"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <path d="m16 17 5-5-5-5M21 12H9" />
+              </svg>
+              Chiqish
+            </button>
+          </div>
+</section>
       )}
 
       {/* ─── TAB: Faoliyatim ─── */}
@@ -525,39 +539,7 @@ export default function ProfilePage() {
         </div>
       )}
 
-      {/* ─── CHIQISH ─── */}
-        <div className="rim rounded-3xl glass p-6 sm:p-8 animate-fade-in">
-          <div className="mb-4 flex items-center gap-2.5">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-slate-600 to-slate-800 text-white shadow-md shadow-slate-500/30">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                <path d="m16 17 5-5-5-5M21 12H9" />
-              </svg>
-            </span>
-            <div>
-              <h2 className="text-lg font-black tracking-tight text-slate-900 dark:text-white">
-                Hisobdan chiqish
-              </h2>
-              <p className="text-xs text-slate-500 dark:text-zinc-400">
-                Boshqa akkaunt bilan kirish
-              </p>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 transition-colors hover:bg-slate-50 dark:border-white/10 dark:bg-white/5 dark:text-zinc-200 dark:hover:bg-white/10"
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-              <path d="m16 17 5-5-5-5M21 12H9" />
-            </svg>
-            Chiqish
-          </button>
-        </div>
-
-        {/* ─── DANGER ZONE (xavfsizlik ichida) ─── */}
+      {/* ─── DANGER ZONE (xavfsizlik ichida) ─── */}
       {tab === "xavfsizlik" && (
         <section className="rim rounded-3xl border border-rose-200/60 bg-rose-50/40 p-6 backdrop-blur-xl animate-fade-in dark:border-rose-500/20 dark:bg-rose-500/5 sm:p-8">
           <div className="mb-4 flex items-center gap-2.5">
