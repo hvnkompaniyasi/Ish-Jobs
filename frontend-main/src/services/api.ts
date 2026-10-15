@@ -183,6 +183,19 @@ api.interceptors.response.use(
     const original = error.config as RetryableConfig | undefined;
     const status = error.response?.status;
 
+    // ═══════════════════════════════════════════════════
+    // DEBUG — har bir xato uchun log chiqaramiz
+    // ═══════════════════════════════════════════════════
+    console.log('[ERR]', {
+      url: original?.url,
+      method: original?.method,
+      status,
+      hasConfig: !!original,
+      retry: original?._retry,
+      isRefreshing,
+      hasRefresh: !!tokenStore.getRefresh(),
+    });
+
     const isRefreshCall = original?.url?.includes("/auth/refresh");
     const isAuthCall =
       original?.url?.includes("/auth/login") ||
